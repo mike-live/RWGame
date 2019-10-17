@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace RWGame
 {
@@ -12,8 +13,40 @@ namespace RWGame
     {
         ServerWorker serverWorker;
         SystemSettings systemSettings;
+        string login;
+        string password;
+
+        public async void saveCredentials(string s, string p)
+        {
+            try
+            {
+                await SecureStorage.SetAsync("login", s);
+                //await SecureStorage.SetAsync("password", p);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+
+        public async void getCredentials()
+        {
+            try
+            {
+                login = await SecureStorage.GetAsync("login");
+                //password = await SecureStorage.GetAsync("password");
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
         public LoginPage(SystemSettings _systemSettings)
         {
+
+            getCredentials();
+            if (login == null) login = "";
+            if (password == null) password = "";
             systemSettings = _systemSettings;
             serverWorker = new ServerWorker();
 
@@ -53,7 +86,7 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.End,
                 Placeholder = "Enter login",
-                Text = "testaccount123",
+                Text = login,
                 TextColor = Color.White,
                 PlaceholderColor = Color.White,
             };
@@ -62,7 +95,7 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Start,
                 Placeholder = "Enter password",
-                Text = "testaccount123",
+                Text = password,
                 TextColor = Color.White,
                 IsPassword = true,
                 PlaceholderColor = Color.White,
@@ -80,6 +113,7 @@ namespace RWGame
                 TextColor = Color.White,
             };
             loginButton.Clicked += async delegate {
+                saveCredentials(loginEntry.Text, passwordEntry.Text);
                 await Auth(loginEntry.Text, passwordEntry.Text);
             }; 
             Label registrationButton = new Label()
