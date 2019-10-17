@@ -17,11 +17,6 @@ namespace RWGame
         SystemSettings systemSettings;
         List<Game> gamesList;
         List<ElementsOfViewCell> customListViewRecords;
-
-        protected override bool OnBackButtonPressed()
-        {
-            return true;
-        }
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);

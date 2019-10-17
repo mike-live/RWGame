@@ -7,7 +7,6 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using System.Net;
-using Xamarin.Essentials;
 
 namespace RWGame.Droid
 {
@@ -27,7 +26,6 @@ namespace RWGame.Droid
             
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            global::Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             LoadApplication(new App());
         }
     }
