@@ -252,7 +252,7 @@ namespace RWGame
             {
                 if (loginEntry != null && loginEntry.Text != null)
                 {
-                    if (Regex.IsMatch(loginEntry.Text, @"^[a-zA-Z_\-\.][a-zA-Z0-9_\-\.]{255}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(loginEntry.Text, @"^[a-zA-Z_\-\.][a-zA-Z0-9_\-\.]{2,255}$", RegexOptions.CultureInvariant))
                     {
                         if (await localServerWorker.TaskCheckLogin(loginEntry.Text))
                         {
