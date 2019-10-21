@@ -15,6 +15,11 @@ namespace RWGame
         SystemSettings systemSettings;
         ListView filesList;
         List<ElementsOfViewCell> customListViewRecords;
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
         public GameHistoryPage (ServerWorker _serverWorker, SystemSettings _systemSettings)
 		{
             serverWorker = _serverWorker;
