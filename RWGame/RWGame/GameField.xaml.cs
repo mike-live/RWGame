@@ -355,7 +355,8 @@ namespace RWGame
             if (gameStateInfo.GameState == GameStateEnum.END)
             {
                 await DisplayAlert("Game finshed", "You made " + idTurn.ToString() + " turns!" + "\n" + "Thanks for playing ;-)", "OK");
-                await Navigation.PopAsync();
+                //await Navigation.PopAsync();
+                await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
                 return;
             }
             InfoTurnLabel.Text = "Make turn!";
