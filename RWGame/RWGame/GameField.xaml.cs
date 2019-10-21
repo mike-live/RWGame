@@ -32,6 +32,12 @@ namespace RWGame
         Image[,] ControlsImages = new Image[2, 2];
         SKCanvasView canvasView;
 
+        protected override bool OnBackButtonPressed()
+        {
+            Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+            return true;
+        }
+
         readonly Game game;
         readonly SystemSettings systemSettings;
         readonly ServerWorker serverWorker;

@@ -203,6 +203,9 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable-xxxhdpi\splash.png" />
   </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\active.png" />
+  </ItemGroup>
   <Import Project="..\RWGame\RWGame.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
 </Project>
