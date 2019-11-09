@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
@@ -646,13 +645,129 @@ namespace RWGame
             registrationStack.Children.Add(cancelButton);
             #endregion
 
+            //Визуализация галочки и ссылки на политику
+            #region
+
+            StackLayout policyStack = new StackLayout()
+            {
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
+                Padding = new Thickness(10, -10),
+                Spacing = 0,
+            };
+            Label policyTextLabel = new Label()
+            {
+                Text = "I have read and agree to the ",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(5, 15, 0, 15)
+            };
+            Label policyHyperlinkLabel = new Label()
+            {
+                Text = "Privacy policy",
+                TextDecorations = TextDecorations.Underline,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(0, 15, 15, 15)
+            };
+
+            CheckBox policyCheckBox = new CheckBox
+            {
+                IsChecked = false,
+                BackgroundColor = Color.FromHex("#35a6de")
+            };
+
+            var policyTapGestureRecognizer = new TapGestureRecognizer();
+            policyTapGestureRecognizer.Tapped += (s, e) =>
+            {
+                Uri uri = new Uri("https://www.freeprivacypolicy.com/privacy/view/f40d2fbb6b454998dff7fdb78d5b9bd4");
+                Device.OpenUri(uri);
+            };
+            policyHyperlinkLabel.GestureRecognizers.Add(policyTapGestureRecognizer);
+            policyStack.Children.Add(policyCheckBox);
+            policyStack.Children.Add(policyTextLabel);
+            policyStack.Children.Add(policyHyperlinkLabel);
+
+
+            #endregion
+
+            //Визуализация галочки и ссылки на соглашение
+            #region
+
+            StackLayout agreementStack = new StackLayout()
+            {
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
+                Padding = new Thickness(10, 0),
+                Spacing = 0,
+            };
+
+            Label agreementTextLabel = new Label()
+            {
+                Text = "I have read and agree to the ",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(5, 15, 0, 15)
+            };
+            Label agreementHyperlinkLabel = new Label()
+            {
+                Text = "Terms and Conditions",
+                TextDecorations = TextDecorations.Underline,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(0, 15, 15, 15)
+            };
+
+            CheckBox agreementCheckBox = new CheckBox
+            {
+                IsChecked = false,
+                BackgroundColor = Color.FromHex("#35a6de")
+            };
+
+            var agreementTapGestureRecognizer = new TapGestureRecognizer();
+            agreementTapGestureRecognizer.Tapped += (s, e) =>
+            {
+                Uri uri = new Uri("https://www.freeprivacypolicy.com/privacy/view/f40d2fbb6b454998dff7fdb78d5b9bd4");
+                Device.OpenUri(uri);
+            };
+
+            agreementHyperlinkLabel.GestureRecognizers.Add(agreementTapGestureRecognizer);
+            agreementStack.Children.Add(agreementCheckBox);
+            agreementStack.Children.Add(agreementTextLabel);
+            agreementStack.Children.Add(agreementHyperlinkLabel);
+
+            #endregion
+
             HeadStack.Children.Add(nameStack);
             HeadStack.Children.Add(surnameStack);
             HeadStack.Children.Add(loginStack);
             HeadStack.Children.Add(passwordStack);
             HeadStack.Children.Add(dateStack);
             HeadStack.Children.Add(emailStack);
+            HeadStack.Children.Add(policyStack);
+            HeadStack.Children.Add(agreementStack);
             HeadStack.Children.Add(registrationStack);
+           
 
             var scroll = new ScrollView
             {
