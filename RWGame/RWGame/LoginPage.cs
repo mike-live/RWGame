@@ -130,7 +130,7 @@ namespace RWGame
             };
             var tapGestureRecognizer = new TapGestureRecognizer();
             tapGestureRecognizer.Tapped += async delegate {
-                await Navigation.PushAsync(new RegistrationPage(serverWorker));
+                await Navigation.PushAsync(new RegistrationPage(serverWorker, systemSettings));
             };
             registrationButton.GestureRecognizers.Add(tapGestureRecognizer);
             StackLayout buttonStack = new StackLayout()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace RWGame
 {
@@ -12,7 +13,7 @@ namespace RWGame
     {
         ServerWorker localServerWorker;
         bool[] RightInformationInField;
-        public RegistrationPage(ServerWorker serverWorker)
+        public RegistrationPage(ServerWorker serverWorker, SystemSettings systemSettings)
         {
             RightInformationInField = new bool[7];
             for (int i = 0; i < RightInformationInField.Length; i++)
@@ -615,7 +616,10 @@ namespace RWGame
                     if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text, 
                         loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))
                     {
+                        await SecureStorage.SetAsync("login", loginEntry.Text);
                         await DisplayAlert("Success", "Registration successful! =)", "OK");
+                        await DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
+                        await Navigation.PushAsync(new LoginPage(systemSettings));
                     }
                     else
                     {
