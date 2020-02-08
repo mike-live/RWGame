@@ -585,66 +585,6 @@ namespace RWGame
 
             #endregion
 
-            //Визуализация кнопки регистрации и отмены
-            #region
-            StackLayout registrationStack = new StackLayout()
-            {
-                BackgroundColor = Color.FromHex("#35a6de"),
-                Orientation = StackOrientation.Horizontal,
-                HorizontalOptions = LayoutOptions.Fill,
-                VerticalOptions = LayoutOptions.FillAndExpand,
-                Margin = new Thickness(0, 0, 0, 10),
-            };
-            Button registrateButton = new Button()
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Start,
-                Text = "Sign Up",
-                BackgroundColor = Color.FromHex("#7ad3ff"),
-                TextColor = Color.White,
-                Margin = new Thickness(10, 0, 10, 0)
-            };
-            registrateButton.Clicked += async delegate
-            {
-                if (RightInformationInField.Contains(false))
-                {
-                    await DisplayAlert("Error", "There are wrong entered fields", "OK");
-                }
-                else
-                {
-                    if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text, 
-                        loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))
-                    {
-                        await SecureStorage.SetAsync("login", loginEntry.Text);
-                        await DisplayAlert("Success", "Registration successful! =)", "OK");
-                        await DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
-                        await Navigation.PushAsync(new LoginPage(systemSettings));
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "Registration unsuccessful =( Try again later", "OK");
-                    }
-                }
-            };
-
-            Button cancelButton = new Button()
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Start,
-                Text = "Cancel",
-                BackgroundColor = Color.FromHex("#7ad3ff"),
-                TextColor = Color.White,
-                Margin = new Thickness(10, 0, 10, 0),
-            };
-            cancelButton.Clicked += async delegate
-            {
-                await Navigation.PopAsync();
-            };
-
-            registrationStack.Children.Add(registrateButton);
-            registrationStack.Children.Add(cancelButton);
-            #endregion
-
             //Визуализация галочки и ссылки на политику
             #region
 
@@ -690,7 +630,7 @@ namespace RWGame
             var policyTapGestureRecognizer = new TapGestureRecognizer();
             policyTapGestureRecognizer.Tapped += (s, e) =>
             {
-                Uri uri = new Uri("https://www.freeprivacypolicy.com/privacy/view/f40d2fbb6b454998dff7fdb78d5b9bd4");
+                Uri uri = new Uri("https://scigames.ru/privacy_policy");
                 Device.OpenUri(uri);
             };
             policyHyperlinkLabel.GestureRecognizers.Add(policyTapGestureRecognizer);
@@ -747,7 +687,7 @@ namespace RWGame
             var agreementTapGestureRecognizer = new TapGestureRecognizer();
             agreementTapGestureRecognizer.Tapped += (s, e) =>
             {
-                Uri uri = new Uri("https://www.freeprivacypolicy.com/privacy/view/f40d2fbb6b454998dff7fdb78d5b9bd4");
+                Uri uri = new Uri("https://scigames.ru/terms");
                 Device.OpenUri(uri);
             };
 
@@ -757,6 +697,72 @@ namespace RWGame
             agreementStack.Children.Add(agreementHyperlinkLabel);
 
             #endregion
+
+            //Визуализация кнопки регистрации и отмены
+            #region
+            StackLayout registrationStack = new StackLayout()
+            {
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                Margin = new Thickness(0, 0, 0, 10),
+            };
+            Button registrateButton = new Button()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Start,
+                Text = "Sign Up",
+                BackgroundColor = Color.FromHex("#7ad3ff"),
+                TextColor = Color.White,
+                Margin = new Thickness(10, 0, 10, 0)
+            };
+            registrateButton.Clicked += async delegate
+            {
+                if (RightInformationInField.Contains(false))
+                {
+                    await DisplayAlert("Error", "There are wrong entered fields", "OK");
+                }
+                else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true)
+                {
+                    if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text,
+                        loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))
+                    {
+                        await SecureStorage.SetAsync("login", loginEntry.Text);
+                        await DisplayAlert("Success", "Registration successful! =)", "OK");
+                        await DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
+                        await Navigation.PushAsync(new LoginPage(systemSettings));
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", "Registration unsuccessful =( Try again later", "OK");
+                    }
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Checks the agreement and privacy policy boxes!", "OK");
+                }
+            };
+
+            Button cancelButton = new Button()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Start,
+                Text = "Cancel",
+                BackgroundColor = Color.FromHex("#7ad3ff"),
+                TextColor = Color.White,
+                Margin = new Thickness(10, 0, 10, 0),
+            };
+            cancelButton.Clicked += async delegate
+            {
+                await Navigation.PopAsync();
+            };
+
+            registrationStack.Children.Add(registrateButton);
+            registrationStack.Children.Add(cancelButton);
+            #endregion
+
+            
 
             HeadStack.Children.Add(nameStack);
             HeadStack.Children.Add(surnameStack);
