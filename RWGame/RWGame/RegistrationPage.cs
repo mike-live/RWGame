@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace RWGame
 {
@@ -12,7 +12,7 @@ namespace RWGame
     {
         ServerWorker localServerWorker;
         bool[] RightInformationInField;
-        public RegistrationPage(ServerWorker serverWorker)
+        public RegistrationPage(ServerWorker serverWorker, SystemSettings systemSettings)
         {
             RightInformationInField = new bool[7];
             for (int i = 0; i < RightInformationInField.Length; i++)
@@ -585,6 +585,119 @@ namespace RWGame
 
             #endregion
 
+            //Визуализация галочки и ссылки на политику
+            #region
+
+            StackLayout policyStack = new StackLayout()
+            {
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
+                Padding = new Thickness(10, -10),
+                Spacing = 0,
+            };
+            Label policyTextLabel = new Label()
+            {
+                Text = "I have read and agree to the ",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(5, 15, 0, 15)
+            };
+            Label policyHyperlinkLabel = new Label()
+            {
+                Text = "Privacy policy",
+                TextDecorations = TextDecorations.Underline,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(0, 15, 15, 15)
+            };
+
+            CheckBox policyCheckBox = new CheckBox
+            {
+                IsChecked = false,
+                BackgroundColor = Color.FromHex("#35a6de")
+            };
+
+            var policyTapGestureRecognizer = new TapGestureRecognizer();
+            policyTapGestureRecognizer.Tapped += (s, e) =>
+            {
+                Uri uri = new Uri("https://scigames.ru/privacy_policy");
+                Device.OpenUri(uri);
+            };
+            policyHyperlinkLabel.GestureRecognizers.Add(policyTapGestureRecognizer);
+            policyStack.Children.Add(policyCheckBox);
+            policyStack.Children.Add(policyTextLabel);
+            policyStack.Children.Add(policyHyperlinkLabel);
+
+
+            #endregion
+
+            //Визуализация галочки и ссылки на соглашение
+            #region
+
+            StackLayout agreementStack = new StackLayout()
+            {
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Orientation = StackOrientation.Horizontal,
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
+                Padding = new Thickness(10, 0),
+                Spacing = 0,
+            };
+
+            Label agreementTextLabel = new Label()
+            {
+                Text = "I have read and agree to the ",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(5, 15, 0, 15)
+            };
+            Label agreementHyperlinkLabel = new Label()
+            {
+                Text = "Terms and Conditions",
+                TextDecorations = TextDecorations.Underline,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#35a6de"),
+                Margin = new Thickness(0, 15, 15, 15)
+            };
+
+            CheckBox agreementCheckBox = new CheckBox
+            {
+                IsChecked = false,
+                BackgroundColor = Color.FromHex("#35a6de")
+            };
+
+            var agreementTapGestureRecognizer = new TapGestureRecognizer();
+            agreementTapGestureRecognizer.Tapped += (s, e) =>
+            {
+                Uri uri = new Uri("https://scigames.ru/terms");
+                Device.OpenUri(uri);
+            };
+
+            agreementHyperlinkLabel.GestureRecognizers.Add(agreementTapGestureRecognizer);
+            agreementStack.Children.Add(agreementCheckBox);
+            agreementStack.Children.Add(agreementTextLabel);
+            agreementStack.Children.Add(agreementHyperlinkLabel);
+
+            #endregion
+
             //Визуализация кнопки регистрации и отмены
             #region
             StackLayout registrationStack = new StackLayout()
@@ -610,17 +723,24 @@ namespace RWGame
                 {
                     await DisplayAlert("Error", "There are wrong entered fields", "OK");
                 }
-                else
+                else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true)
                 {
-                    if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text, 
+                    if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text,
                         loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))
                     {
+                        await SecureStorage.SetAsync("login", loginEntry.Text);
                         await DisplayAlert("Success", "Registration successful! =)", "OK");
+                        await DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
+                        await Navigation.PushAsync(new LoginPage(systemSettings));
                     }
                     else
                     {
                         await DisplayAlert("Error", "Registration unsuccessful =( Try again later", "OK");
                     }
+                }
+                else
+                {
+                    await DisplayAlert("Error", "Checks the agreement and privacy policy boxes!", "OK");
                 }
             };
 
@@ -642,13 +762,18 @@ namespace RWGame
             registrationStack.Children.Add(cancelButton);
             #endregion
 
+            
+
             HeadStack.Children.Add(nameStack);
             HeadStack.Children.Add(surnameStack);
             HeadStack.Children.Add(loginStack);
             HeadStack.Children.Add(passwordStack);
             HeadStack.Children.Add(dateStack);
             HeadStack.Children.Add(emailStack);
+            HeadStack.Children.Add(policyStack);
+            HeadStack.Children.Add(agreementStack);
             HeadStack.Children.Add(registrationStack);
+           
 
             var scroll = new ScrollView
             {

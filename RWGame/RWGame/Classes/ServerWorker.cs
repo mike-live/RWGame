@@ -68,7 +68,7 @@ namespace RWGame.Classes
 
         public ServerWorker()
         {
-            URLServer = "http://185.231.154.161/";
+            URLServer = "https://scigames.ru/";
             CrossConnectivity.Current.ConnectivityChanged += delegate {
                 bool hasServerConnect = CrossConnectivity.Current.IsConnected;
                 if (!hasServerConnect)
