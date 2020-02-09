@@ -35,7 +35,7 @@ namespace RWGame
         static public async Task<bool> StartGame(ServerWorker serverWorker, Game game)
         {
             GameStateEnum GameState = game.GameState;
-            while (GameState != GameStateEnum.ACTIVE)
+            while (GameState != GameStateEnum.ACTIVE && GameState != GameStateEnum.WAIT)
             {
                 await Task.Delay(1000);
                 GameState = (await serverWorker.TaskPlayGame(idGame: game.IdGame)).GameState;
