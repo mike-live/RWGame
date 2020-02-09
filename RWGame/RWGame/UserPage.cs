@@ -18,10 +18,7 @@ namespace RWGame
         List<Game> gamesList;
         List<ElementsOfViewCell> customListViewRecords;
 
-        protected override bool OnBackButtonPressed()
-        {
-            return true;
-        }
+        
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -110,17 +107,7 @@ namespace RWGame
             userprofilStackLayout.Children.Add(buttonStack);
 
             Content = userprofilStackLayout;
-        }
-
-        protected override void OnAppearing()
-        {
-            upd();
-        }
-
-        public async void upd()
-        {
-            await UpdateGameList();
-        }
+        }        
 
         public async Task UpdateGameList()
         {
@@ -154,6 +141,21 @@ namespace RWGame
                 }
             }
             return null;
+        }
+
+        public async void CallUpdateGameList()
+        {
+            await UpdateGameList();
+        }
+
+        protected override void OnAppearing()
+        {
+            CallUpdateGameList();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
 
         class DateCellView : ViewCell
