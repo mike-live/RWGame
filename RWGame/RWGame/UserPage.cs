@@ -112,6 +112,16 @@ namespace RWGame
             Content = userprofilStackLayout;
         }
 
+        protected override void OnAppearing()
+        {
+            upd();
+        }
+
+        public async void upd()
+        {
+            await UpdateGameList();
+        }
+
         public async Task UpdateGameList()
         {
             gamesList = await serverWorker.TaskGetGamesList();

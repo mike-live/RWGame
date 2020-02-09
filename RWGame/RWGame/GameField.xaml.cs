@@ -32,6 +32,17 @@ namespace RWGame
         Image[,] ControlsImages = new Image[2, 2];
         SKCanvasView canvasView;
 
+        protected override bool OnBackButtonPressed()
+        {
+            pop();
+            return true;
+        }
+
+        public async void pop()
+        {
+            await Navigation.PopAsync();
+        }
+
         readonly Game game;
         readonly SystemSettings systemSettings;
         readonly ServerWorker serverWorker;
