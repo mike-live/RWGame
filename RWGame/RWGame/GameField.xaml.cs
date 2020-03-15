@@ -30,7 +30,7 @@ namespace RWGame
         Label GoalLabel;
         Grid ControlsGrid;
         Image[,] ControlsImages = new Image[2, 2];
-        SKCanvasView canvasView;
+        SKCanvasView canvasView;      
 
         readonly Game game;
         readonly SystemSettings systemSettings;
@@ -155,19 +155,6 @@ namespace RWGame
             paint.Shader = null;
             paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 2);
             //canvas.DrawCircle(GetGridPoint(gameTrajectory.Last()), pointRadius, paint);
-
-
-
-
-
-
-
-
-
-
-
-
-
             //Console.WriteLine(names[0]);
             //string resourceID = "RWGame.Droid.Images.star.png";
 //            var names = assembly.GetManifestResourceNames();
@@ -436,5 +423,17 @@ namespace RWGame
 
             Content = stackLayout;
         }
+
+        public async void CallPopAsync()
+        {
+            await Navigation.PopAsync();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            CallPopAsync();
+            return true;
+        }
+
     }
 }
