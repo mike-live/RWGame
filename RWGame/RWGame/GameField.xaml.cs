@@ -93,7 +93,7 @@ namespace RWGame
                 Shader = SKShader.CreateRadialGradient(
                             gridCenter,
                             centerRadius,
-                            new SKColor[] { SKColor.Parse("#ee423e").WithAlpha(127), backgroundSKColor },
+                            new SKColor[] { SKColor.Parse("#3949AB").WithAlpha(127), backgroundSKColor },
                             null,
                             0),
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 10)
@@ -114,7 +114,7 @@ namespace RWGame
                 canvas.DrawLine(GetGridPoint(0, i), GetGridPoint(gridSize, i), paint);
             }
             paint.StrokeWidth = 4;
-            paint.Color = SKColors.MediumVioletRed;
+            paint.Color = SKColor.Parse("#3949AB");
             SKPoint p1 = GetGridPoint(0, 0), p2 = GetGridPoint(gridSize, gridSize);
             canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
         }
@@ -132,7 +132,7 @@ namespace RWGame
         {
             SKPaint paint = new SKPaint
             {
-                Color = SKColor.Parse("ee423e"),
+                Color = SKColor.Parse("#3949AB"),
                 Style = SKPaintStyle.StrokeAndFill,
                 StrokeWidth = 5,
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
