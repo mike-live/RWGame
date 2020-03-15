@@ -29,6 +29,7 @@ namespace RWGame
         Label GameInfoLabel;
         Label GameScoreLabel;
         Label GoalLabel;
+        StackLayout labelLayout;
         Grid ControlsGrid;
         Image[,] ControlsImages = new Image[2, 2];
         SKCanvasView canvasView;      
@@ -377,6 +378,13 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 Spacing = 0,
             };
+            labelLayout = new StackLayout()
+            {
+                HorizontalOptions = LayoutOptions.Fill,
+                Orientation = StackOrientation.Horizontal,
+                Margin = new Thickness(10, 0, 10, 0),
+                Spacing = 0,
+            };
             InfoTurnLabel = new Label()
             {
                 Text = "",
@@ -394,8 +402,8 @@ namespace RWGame
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Fill,
+                HorizontalTextAlignment = TextAlignment.Start,
                 BackgroundColor = backgroundColor,
                 Margin = new Thickness(10, 0, 10, 0),
             };
@@ -406,8 +414,8 @@ namespace RWGame
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                HorizontalTextAlignment = TextAlignment.End,
                 BackgroundColor = backgroundColor,
                 Margin = new Thickness(10, 0, 10, 0),
             };
@@ -432,8 +440,10 @@ namespace RWGame
                 GameScoreLabel.Text = "Top score: 29";
             }
 
-            stackLayout.Children.Add(GameInfoLabel);
-            stackLayout.Children.Add(GameScoreLabel);
+            labelLayout.Children.Add(GameInfoLabel);
+            labelLayout.Children.Add(GameScoreLabel);
+
+            stackLayout.Children.Add(labelLayout);
             stackLayout.Children.Add(canvasView);
             stackLayout.Children.Add(InfoTurnLabel);
 
