@@ -1,10 +1,11 @@
-﻿using RWGame.Classes;
+﻿using Acr.UserDialogs;
+using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace RWGame.PagesGameChoise
@@ -135,16 +136,21 @@ namespace RWGame.PagesGameChoise
                 //проверим введённый ник
                 if (entryLogin.Text == "" || !(await serverWorker.TaskCheckLogin(entryLogin.Text)))
                 {
+                    string alertMessage;
                     if (entryLogin.Text == "")
                     {
-                        await DisplayAlert("Game", "Try to find player...", "OK");
+                        alertMessage = "Try to find player...";
                     }
                     else
                     {
-                        await DisplayAlert("Attention", "Game started. Wait for second player.", "OK");
+                        alertMessage = "Game started. Wait for second player.";
                     }
                     Game game = await GameProcesses.MakeGameWithPlayer(serverWorker, selectedIdPlayer);
+
+                    UserDialogs.Instance.ShowLoading(alertMessage);
                     await GameProcesses.StartGame(serverWorker, game);
+                    UserDialogs.Instance.HideLoading();
+
                     await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
                     //await Navigation.PopAsync();
                 }

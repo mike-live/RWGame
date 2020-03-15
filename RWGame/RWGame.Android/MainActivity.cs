@@ -8,6 +8,7 @@ using Android.Widget;
 using Android.OS;
 using System.Net;
 using Xamarin.Essentials;
+using Acr.UserDialogs;
 
 namespace RWGame.Droid
 {
@@ -28,6 +29,7 @@ namespace RWGame.Droid
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            UserDialogs.Init(this);
             LoadApplication(new App());
         }
     }
