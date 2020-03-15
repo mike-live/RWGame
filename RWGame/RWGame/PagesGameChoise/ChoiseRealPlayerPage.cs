@@ -50,7 +50,7 @@ namespace RWGame.PagesGameChoise
             {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                Text = "Выбор соперника",
+                Text = "Select player",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
@@ -60,7 +60,7 @@ namespace RWGame.PagesGameChoise
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Center,
-                Placeholder = "Введите логин игрока",
+                Placeholder = "Enter player login",
                 TextColor = Color.White,
                 BackgroundColor = Color.FromHex("#39bafa"),
                 PlaceholderColor = Color.LightGray,
@@ -117,7 +117,7 @@ namespace RWGame.PagesGameChoise
             //listPlayer.ItemsSource = 
             Button backButton = new Button()
             {
-                Text = "Назад",
+                Text = "Back",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
                 BackgroundColor = Color.FromHex("#69c6f5")
@@ -125,7 +125,7 @@ namespace RWGame.PagesGameChoise
             backButton.Clicked += async delegate { await Navigation.PopAsync(); };
             Button playButton = new Button()
             {
-                Text = "Играть",
+                Text = "Play!",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
                 BackgroundColor = Color.FromHex("#69c6f5")
