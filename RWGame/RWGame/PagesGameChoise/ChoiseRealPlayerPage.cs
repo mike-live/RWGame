@@ -152,7 +152,6 @@ namespace RWGame.PagesGameChoise
                     UserDialogs.Instance.HideLoading();
 
                     await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
-                    //await Navigation.PopAsync();
                 }
                 else
                 {

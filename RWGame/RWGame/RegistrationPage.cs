@@ -628,16 +628,15 @@ namespace RWGame
             };
 
             var policyTapGestureRecognizer = new TapGestureRecognizer();
-            policyTapGestureRecognizer.Tapped += (s, e) =>
+            policyTapGestureRecognizer.Tapped += async (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/privacy_policy");
-                Device.OpenUri(uri);
+                await Xamarin.Essentials.Launcher.OpenAsync(uri);
             };
             policyHyperlinkLabel.GestureRecognizers.Add(policyTapGestureRecognizer);
             policyStack.Children.Add(policyCheckBox);
             policyStack.Children.Add(policyTextLabel);
             policyStack.Children.Add(policyHyperlinkLabel);
-
 
             #endregion
 
@@ -685,10 +684,10 @@ namespace RWGame
             };
 
             var agreementTapGestureRecognizer = new TapGestureRecognizer();
-            agreementTapGestureRecognizer.Tapped += (s, e) =>
+            agreementTapGestureRecognizer.Tapped += async (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/terms");
-                Device.OpenUri(uri);
+                await Xamarin.Essentials.Launcher.OpenAsync(uri);
             };
 
             agreementHyperlinkLabel.GestureRecognizers.Add(agreementTapGestureRecognizer);

@@ -23,7 +23,7 @@ namespace RWGame
                 await SecureStorage.SetAsync("login", s);
                 //await SecureStorage.SetAsync("password", p);
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -36,7 +36,7 @@ namespace RWGame
                 login = await SecureStorage.GetAsync("login");
                 //password = await SecureStorage.GetAsync("password");
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
