@@ -177,7 +177,7 @@ namespace RWGame.Classes
 
                 return currentResponse.IsRegistrationSuccessful;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return false;
             }
@@ -195,7 +195,7 @@ namespace RWGame.Classes
 
                 return currentResponse;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return false;
             }
@@ -213,7 +213,7 @@ namespace RWGame.Classes
 
                 return currentResponse;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return false;
             }
@@ -232,7 +232,7 @@ namespace RWGame.Classes
 
                 return currentResponse.IsAuthenticationSuccessful;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return false;
             }
@@ -257,7 +257,7 @@ namespace RWGame.Classes
                     return null;
                 }
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }
@@ -279,7 +279,7 @@ namespace RWGame.Classes
                     return null;
                 }
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }
@@ -295,7 +295,7 @@ namespace RWGame.Classes
 
                 return currentResponse.Game;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }
@@ -313,7 +313,7 @@ namespace RWGame.Classes
                 );
                 return currentResponse;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }
@@ -330,7 +330,7 @@ namespace RWGame.Classes
                 );
                 return currentResponse;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }
@@ -348,7 +348,7 @@ namespace RWGame.Classes
                 );
                 return currentResponse;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }
@@ -365,7 +365,7 @@ namespace RWGame.Classes
                 );
                 return currentResponse.Turns;
             }
-            catch (System.Net.WebException e)
+            catch (System.Net.WebException)
             {
                 return null;
             }

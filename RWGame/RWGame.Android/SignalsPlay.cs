@@ -53,7 +53,7 @@ namespace RWGame.Droid
 
             try
             {
-                afd = Forms.Context.Assets.OpenFd(fullPath);
+                afd = Android.App.Application.Context.Assets.OpenFd(fullPath);
             }
             catch (Exception ex)
             {

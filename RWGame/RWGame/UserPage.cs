@@ -47,10 +47,12 @@ namespace RWGame
                 Margin = new Thickness(10, 10, 10, 10)
             };
 
-            gamesListView = new ListView();
-            gamesListView.ItemTemplate = new DataTemplate(typeof(DateCellView));
-            
-            UpdateGameList();
+            gamesListView = new ListView
+            {
+                ItemTemplate = new DataTemplate(typeof(DateCellView))
+            };
+
+            _ = UpdateGameList();
 
             gamesListView.ItemSelected += async delegate {
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;

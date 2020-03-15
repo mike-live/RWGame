@@ -35,8 +35,6 @@ namespace RWGame
         readonly Game game;
         readonly SystemSettings systemSettings;
         readonly ServerWorker serverWorker;
-        //choosedMatrixLine : 0 - строки, 1 - столбцы. -1 Ошибка
-        private readonly int choosedMatrixLine = -1;
         private readonly Color coloredColor = Color.FromHex("#6ecbfa");
         private readonly Color defaultColor = Color.FromHex("#39bafa");
         private bool canAnimate = true;
@@ -160,7 +158,7 @@ namespace RWGame
 //            var names = assembly.GetManifestResourceNames();
             //var filestream = new SKManagedStream();
             var bitmap = SKBitmap.Decode(getResourceStream("Images.star.png"));
-            var scaled = bitmap.Resize(new SKImageInfo(pointRadius * 2, pointRadius * 2), SKBitmapResizeMethod.Lanczos3);
+            var scaled = bitmap.Resize(new SKImageInfo(pointRadius * 2, pointRadius * 2), SKFilterQuality.High);
             SKImage image = SKImage.FromBitmap(scaled);
             SKRect rect = new SKRect
             {
