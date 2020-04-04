@@ -96,7 +96,7 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.Center,
                 Opacity = 0,
                 Source = "update30.png"
-        };
+            };
             PlayWithBot.Clicked += async delegate
             {
                 // Запуск игры с ботом
