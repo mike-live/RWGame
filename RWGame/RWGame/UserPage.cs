@@ -37,7 +37,7 @@ namespace RWGame
                 TextColor = Color.White,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
-                Margin = new Thickness(20, 30, 20, 30),
+                Margin = new Thickness(20, 10, 20, 10),
                 Text = "Hi, " + serverWorker.UserLogin
             };
             StackLayout stackLayoutListView = new StackLayout()
@@ -90,6 +90,13 @@ namespace RWGame
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 TextColor = Color.White
             };
+            Image updateImage = new Image()
+            {
+                VerticalOptions = LayoutOptions.Start,
+                HorizontalOptions = LayoutOptions.Center,
+                Opacity = 0,
+                Source = "update30.png"
+        };
             PlayWithBot.Clicked += async delegate
             {
                 // Запуск игры с ботом
@@ -97,23 +104,23 @@ namespace RWGame
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
                 await UpdateGameList();
             };
-           /* void OnSwiped(object sender, SwipedEventArgs e)
-            {
-                switch(e.Direction)
-                {
-                    case SwipeDirection.Down:
-                        CallUpdateGameList();
-                        break;
-                }
-            }
             var downSwipeGesture = new SwipeGestureRecognizer { Direction = SwipeDirection.Down };
-            downSwipeGesture.Swiped += OnSwiped;*/
+            downSwipeGesture.Swiped += async delegate
+            {
+                await userprofilStackLayout.TranslateTo(0, 40);
+                await UpdateGameList();
+                updateImage.Opacity = 1;
+                await updateImage.RotateTo(360, 2000);
+                updateImage.Rotation = 0;
+                await userprofilStackLayout.TranslateTo(0, -10);
+                updateImage.Opacity = 0;
+            };
 
             buttonStack.Children.Add(PlayWithAnotherPlayer);
             buttonStack.Children.Add(PlayWithBot);
 
-
-            //userprofilStackLayout.GestureRecognizers.Add(downSwipeGesture);
+            userprofilStackLayout.Children.Add(updateImage);
+            userprofilStackLayout.GestureRecognizers.Add(downSwipeGesture);
             userprofilStackLayout.Children.Add(userName);
             userprofilStackLayout.Children.Add(stackLayoutListView);
             userprofilStackLayout.Children.Add(buttonStack);
