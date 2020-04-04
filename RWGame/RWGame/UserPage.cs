@@ -97,11 +97,23 @@ namespace RWGame
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
                 await UpdateGameList();
             };
+           /* void OnSwiped(object sender, SwipedEventArgs e)
+            {
+                switch(e.Direction)
+                {
+                    case SwipeDirection.Down:
+                        CallUpdateGameList();
+                        break;
+                }
+            }
+            var downSwipeGesture = new SwipeGestureRecognizer { Direction = SwipeDirection.Down };
+            downSwipeGesture.Swiped += OnSwiped;*/
+
             buttonStack.Children.Add(PlayWithAnotherPlayer);
             buttonStack.Children.Add(PlayWithBot);
 
-            
 
+            //userprofilStackLayout.GestureRecognizers.Add(downSwipeGesture);
             userprofilStackLayout.Children.Add(userName);
             userprofilStackLayout.Children.Add(stackLayoutListView);
             userprofilStackLayout.Children.Add(buttonStack);
