@@ -103,7 +103,7 @@ namespace RWGame
 
             paint = new SKPaint
             {
-                Color = (SKColors.White),
+                Color = SKColors.White,
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = 1,
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
@@ -116,6 +116,16 @@ namespace RWGame
             paint.StrokeWidth = 4;
             paint.Color = SKColor.Parse("#3949AB");
             SKPoint p1 = GetGridPoint(0, 0), p2 = GetGridPoint(gridSize, gridSize);
+            canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
+
+            paint = new SKPaint
+            {
+                Color = SKColor.Parse("#3949AB").WithAlpha(48),
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 1,
+                //MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5),
+                ImageFilter = SKImageFilter.CreateBlur(20, 20),
+            };
             canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
         }
 
