@@ -362,6 +362,14 @@ namespace RWGame
                         loginTipLabel.Text = "Login should be less than 255 charachters long";
                         loginTipLabel.Opacity = 1;
                     }
+                    else if (Regex.IsMatch(loginEntry.Text[0].ToString(), @"^[0-9]{1,255}$", RegexOptions.CultureInvariant))
+                    {
+                        RightInformationInField[2] = false;
+                        loginRightImage.HeightRequest = loginLabel.Height;
+                        loginRightImage.Source = "no.png";
+                        loginTipLabel.Text = "Login can't start with a digit";
+                        loginTipLabel.Opacity = 1;
+                    }
                     else
                     {
                         RightInformationInField[2] = false;
