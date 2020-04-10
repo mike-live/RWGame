@@ -509,6 +509,32 @@ namespace RWGame
                         passwordTipLabel.Opacity = 0;
                         passwordConfirmTipLabel.Text = "Confirm password";
                         passwordConfirmTipLabel.Opacity = 1;
+                        if (passwordConfirmEntry != null && passwordConfirmEntry.Text != null && passwordEntry != null && passwordEntry.Text != null && RightInformationInField[3] == true)
+                        {
+                            if (passwordConfirmEntry.Text == passwordEntry.Text)
+                            {
+                                RightInformationInField[4] = true;
+                                passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
+                                passwordConfirmRightImage.Source = "yes.png";
+                                passwordConfirmTipLabel.Opacity = 0;
+                            }
+                            else
+                            {
+                                RightInformationInField[4] = false;
+                                passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
+                                passwordConfirmRightImage.Source = "no.png";
+                                passwordConfirmTipLabel.Text = "Passwords don't match";
+                                passwordConfirmTipLabel.Opacity = 1;
+                            }
+                        }
+                        else
+                        {
+                            RightInformationInField[4] = false;
+                            passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
+                            passwordConfirmRightImage.Source = "no.png";
+                            passwordConfirmTipLabel.Text = "Confirm your password";
+                            passwordConfirmTipLabel.Opacity = 1;
+                        }
                     }
                     else if (passwordEntry.Text.Length < 6)
                     {
@@ -526,6 +552,16 @@ namespace RWGame
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "no.png";
                         passwordTipLabel.Text = "Password should contain at least 6 characters";
+                        passwordTipLabel.Opacity = 1;
+                        passwordConfirmTipLabel.Text = "Confirm password";
+                        passwordConfirmTipLabel.Opacity = 1;
+                    }
+                    else
+                    {
+                        RightInformationInField[3] = false;
+                        passwordRightImage.HeightRequest = passwordLabel.Height;
+                        passwordRightImage.Source = "no.png";
+                        passwordTipLabel.Text = "Password should contain at only latin letters, digits and special symbols";
                         passwordTipLabel.Opacity = 1;
                         passwordConfirmTipLabel.Text = "Confirm password";
                         passwordConfirmTipLabel.Opacity = 1;
