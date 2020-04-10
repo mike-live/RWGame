@@ -1,4 +1,5 @@
-﻿using RWGame.Classes;
+﻿using Android.Telephony;
+using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.PagesGameChoise;
 using System;
@@ -92,10 +93,10 @@ namespace RWGame
             };
             Image updateImage = new Image()
             {
-                VerticalOptions = LayoutOptions.Start,
+                VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
-                Opacity = 0,
-                Source = "update30.png"
+                Opacity = 1,
+                Source = "update3.png"
             };
             PlayWithBot.Clicked += async delegate
             {
@@ -107,19 +108,17 @@ namespace RWGame
             var downSwipeGesture = new SwipeGestureRecognizer { Direction = SwipeDirection.Down };
             downSwipeGesture.Swiped += async delegate
             {
-                await userprofilStackLayout.TranslateTo(0, 40);
-                await UpdateGameList();
-                updateImage.Opacity = 1;
-                await updateImage.RotateTo(360, 2000);
+                updateImage.IsVisible = true;
+                await Task.WhenAll(UpdateGameList(), updateImage.RotateTo(360, 1000));
                 updateImage.Rotation = 0;
-                await userprofilStackLayout.TranslateTo(0, -10);
-                updateImage.Opacity = 0;
+                updateImage.IsVisible = false;
             };
 
             buttonStack.Children.Add(PlayWithAnotherPlayer);
             buttonStack.Children.Add(PlayWithBot);
 
             userprofilStackLayout.Children.Add(updateImage);
+            updateImage.IsVisible = false;
             userprofilStackLayout.GestureRecognizers.Add(downSwipeGesture);
             userprofilStackLayout.Children.Add(userName);
             userprofilStackLayout.Children.Add(stackLayoutListView);

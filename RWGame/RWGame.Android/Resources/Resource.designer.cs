@@ -15,7 +15,7 @@ namespace RWGame.Droid
 {
 	
 	
-	[System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "1.0.0.0")]
+	[global::System.CodeDom.Compiler.GeneratedCodeAttribute("Xamarin.Android.Build.Tasks", "1.0.0.0")]
 	public partial class Resource
 	{
 		
@@ -6503,16 +6503,22 @@ namespace RWGame.Droid
 			public const int up = 2131165516;
 			
 			// aapt resource value: 0x7F07014D
-			public const int update = 2131165517;
+			public const int update1 = 2131165517;
 			
 			// aapt resource value: 0x7F07014E
-			public const int update30 = 2131165518;
+			public const int update2 = 2131165518;
 			
 			// aapt resource value: 0x7F07014F
-			public const int wait = 2131165519;
+			public const int update3 = 2131165519;
 			
 			// aapt resource value: 0x7F070150
-			public const int yes = 2131165520;
+			public const int update30 = 2131165520;
+			
+			// aapt resource value: 0x7F070151
+			public const int wait = 2131165521;
+			
+			// aapt resource value: 0x7F070152
+			public const int yes = 2131165522;
 			
 			static Drawable()
 			{
