@@ -375,7 +375,7 @@ namespace RWGame
                         RightInformationInField[2] = false;
                         loginRightImage.HeightRequest = loginLabel.Height;
                         loginRightImage.Source = "no.png";
-                        loginTipLabel.Text = "Login should be conatin only latin letters, numbers and special symbols";
+                        loginTipLabel.Text = "Login should conatin only latin letters, numbers and special symbols";
                         loginTipLabel.Opacity = 1;
                     }
                 }
