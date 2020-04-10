@@ -354,3 +354,5 @@ healthchecksdb
 MigrationBackup/
 
 RWGame/RWGame.Android/Resources/Resource.designer.cs
+
+bundle/
