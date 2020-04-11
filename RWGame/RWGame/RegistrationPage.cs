@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+
 namespace RWGame
 {
     public class RegistrationPage : ContentPage
@@ -110,7 +111,7 @@ namespace RWGame
             {
                 if (nameEntry != null && nameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(nameEntry.Text, @"^[a-zA-Z']{1,256}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(nameEntry.Text, @"^^(?:\w\D){1,256}$", RegexOptions.CultureInvariant))
                     {
                         RightInformationInField[0] = true;
                         labelRightImage.HeightRequest = nameLabel.Height;
@@ -138,7 +139,7 @@ namespace RWGame
                         RightInformationInField[0] = false;
                         labelRightImage.HeightRequest = nameLabel.Height;
                         labelRightImage.Source = "no.png";
-                        nameTipLabel.Text = "Name should contain only latin letters";
+                        nameTipLabel.Text = "Name should contain only letters";
                         nameTipLabel.Opacity = 1;
                     }
                 }
@@ -223,7 +224,7 @@ namespace RWGame
             {
                 if (surnameEntry != null && surnameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(surnameEntry.Text, @"^[a-zA-Z']{1,256}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(surnameEntry.Text, @"^(?:\w\D){1,256}$", RegexOptions.CultureInvariant))
                     {
                         RightInformationInField[1] = true;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
@@ -251,7 +252,7 @@ namespace RWGame
                         RightInformationInField[1] = false;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
                         surnameRightImage.Source = "no.png";
-                        surnameTipLabel.Text = "Surname should contain only latin letters";
+                        surnameTipLabel.Text = "Surname should contain only letters";
                         surnameTipLabel.Opacity = 1;
                     }
                 }
@@ -454,7 +455,7 @@ namespace RWGame
             };
             Label passwordConfirmLabel = new Label()
             {
-                Text = "Confirm password",
+                Text = "Confirm your password",
                 FontSize = Device.GetNamedSize(NamedSize.Micro, typeof(Label)),
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
@@ -515,9 +516,9 @@ namespace RWGame
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "yes.png";
                         passwordTipLabel.Opacity = 0;
-                        passwordConfirmTipLabel.Text = "Confirm password";
+                        passwordConfirmTipLabel.Text = "Confirm your password";
                         passwordConfirmTipLabel.Opacity = 1;
-                        if (passwordConfirmEntry != null && passwordConfirmEntry.Text != null && passwordEntry != null && passwordEntry.Text != null && RightInformationInField[3] == true)
+                        if (passwordConfirmEntry != null && passwordConfirmEntry.Text != null)
                         {
                             if (passwordConfirmEntry.Text == passwordEntry.Text)
                             {
@@ -525,6 +526,7 @@ namespace RWGame
                                 passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                                 passwordConfirmRightImage.Source = "yes.png";
                                 passwordConfirmTipLabel.Opacity = 0;
+                                passwordConfirmRightImage.Opacity = 1;
                             }
                             else
                             {
@@ -533,6 +535,7 @@ namespace RWGame
                                 passwordConfirmRightImage.Source = "no.png";
                                 passwordConfirmTipLabel.Text = "Passwords don't match";
                                 passwordConfirmTipLabel.Opacity = 1;
+                                passwordConfirmRightImage.Opacity = 1;
                             }
                         }
                         else
@@ -542,6 +545,7 @@ namespace RWGame
                             passwordConfirmRightImage.Source = "no.png";
                             passwordConfirmTipLabel.Text = "Confirm your password";
                             passwordConfirmTipLabel.Opacity = 1;
+                            passwordConfirmRightImage.Opacity = 1;
                         }
                     }
                     else if (passwordEntry.Text.Length < 6)
@@ -551,8 +555,8 @@ namespace RWGame
                         passwordRightImage.Source = "no.png";
                         passwordTipLabel.Text = "Password should contain at least 6 characters";
                         passwordTipLabel.Opacity = 1;
-                        passwordConfirmTipLabel.Text = "Confirm password";
-                        passwordConfirmTipLabel.Opacity = 1;
+                        passwordConfirmTipLabel.Opacity = 0;
+                        passwordConfirmRightImage.Opacity = 0;
                     }
                     else if (passwordEntry.Text.Length > 256)
                     {
@@ -561,18 +565,31 @@ namespace RWGame
                         passwordRightImage.Source = "no.png";
                         passwordTipLabel.Text = "Password should contain at least 6 characters";
                         passwordTipLabel.Opacity = 1;
-                        passwordConfirmTipLabel.Text = "Confirm password";
-                        passwordConfirmTipLabel.Opacity = 1;
+                        passwordConfirmTipLabel.Opacity = 0;
+                        passwordConfirmRightImage.Opacity = 0;
                     }
                     else
                     {
                         RightInformationInField[3] = false;
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "no.png";
-                        passwordTipLabel.Text = "Password should contain at only latin letters, digits and special symbols";
+                        bool foundMistake = false;
+
+                        for (int i = 0; i < passwordEntry.Text.Length; ++i)
+                        {
+                            if (!Regex.IsMatch(passwordEntry.Text[i].ToString(), @"^[a-zA-Z0-9_\.\-\!\#\$\%\&\'\(\)\*\+\,\.\:\;\<\=\>\?\@\[\^\`\{\|\}\~\–]$", RegexOptions.CultureInvariant))
+                            {
+                                passwordTipLabel.Text = "Password should not contain \"" + passwordEntry.Text[i].ToString() + "\"";
+                                foundMistake = true;
+                                break;
+                            }
+                        }
+
+                        if (!foundMistake)
+                            passwordTipLabel.Text = "Password should contain at only latin letters, digits and special symbols"; // В теории кейса быть не должно, но вдруг. Затычкой пусть будет?
                         passwordTipLabel.Opacity = 1;
-                        passwordConfirmTipLabel.Text = "Confirm password";
-                        passwordConfirmTipLabel.Opacity = 1;
+                        passwordConfirmTipLabel.Opacity = 0;
+                        passwordConfirmRightImage.Opacity = 0;
                     }
                 }
                 else
@@ -582,8 +599,8 @@ namespace RWGame
                     passwordRightImage.Source = "no.png";
                     passwordTipLabel.Text = "Password should contain at least 6 characters";
                     passwordTipLabel.Opacity = 1;
-                    passwordConfirmTipLabel.Text = "Confirm password";
-                    passwordConfirmTipLabel.Opacity = 1;
+                    passwordConfirmTipLabel.Opacity = 0;
+                    passwordConfirmRightImage.Opacity = 0;
                 }
             };
             passwordConfirmEntry.TextChanged += delegate
@@ -764,9 +781,8 @@ namespace RWGame
             {
                 if (emailEntry != null && emailEntry.Text != null)
                 {
-                    string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                    string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
                 @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
-
                     if (Regex.IsMatch(emailEntry.Text,
                         pattern, 
                         RegexOptions.CultureInvariant) && await serverWorker.TaskCheckEmail(emailEntry.Text))
@@ -808,7 +824,7 @@ namespace RWGame
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
-                Padding = new Thickness(10, 0, 0, -5),
+                Padding = new Thickness(0, 0, 0, -5),
                 Spacing = 0,
             };
             Label policyTextLabel = new Label()
@@ -841,12 +857,21 @@ namespace RWGame
                 BackgroundColor = Color.FromHex("#35a6de")
             };
 
+            var policyLabelTapGestureRecognizer = new TapGestureRecognizer();
             var policyTapGestureRecognizer = new TapGestureRecognizer();
+            
             policyTapGestureRecognizer.Tapped += (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/privacy_policy");
                 Device.OpenUri(uri);
             };
+
+            policyLabelTapGestureRecognizer.Tapped += (s, e) =>
+            {
+                policyCheckBox.IsChecked = policyCheckBox.IsChecked ? false : true;
+            };
+
+            policyTextLabel.GestureRecognizers.Add(policyLabelTapGestureRecognizer);
             policyHyperlinkLabel.GestureRecognizers.Add(policyTapGestureRecognizer);
             policyStack.Children.Add(policyCheckBox);
             policyStack.Children.Add(policyTextLabel);
@@ -864,7 +889,7 @@ namespace RWGame
                 Orientation = StackOrientation.Horizontal,
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
-                Padding = new Thickness(10, -10, 0, 0),
+                Padding = new Thickness(0, -10, 0, 0),
                 Spacing = 0,
             };
 
@@ -889,7 +914,7 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 BackgroundColor = Color.FromHex("#35a6de"),
-                Margin = new Thickness(5, 15, 15, 15)
+                Margin = new Thickness(5, 15, 0, 15)
             };
 
             CheckBox agreementCheckBox = new CheckBox
@@ -899,12 +924,19 @@ namespace RWGame
             };
 
             var agreementTapGestureRecognizer = new TapGestureRecognizer();
+            var agreementLabelTapGestureRecoginzer = new TapGestureRecognizer();
             agreementTapGestureRecognizer.Tapped += (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/terms");
                 Device.OpenUri(uri);
             };
+            agreementLabelTapGestureRecoginzer.Tapped += (s, e) =>
+            {
+                agreementCheckBox.IsChecked = agreementCheckBox.IsChecked ? false : true;
+            };
 
+
+            agreementTextLabel.GestureRecognizers.Add(agreementLabelTapGestureRecoginzer);
             agreementHyperlinkLabel.GestureRecognizers.Add(agreementTapGestureRecognizer);
             agreementStack.Children.Add(agreementCheckBox);
             agreementStack.Children.Add(agreementTextLabel);
@@ -930,7 +962,15 @@ namespace RWGame
                 Text = "Sign Up",
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 TextColor = Color.White,
-                Margin = new Thickness(10, 0, 10, 0)
+                Margin = new Thickness(10, 0, 10, 0),
+                IsVisible = false
+            };
+            agreementCheckBox.CheckedChanged += delegate
+            {
+                if (!RightInformationInField.Contains(false))
+                {
+                    registrateButton.IsVisible = registrateButton.IsVisible ? false : true;
+                }
             };
             registrateButton.Clicked += async delegate
             {
@@ -938,7 +978,7 @@ namespace RWGame
                 {
                     await DisplayAlert("Error", "There are wrong entered fields", "OK");
                 }
-                else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true)
+                else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true )
                 {
                     if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text,
                         loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))
