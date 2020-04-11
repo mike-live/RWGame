@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -105,6 +106,7 @@ namespace RWGame
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
                 await UpdateGameList();
             };
+
             var downSwipeGesture = new SwipeGestureRecognizer { Direction = SwipeDirection.Down };
             downSwipeGesture.Swiped += async delegate
             {
