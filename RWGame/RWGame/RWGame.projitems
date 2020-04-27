@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Classes\CustomDatePicker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ResponseClases\JsonResponses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ServerWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\SystemSettings.cs" />
