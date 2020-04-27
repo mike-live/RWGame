@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>{368977C0-0D7D-40B4-891E-657FFD14FB08}</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>RWGame</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)MainPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Classes\CustomDatePicker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Classes\ResponseClases\JsonResponses.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Classes\ServerWorker.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Classes\SystemSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameField.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)GameHistoryPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LoginPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)PagesGameChoise\ChoiseRealPlayerPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RegistrationPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml.cs">
+      <DependentUpon>TabbedUserPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)GameField.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\star.png" />
+  </ItemGroup>
+</Project>
