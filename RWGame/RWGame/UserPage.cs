@@ -1,5 +1,4 @@
-﻿using Android.Telephony;
-using RWGame.Classes;
+﻿using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.PagesGameChoise;
 using System;
@@ -20,7 +19,8 @@ namespace RWGame
         List<Game> gamesList;
         List<ElementsOfViewCell> customListViewRecords;
 
-        
+       
+
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -51,6 +51,13 @@ namespace RWGame
 
             gamesListView = new ListView();
             gamesListView.ItemTemplate = new DataTemplate(typeof(DateCellView));
+            gamesListView.IsPullToRefreshEnabled = true;
+
+            gamesListView.RefreshCommand = new Command(async () =>
+            {
+                await UpdateGameList();
+                gamesListView.IsRefreshing = false;
+            });
             
             UpdateGameList();
 
@@ -92,13 +99,6 @@ namespace RWGame
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 TextColor = Color.White
             };
-            Image updateImage = new Image()
-            {
-                VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.Center,
-                Opacity = 1,
-                Source = "update3.png"
-            };
             PlayWithBot.Clicked += async delegate
             {
                 // Запуск игры с ботом
@@ -107,21 +107,8 @@ namespace RWGame
                 await UpdateGameList();
             };
 
-            var downSwipeGesture = new SwipeGestureRecognizer { Direction = SwipeDirection.Down };
-            downSwipeGesture.Swiped += async delegate
-            {
-                updateImage.IsVisible = true;
-                await Task.WhenAll(UpdateGameList(), updateImage.RotateTo(360, 1000));
-                updateImage.Rotation = 0;
-                updateImage.IsVisible = false;
-            };
-
             buttonStack.Children.Add(PlayWithAnotherPlayer);
             buttonStack.Children.Add(PlayWithBot);
-
-            userprofilStackLayout.Children.Add(updateImage);
-            updateImage.IsVisible = false;
-            userprofilStackLayout.GestureRecognizers.Add(downSwipeGesture);
             userprofilStackLayout.Children.Add(userName);
             userprofilStackLayout.Children.Add(stackLayoutListView);
             userprofilStackLayout.Children.Add(buttonStack);
