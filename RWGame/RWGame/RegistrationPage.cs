@@ -687,7 +687,7 @@ namespace RWGame
                 Format = "d",
                 TextColor = Color.White,
                 MaximumDate = DateTime.Now,
-                Date = new DateTime(1990, 1, 1),
+                Date = DateTime.Now,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Center,
                 Margin = new Thickness(10, 0, 10, 0),
