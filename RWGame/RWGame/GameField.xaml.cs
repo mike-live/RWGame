@@ -37,8 +37,6 @@ namespace RWGame
         readonly Game game;
         readonly SystemSettings systemSettings;
         readonly ServerWorker serverWorker;
-        //choosedMatrixLine : 0 - строки, 1 - столбцы. -1 Ошибка
-        private readonly int choosedMatrixLine = -1;
         private readonly Color coloredColor = Color.FromHex("#6ecbfa");
         private readonly Color defaultColor = Color.FromHex("#39bafa");
         private bool canAnimate = true;
@@ -97,7 +95,7 @@ namespace RWGame
                 Shader = SKShader.CreateRadialGradient(
                             gridCenter,
                             centerRadius,
-                            new SKColor[] { SKColor.Parse("#ee423e").WithAlpha(127), backgroundSKColor },
+                            new SKColor[] { SKColor.Parse("#3949AB").WithAlpha(127), backgroundSKColor },
                             null,
                             0),
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 10)
@@ -107,7 +105,7 @@ namespace RWGame
 
             paint = new SKPaint
             {
-                Color = (SKColors.White),
+                Color = SKColors.White,
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = 1,
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
@@ -118,8 +116,18 @@ namespace RWGame
                 canvas.DrawLine(GetGridPoint(0, i), GetGridPoint(gridSize, i), paint);
             }
             paint.StrokeWidth = 4;
-            paint.Color = SKColors.MediumVioletRed;
+            paint.Color = SKColor.Parse("#3949AB");
             SKPoint p1 = GetGridPoint(0, 0), p2 = GetGridPoint(gridSize, gridSize);
+            canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
+
+            paint = new SKPaint
+            {
+                Color = SKColor.Parse("#3949AB").WithAlpha(48),
+                Style = SKPaintStyle.Fill,
+                StrokeWidth = 1,
+                //MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5),
+                ImageFilter = SKImageFilter.CreateBlur(20, 20),
+            };
             canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
         }
 
@@ -136,7 +144,7 @@ namespace RWGame
         {
             SKPaint paint = new SKPaint
             {
-                Color = SKColor.Parse("ee423e"),
+                Color = SKColor.Parse("#3949AB"),
                 Style = SKPaintStyle.StrokeAndFill,
                 StrokeWidth = 5,
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
@@ -162,7 +170,7 @@ namespace RWGame
 //            var names = assembly.GetManifestResourceNames();
             //var filestream = new SKManagedStream();
             var bitmap = SKBitmap.Decode(getResourceStream("Images.star.png"));
-            var scaled = bitmap.Resize(new SKImageInfo(pointRadius * 2, pointRadius * 2), SKBitmapResizeMethod.Lanczos3);
+            var scaled = bitmap.Resize(new SKImageInfo(pointRadius * 2, pointRadius * 2), SKFilterQuality.High);
             SKImage image = SKImage.FromBitmap(scaled);
             SKRect rect = new SKRect
             {

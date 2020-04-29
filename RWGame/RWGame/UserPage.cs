@@ -58,8 +58,8 @@ namespace RWGame
                 await UpdateGameList();
                 gamesListView.IsRefreshing = false;
             });
-            
-            UpdateGameList();
+
+            _ = UpdateGameList();
 
             gamesListView.ItemSelected += async delegate {
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;

@@ -1,10 +1,11 @@
-﻿using RWGame.Classes;
+﻿using Acr.UserDialogs;
+using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace RWGame.PagesGameChoise
@@ -50,7 +51,7 @@ namespace RWGame.PagesGameChoise
             {
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.Center,
-                Text = "Выбор соперника",
+                Text = "Select player",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
@@ -60,7 +61,7 @@ namespace RWGame.PagesGameChoise
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Center,
-                Placeholder = "Введите логин игрока",
+                Placeholder = "Enter player login",
                 TextColor = Color.White,
                 BackgroundColor = Color.FromHex("#39bafa"),
                 PlaceholderColor = Color.LightGray,
@@ -117,7 +118,7 @@ namespace RWGame.PagesGameChoise
             //listPlayer.ItemsSource = 
             Button backButton = new Button()
             {
-                Text = "Назад",
+                Text = "Back",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
                 BackgroundColor = Color.FromHex("#69c6f5")
@@ -125,7 +126,7 @@ namespace RWGame.PagesGameChoise
             backButton.Clicked += async delegate { await Navigation.PopAsync(); };
             Button playButton = new Button()
             {
-                Text = "Играть",
+                Text = "Play!",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
                 BackgroundColor = Color.FromHex("#69c6f5")
@@ -135,18 +136,22 @@ namespace RWGame.PagesGameChoise
                 //проверим введённый ник
                 if (entryLogin.Text == "" || !(await serverWorker.TaskCheckLogin(entryLogin.Text)))
                 {
+                    string alertMessage;
                     if (entryLogin.Text == "")
                     {
-                        await DisplayAlert("Game", "Try to find player...", "OK");
+                        alertMessage = "Try to find player...";
                     }
                     else
                     {
-                        await DisplayAlert("Attention", "Game started. Wait for second player.", "OK");
+                        alertMessage = "Game started. Wait for second player.";
                     }
                     Game game = await GameProcesses.MakeGameWithPlayer(serverWorker, selectedIdPlayer);
+
+                    UserDialogs.Instance.ShowLoading(alertMessage);
                     await GameProcesses.StartGame(serverWorker, game);
+                    UserDialogs.Instance.HideLoading();
+
                     await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
-                    //await Navigation.PopAsync();
                 }
                 else
                 {

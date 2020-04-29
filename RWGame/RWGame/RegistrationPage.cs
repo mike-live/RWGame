@@ -863,7 +863,7 @@ namespace RWGame
             policyTapGestureRecognizer.Tapped += (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/privacy_policy");
-                Device.OpenUri(uri);
+                await Xamarin.Essentials.Launcher.OpenAsync(uri);
             };
 
             policyLabelTapGestureRecognizer.Tapped += (s, e) =>
@@ -877,8 +877,7 @@ namespace RWGame
             policyStack.Children.Add(policyTextLabel);
             policyStack.Children.Add(policyHyperlinkLabel);
 
-
-            #endregion 
+            #endregion
 
 
             //Визуализация галочки и ссылки на соглашение
@@ -928,7 +927,7 @@ namespace RWGame
             agreementTapGestureRecognizer.Tapped += (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/terms");
-                Device.OpenUri(uri);
+                await Xamarin.Essentials.Launcher.OpenAsync(uri);
             };
             agreementLabelTapGestureRecoginzer.Tapped += (s, e) =>
             {
