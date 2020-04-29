@@ -1025,7 +1025,7 @@ namespace RWGame
             registrationStack.Children.Add(cancelButton);
             #endregion
 
-            
+
 
             HeadStack.Children.Add(nameStack);
             HeadStack.Children.Add(surnameStack);
@@ -1036,7 +1036,7 @@ namespace RWGame
             HeadStack.Children.Add(policyStack);
             HeadStack.Children.Add(agreementStack);
             HeadStack.Children.Add(registrationStack);
-           
+
 
             var scroll = new ScrollView
             {

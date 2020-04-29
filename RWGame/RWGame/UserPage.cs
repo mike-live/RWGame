@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -18,7 +19,8 @@ namespace RWGame
         List<Game> gamesList;
         List<ElementsOfViewCell> customListViewRecords;
 
-        
+       
+
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -37,7 +39,7 @@ namespace RWGame
                 TextColor = Color.White,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
-                Margin = new Thickness(20, 30, 20, 30),
+                Margin = new Thickness(20, 10, 20, 10),
                 Text = "Hi, " + serverWorker.UserLogin
             };
             StackLayout stackLayoutListView = new StackLayout()
@@ -49,6 +51,13 @@ namespace RWGame
 
             gamesListView = new ListView();
             gamesListView.ItemTemplate = new DataTemplate(typeof(DateCellView));
+            gamesListView.IsPullToRefreshEnabled = true;
+
+            gamesListView.RefreshCommand = new Command(async () =>
+            {
+                await UpdateGameList();
+                gamesListView.IsRefreshing = false;
+            });
             
             UpdateGameList();
 
@@ -97,11 +106,9 @@ namespace RWGame
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
                 await UpdateGameList();
             };
+
             buttonStack.Children.Add(PlayWithAnotherPlayer);
             buttonStack.Children.Add(PlayWithBot);
-
-            
-
             userprofilStackLayout.Children.Add(userName);
             userprofilStackLayout.Children.Add(stackLayoutListView);
             userprofilStackLayout.Children.Add(buttonStack);
