@@ -111,7 +111,7 @@ namespace RWGame
             {
                 if (nameEntry != null && nameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(nameEntry.Text, @"^^(?:\w\D){1,256}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(nameEntry.Text, @"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", RegexOptions.CultureInvariant))
                     {
                         RightInformationInField[0] = true;
                         labelRightImage.HeightRequest = nameLabel.Height;
@@ -224,7 +224,7 @@ namespace RWGame
             {
                 if (surnameEntry != null && surnameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(surnameEntry.Text, @"^(?:\w\D){1,256}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(surnameEntry.Text, @"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", RegexOptions.CultureInvariant))
                     {
                         RightInformationInField[1] = true;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
@@ -963,13 +963,13 @@ namespace RWGame
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 TextColor = Color.White,
                 Margin = new Thickness(10, 0, 10, 0),
-                IsVisible = false
+                IsEnabled = false
             };
             agreementCheckBox.CheckedChanged += delegate
             {
                 if (!RightInformationInField.Contains(false))
                 {
-                    registrateButton.IsVisible = registrateButton.IsVisible ? false : true;
+                    registrateButton.IsEnabled = registrateButton.IsEnabled ? false : true;
                 }
             };
             registrateButton.Clicked += async delegate
