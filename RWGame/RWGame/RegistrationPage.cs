@@ -738,9 +738,17 @@ namespace RWGame
                         await DisplayAlert("Error", "Registration unsuccessful =( Try again later", "OK");
                     }
                 }
-                else
+                else if (!policyCheckBox.IsChecked && agreementCheckBox.IsChecked)
                 {
-                    await DisplayAlert("Error", "Checks the agreement and privacy policy boxes!", "OK");
+                    await DisplayAlert("Error", "Agree to the Privacy Policy!", "OK");
+                }
+                else if (policyCheckBox.IsChecked && !agreementCheckBox.IsChecked)
+                {
+                    await DisplayAlert("Error", "Agree to the Terms and Conditions!", "OK");
+                }
+                else if (!policyCheckBox.IsChecked && !agreementCheckBox.IsChecked)
+                {
+                    await DisplayAlert("Error", "Agree to the Privacy Policy and the Terms and Conditions!", "OK");
                 }
             };
 

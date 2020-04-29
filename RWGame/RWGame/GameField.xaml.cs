@@ -27,7 +27,9 @@ namespace RWGame
         //private StackLayout stackLayout;
         Label InfoTurnLabel;
         Label GameInfoLabel;
+        Label GameScoreLabel;
         Label GoalLabel;
+        StackLayout labelLayout;
         Grid ControlsGrid;
         Image[,] ControlsImages = new Image[2, 2];
         SKCanvasView canvasView;      
@@ -330,7 +332,7 @@ namespace RWGame
             }
             chosenTurn = -1;
             idTurn = gameStateInfo.LastIdTurn;
-            GameInfoLabel.Text = "Time: " + idTurn;
+            GameInfoLabel.Text = "Score: " + idTurn;
 
             canvasView.InvalidateSurface();
             if (gameStateInfo.GameState == GameStateEnum.END)
@@ -376,6 +378,13 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 Spacing = 0,
             };
+            labelLayout = new StackLayout()
+            {
+                HorizontalOptions = LayoutOptions.Fill,
+                Orientation = StackOrientation.Horizontal,
+                Margin = new Thickness(10, 0, 10, 0),
+                Spacing = 0,
+            };
             InfoTurnLabel = new Label()
             {
                 Text = "",
@@ -389,12 +398,24 @@ namespace RWGame
 
             GameInfoLabel = new Label()
             {
-                Text = "Time: " + game.Turns.Count,
+                Text = "Score: " + game.Turns.Count,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Fill,
+                HorizontalTextAlignment = TextAlignment.Start,
+                BackgroundColor = backgroundColor,
+                Margin = new Thickness(10, 0, 10, 0),
+            };
+
+            GameScoreLabel = new Label()
+            {
+                Text = "",
+                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.White,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                HorizontalTextAlignment = TextAlignment.End,
                 BackgroundColor = backgroundColor,
                 Margin = new Thickness(10, 0, 10, 0),
             };
@@ -410,8 +431,19 @@ namespace RWGame
                 BackgroundColor = backgroundColor
             };
 
+            if (game.GameSettings.Goals[game.IdPlayer] == "center")
+            {
+                GameScoreLabel.Text = "Top score: 546";
+            }
+            else if(game.GameSettings.Goals[game.IdPlayer] == "border")
+            {
+                GameScoreLabel.Text = "Top score: 29";
+            }
 
-            stackLayout.Children.Add(GameInfoLabel);
+            labelLayout.Children.Add(GameInfoLabel);
+            labelLayout.Children.Add(GameScoreLabel);
+
+            stackLayout.Children.Add(labelLayout);
             stackLayout.Children.Add(canvasView);
             stackLayout.Children.Add(InfoTurnLabel);
 

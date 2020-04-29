@@ -37,35 +37,45 @@ namespace RWGame
             this.Content = stackLayout;
         }
 
-        public async void UpdateGameList()
+        public async Task UpdateGameList()
         {
-            await Task.Run(async() =>
+            List<Game> gamesList = await serverWorker.TaskGetGamesList();
+            customListViewRecords = new List<ElementsOfViewCell>();
+
+            if (gamesList != null && gamesList.Count > 0)
             {
-                List<Game> gamesList = await serverWorker.TaskGetGamesList();
-                customListViewRecords = new List<ElementsOfViewCell>();
-
-                if (gamesList != null && gamesList.Count > 0)
+                for (int i = 0; i < gamesList.Count; i++)
                 {
-                    for (int i = 0; i < gamesList.Count; i++)
+                    if (gamesList[i].GameState == GameStateEnum.END)
                     {
-                        if (gamesList[i].GameState == GameStateEnum.END)
-                        {
-                            customListViewRecords.Add(new ElementsOfViewCell(
-                                gamesList[i].IdGame,
-                                gamesList[i].Start.ToString(),
-                                "end.png"));
-                        }
+                        customListViewRecords.Add(new ElementsOfViewCell(
+                            gamesList[i].IdGame,
+                            gamesList[i].Start.ToString(),
+                            "end.png"));
                     }
-                    filesList.ItemsSource = customListViewRecords;
                 }
-                else
-                {
-                    filesList.ItemsSource = null;
-                }
-            });
-
+                filesList.ItemsSource = customListViewRecords;
+            }
+            else
+            {
+                filesList.ItemsSource = null;
+            }
         }
 
+        public async void CallUpdateGameList()
+        {
+            await UpdateGameList();
+        }
+
+        protected override void OnAppearing()
+        {
+            CallUpdateGameList();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
 
         class DateCellView : ViewCell
         {
