@@ -19,8 +19,6 @@ namespace RWGame
         List<Game> gamesList;
         List<ElementsOfViewCell> customListViewRecords;
 
-       
-
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -84,11 +82,11 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 Text = "PVP",
                 BackgroundColor = Color.FromHex("#7ad3ff"),
-                TextColor = Color.White
+                TextColor = Color.White,
+                IsEnabled = false
             };
             PlayWithAnotherPlayer.Clicked += async delegate
             {
-                //Вызов подокна PopUp с полями
                 await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
             };
             Button PlayWithBot = new Button()
@@ -101,7 +99,6 @@ namespace RWGame
             };
             PlayWithBot.Clicked += async delegate
             {
-                // Запуск игры с ботом
                 Game game = await GameProcesses.MakeGameWithBot(serverWorker);
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
                 await UpdateGameList();
