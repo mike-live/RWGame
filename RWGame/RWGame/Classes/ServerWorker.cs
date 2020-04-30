@@ -32,7 +32,7 @@ namespace RWGame.Classes
 
         private HttpClient client;
         private HttpClientHandler clientHandler;
-        private CookieContainer cookieContainer;
+        //private CookieContainer cookieContainer;
 
         public string CurrentLogin = "";
         public string CurrentPassword = "";
@@ -42,7 +42,7 @@ namespace RWGame.Classes
         /// <summary>+Команда логирования</summary>
         string LoginCommand = "game_actions/login";
         /// <summary>Команда разлогирования</summary>
-        string LogoutCommand = "game_actions/logout";
+        //string LogoutCommand = "game_actions/logout";
         /// <summary>+Команда проверки ранее зарегистрированного пользователя с аналогичным логином</summary>
         string CheckLoginCommand = "game_actions/check_login";
         /// <summary>+Команда проверки ранее зарегистрированного пользователя с аналогичным почтовым ящиком</summary>
@@ -62,7 +62,7 @@ namespace RWGame.Classes
         /// <summary>+Команда получения ходов игры</summary>
         string GameTurnsCommand = "game_actions/game_turns";
         /// <summary>Команда standings</summary>
-        string StandingsCommand = "game_actions/standings";
+        //string StandingsCommand = "game_actions/standings";
         /// <summary>+Команда поиска игрока</summary>
         string FindPlayerCommand = "game_actions/find_player";
 

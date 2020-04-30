@@ -5,19 +5,16 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using System.Collections.ObjectModel;
 
 namespace RWGame
 {
     public class RegistrationPage : ContentPage
     {
-        ServerWorker localServerWorker;
-        bool[] RightInformationInField;
+        private readonly ServerWorker localServerWorker;
+        private readonly ObservableCollection<bool> isFieldsCorrect = new ObservableCollection<bool>(new bool[9]);
         public RegistrationPage(ServerWorker serverWorker, SystemSettings systemSettings)
         {
-            RightInformationInField = new bool[7];
-            for (int i = 0; i < RightInformationInField.Length; i++)
-                RightInformationInField[i] = false;
-
             localServerWorker = serverWorker;
             this.BackgroundColor = Color.FromHex("#39bafa"); 
             NavigationPage.SetHasNavigationBar(this, false);
@@ -111,16 +108,16 @@ namespace RWGame
             {
                 if (nameEntry != null && nameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(nameEntry.Text, @"^^(?:\w\D){1,256}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(nameEntry.Text, @"^[\p{L}]+(([',. -][\p{L} ])?[\p{L}]*)*$", RegexOptions.CultureInvariant))
                     {
-                        RightInformationInField[0] = true;
+                        isFieldsCorrect[0] = true;
                         labelRightImage.HeightRequest = nameLabel.Height;
                         labelRightImage.Source = "yes.png";
                         nameTipLabel.Opacity = 0;
                     }
                     else if (nameEntry.Text.Length < 1)
                     {
-                        RightInformationInField[0] = false;
+                        isFieldsCorrect[0] = false;
                         labelRightImage.HeightRequest = nameLabel.Height;
                         labelRightImage.Source = "no.png";
                         nameTipLabel.Text = "Name should be at least 1 character long";
@@ -128,7 +125,7 @@ namespace RWGame
                     }
                     else if (nameEntry.Text.Length > 256)
                     {
-                        RightInformationInField[0] = false;
+                        isFieldsCorrect[0] = false;
                         labelRightImage.HeightRequest = nameLabel.Height;
                         labelRightImage.Source = "no.png";
                         nameTipLabel.Text = "Name should be at less than 256 characters long";
@@ -136,7 +133,7 @@ namespace RWGame
                     }
                     else
                     {
-                        RightInformationInField[0] = false;
+                        isFieldsCorrect[0] = false;
                         labelRightImage.HeightRequest = nameLabel.Height;
                         labelRightImage.Source = "no.png";
                         nameTipLabel.Text = "Name should contain only letters";
@@ -145,7 +142,7 @@ namespace RWGame
                 }
                 else
                 {
-                    RightInformationInField[0] = false;
+                    isFieldsCorrect[0] = false;
                     labelRightImage.HeightRequest = nameLabel.Height;
                     labelRightImage.Source = "no.png";
                     nameTipLabel.Text = "Name should be at least 1 character long";
@@ -224,16 +221,16 @@ namespace RWGame
             {
                 if (surnameEntry != null && surnameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(surnameEntry.Text, @"^(?:\w\D){1,256}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(surnameEntry.Text, @"^[\p{L}]+(([',. -][\p{L} ])?[\p{L}]*)*$", RegexOptions.CultureInvariant))
                     {
-                        RightInformationInField[1] = true;
+                        isFieldsCorrect[1] = true;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
                         surnameRightImage.Source = "yes.png";
                         surnameTipLabel.Opacity = 0;
                     }
                     else if (surnameEntry.Text.Length < 1)
                     {
-                        RightInformationInField[1] = false;
+                        isFieldsCorrect[1] = false;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
                         surnameRightImage.Source = "no.png";
                         surnameTipLabel.Text = "Surname should be at least 1 character long";
@@ -241,7 +238,7 @@ namespace RWGame
                     }
                     else if (surnameEntry.Text.Length > 256)
                     {
-                        RightInformationInField[1] = false;
+                        isFieldsCorrect[1] = false;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
                         surnameRightImage.Source = "no.png";
                         surnameTipLabel.Text = "Surname should be less than 256 characters long";
@@ -249,7 +246,7 @@ namespace RWGame
                     }
                     else
                     {
-                        RightInformationInField[1] = false;
+                        isFieldsCorrect[1] = false;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
                         surnameRightImage.Source = "no.png";
                         surnameTipLabel.Text = "Surname should contain only letters";
@@ -258,7 +255,7 @@ namespace RWGame
                 }
                 else
                 {
-                    RightInformationInField[1] = false;
+                    isFieldsCorrect[1] = false;
                     surnameRightImage.HeightRequest = surnameLabel.Height;
                     surnameRightImage.Source = "no.png";
                     surnameTipLabel.Text = "Surname should be at least 1 character long";
@@ -337,11 +334,11 @@ namespace RWGame
             {
                 if (loginEntry != null && loginEntry.Text != null)
                 {
-                    if (Regex.IsMatch(loginEntry.Text, @"^[a-zA-Z_\-\.][a-zA-Z0-9_\-\.]{1,255}$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(loginEntry.Text, @"^[a-zA-Z_][a-zA-Z0-9_\-\.]{1,255}$", RegexOptions.CultureInvariant))
                     {
                         if (await localServerWorker.TaskCheckLogin(loginEntry.Text))
                         {
-                            RightInformationInField[2] = true;
+                            isFieldsCorrect[2] = true;
                             loginRightImage.HeightRequest = loginLabel.Height;
                             loginRightImage.Source = "yes.png";
                             loginTipLabel.Opacity = 0;
@@ -349,7 +346,7 @@ namespace RWGame
                     }
                     else if (loginEntry.Text.Length < 2)
                     {
-                        RightInformationInField[2] = false;
+                        isFieldsCorrect[2] = false;
                         loginRightImage.HeightRequest = loginLabel.Height;
                         loginRightImage.Source = "no.png";
                         loginTipLabel.Text = "Login should be at least 2 charachters long";
@@ -357,7 +354,7 @@ namespace RWGame
                     }
                     else if (loginEntry.Text.Length > 255)
                     {
-                        RightInformationInField[2] = false;
+                        isFieldsCorrect[2] = false;
                         loginRightImage.HeightRequest = loginLabel.Height;
                         loginRightImage.Source = "no.png";
                         loginTipLabel.Text = "Login should be less than 255 charachters long";
@@ -365,7 +362,7 @@ namespace RWGame
                     }
                     else if (Regex.IsMatch(loginEntry.Text[0].ToString(), @"^[0-9]{1,255}$", RegexOptions.CultureInvariant))
                     {
-                        RightInformationInField[2] = false;
+                        isFieldsCorrect[2] = false;
                         loginRightImage.HeightRequest = loginLabel.Height;
                         loginRightImage.Source = "no.png";
                         loginTipLabel.Text = "Login can't start with a digit";
@@ -373,16 +370,16 @@ namespace RWGame
                     }
                     else
                     {
-                        RightInformationInField[2] = false;
+                        isFieldsCorrect[2] = false;
                         loginRightImage.HeightRequest = loginLabel.Height;
                         loginRightImage.Source = "no.png";
-                        loginTipLabel.Text = "Login should conatin only latin letters, numbers and special symbols";
+                        loginTipLabel.Text = "Login should conatin only latin letters, numbers and _ . -";
                         loginTipLabel.Opacity = 1;
                     }
                 }
                 else
                 {
-                    RightInformationInField[2] = false;
+                    isFieldsCorrect[2] = false;
                     loginRightImage.HeightRequest = loginLabel.Height;
                     loginRightImage.Source = "no.png";
                     loginTipLabel.Text = "Login should be at least 2 charachters long";
@@ -511,8 +508,7 @@ namespace RWGame
                 {
                     if (Regex.IsMatch(passwordEntry.Text, @"^[a-zA-Z0-9_\.\-\!\#\$\%\&\'\(\)\*\+\,\.\:\;\<\=\>\?\@\[\^\`\{\|\}\~\–]{6,256}$", RegexOptions.CultureInvariant))
                     {
-                        if (Regex.IsMatch(passwordEntry.Text, @"^[0-9]{6,256}$", RegexOptions.CultureInvariant) || Regex.IsMatch(passwordEntry.Text, @"^[a-zA-Z0-9_\.\-\!\#\$\%\&\'\(\)\*\+\,\.\:\;\<\=\>\?\@\[\^\`\{\|\}\~\–]{6,256}$", RegexOptions.CultureInvariant))
-                        RightInformationInField[3] = true;
+                        isFieldsCorrect[3] = true;
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "yes.png";
                         passwordTipLabel.Opacity = 0;
@@ -522,7 +518,7 @@ namespace RWGame
                         {
                             if (passwordConfirmEntry.Text == passwordEntry.Text)
                             {
-                                RightInformationInField[4] = true;
+                                isFieldsCorrect[4] = true;
                                 passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                                 passwordConfirmRightImage.Source = "yes.png";
                                 passwordConfirmTipLabel.Opacity = 0;
@@ -530,7 +526,7 @@ namespace RWGame
                             }
                             else
                             {
-                                RightInformationInField[4] = false;
+                                isFieldsCorrect[4] = false;
                                 passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                                 passwordConfirmRightImage.Source = "no.png";
                                 passwordConfirmTipLabel.Text = "Passwords don't match";
@@ -540,7 +536,7 @@ namespace RWGame
                         }
                         else
                         {
-                            RightInformationInField[4] = false;
+                            isFieldsCorrect[4] = false;
                             passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                             passwordConfirmRightImage.Source = "no.png";
                             passwordConfirmTipLabel.Text = "Confirm your password";
@@ -550,7 +546,7 @@ namespace RWGame
                     }
                     else if (passwordEntry.Text.Length < 6)
                     {
-                        RightInformationInField[3] = false;
+                        isFieldsCorrect[3] = false;
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "no.png";
                         passwordTipLabel.Text = "Password should contain at least 6 characters";
@@ -560,7 +556,7 @@ namespace RWGame
                     }
                     else if (passwordEntry.Text.Length > 256)
                     {
-                        RightInformationInField[3] = false;
+                        isFieldsCorrect[3] = false;
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "no.png";
                         passwordTipLabel.Text = "Password should contain at least 6 characters";
@@ -570,7 +566,7 @@ namespace RWGame
                     }
                     else
                     {
-                        RightInformationInField[3] = false;
+                        isFieldsCorrect[3] = false;
                         passwordRightImage.HeightRequest = passwordLabel.Height;
                         passwordRightImage.Source = "no.png";
                         bool foundMistake = false;
@@ -586,7 +582,7 @@ namespace RWGame
                         }
 
                         if (!foundMistake)
-                            passwordTipLabel.Text = "Password should contain at only latin letters, digits and special symbols"; // В теории кейса быть не должно, но вдруг. Затычкой пусть будет?
+                            passwordTipLabel.Text = "Password should contain at only latin letters, digits and special symbols";
                         passwordTipLabel.Opacity = 1;
                         passwordConfirmTipLabel.Opacity = 0;
                         passwordConfirmRightImage.Opacity = 0;
@@ -594,7 +590,7 @@ namespace RWGame
                 }
                 else
                 {
-                    RightInformationInField[3] = false;
+                    isFieldsCorrect[3] = false;
                     passwordRightImage.HeightRequest = passwordLabel.Height;
                     passwordRightImage.Source = "no.png";
                     passwordTipLabel.Text = "Password should contain at least 6 characters";
@@ -609,18 +605,18 @@ namespace RWGame
             };
             passwordConfirmEntry.Unfocused += delegate
             {
-                if (passwordConfirmEntry != null && passwordConfirmEntry.Text != null && passwordEntry != null && passwordEntry.Text != null && RightInformationInField[3] == true)
+                if (passwordConfirmEntry != null && passwordConfirmEntry.Text != null && passwordEntry != null && passwordEntry.Text != null && isFieldsCorrect[3] == true)
                 {
                     if (passwordConfirmEntry.Text == passwordEntry.Text)
                     {
-                        RightInformationInField[4] = true;
+                        isFieldsCorrect[4] = true;
                         passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                         passwordConfirmRightImage.Source = "yes.png";
                         passwordConfirmTipLabel.Opacity = 0;
                     }
                     else
                     {
-                        RightInformationInField[4] = false;
+                        isFieldsCorrect[4] = false;
                         passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                         passwordConfirmRightImage.Source = "no.png";
                         passwordConfirmTipLabel.Text = "Passwords don't match";
@@ -629,7 +625,7 @@ namespace RWGame
                 }
                 else
                 {
-                    RightInformationInField[4] = false;
+                    isFieldsCorrect[4] = false;
                     passwordConfirmRightImage.HeightRequest = passwordConfirmLabel.Height;
                     passwordConfirmRightImage.Source = "no.png";
                     passwordConfirmTipLabel.Text = "Confirm your password";
@@ -665,7 +661,7 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.End,
                 HorizontalOptions = LayoutOptions.StartAndExpand,
                 BackgroundColor = Color.FromHex("#39aae3"),
-                Opacity = 0,
+                Opacity = 1,
             };
             Image dateRightImage = new Image()
             {
@@ -700,13 +696,13 @@ namespace RWGame
             {
                 if (datePicker != null)
                 {
-                    RightInformationInField[5] = true;
+                    isFieldsCorrect[5] = true;
                     dateRightImage.HeightRequest = dateLabel.Height;
                     dateRightImage.Source = "yes.png";
                 }
                 else
                 {
-                    RightInformationInField[5] = false;
+                    isFieldsCorrect[5] = false;
                     dateRightImage.HeightRequest = dateLabel.Height;
                     dateRightImage.Source = "no.png";
                 }
@@ -787,14 +783,14 @@ namespace RWGame
                         pattern, 
                         RegexOptions.CultureInvariant) && await serverWorker.TaskCheckEmail(emailEntry.Text))
                     {
-                        RightInformationInField[6] = true;
+                        isFieldsCorrect[6] = true;
                         emailRightImage.HeightRequest = emailLabel.Height;
                         emailRightImage.Source = "yes.png";
                         emailTipLabel.Opacity = 0;
                     }
                     else
                     {
-                        RightInformationInField[6] = false;
+                        isFieldsCorrect[6] = false;
                         emailRightImage.HeightRequest = emailLabel.Height;
                         emailRightImage.Source = "no.png";
                         emailTipLabel.Text = "Enter a valid email address";
@@ -803,7 +799,7 @@ namespace RWGame
                 }
                 else
                 {
-                    RightInformationInField[6] = false;
+                    isFieldsCorrect[6] = false;
                     emailRightImage.HeightRequest = emailLabel.Height;
                     emailRightImage.Source = "no.png";
                     emailTipLabel.Text = "Enter a valid email address";
@@ -860,15 +856,20 @@ namespace RWGame
             var policyLabelTapGestureRecognizer = new TapGestureRecognizer();
             var policyTapGestureRecognizer = new TapGestureRecognizer();
             
-            policyTapGestureRecognizer.Tapped += (s, e) =>
+            policyTapGestureRecognizer.Tapped += async (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/privacy_policy");
-                await Xamarin.Essentials.Launcher.OpenAsync(uri);
+                await Launcher.OpenAsync(uri);
             };
 
             policyLabelTapGestureRecognizer.Tapped += (s, e) =>
             {
-                policyCheckBox.IsChecked = policyCheckBox.IsChecked ? false : true;
+                policyCheckBox.IsChecked = !policyCheckBox.IsChecked;
+            };
+
+            policyCheckBox.CheckedChanged += delegate
+            {
+                isFieldsCorrect[7] = policyCheckBox.IsChecked;
             };
 
             policyTextLabel.GestureRecognizers.Add(policyLabelTapGestureRecognizer);
@@ -924,22 +925,28 @@ namespace RWGame
 
             var agreementTapGestureRecognizer = new TapGestureRecognizer();
             var agreementLabelTapGestureRecoginzer = new TapGestureRecognizer();
-            agreementTapGestureRecognizer.Tapped += (s, e) =>
+            agreementTapGestureRecognizer.Tapped += async (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/terms");
-                await Xamarin.Essentials.Launcher.OpenAsync(uri);
+                await Launcher.OpenAsync(uri);
             };
             agreementLabelTapGestureRecoginzer.Tapped += (s, e) =>
             {
-                agreementCheckBox.IsChecked = agreementCheckBox.IsChecked ? false : true;
+                agreementCheckBox.IsChecked = !agreementCheckBox.IsChecked;
             };
 
+            agreementCheckBox.CheckedChanged += delegate
+            {
+                isFieldsCorrect[8] = agreementCheckBox.IsChecked;
+            };
 
             agreementTextLabel.GestureRecognizers.Add(agreementLabelTapGestureRecoginzer);
             agreementHyperlinkLabel.GestureRecognizers.Add(agreementTapGestureRecognizer);
             agreementStack.Children.Add(agreementCheckBox);
             agreementStack.Children.Add(agreementTextLabel);
             agreementStack.Children.Add(agreementHyperlinkLabel);
+
+
 
             #endregion
 
@@ -962,18 +969,17 @@ namespace RWGame
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 TextColor = Color.White,
                 Margin = new Thickness(10, 0, 10, 0),
-                IsVisible = false
+                IsEnabled = false
             };
-            agreementCheckBox.CheckedChanged += delegate
+
+            isFieldsCorrect.CollectionChanged += delegate 
             {
-                if (!RightInformationInField.Contains(false))
-                {
-                    registrateButton.IsVisible = registrateButton.IsVisible ? false : true;
-                }
+                registrateButton.IsEnabled = isFieldsCorrect.All(x => x == true);
             };
+
             registrateButton.Clicked += async delegate
             {
-                if (RightInformationInField.Contains(false))
+                if (isFieldsCorrect.Contains(false))
                 {
                     await DisplayAlert("Error", "There are wrong entered fields", "OK");
                 }

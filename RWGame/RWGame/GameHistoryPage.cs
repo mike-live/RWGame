@@ -32,7 +32,7 @@ namespace RWGame
 
             filesList.ItemsSource = customListViewRecords;
 
-            UpdateGameList();
+            _ = UpdateGameList();
 
             this.Content = stackLayout;
         }
