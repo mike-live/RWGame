@@ -63,7 +63,7 @@ namespace RWGame
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
                 
-                await GameProcesses.StartGame(serverWorker, game);
+                await GameProcesses.StartGame(serverWorker, game, () => false);
                 GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
 
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));

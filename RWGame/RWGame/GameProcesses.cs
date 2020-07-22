@@ -32,11 +32,12 @@ namespace RWGame
             return game;
         }
 
-        static public async Task<bool> StartGame(ServerWorker serverWorker, Game game)
+        static public async Task<bool> StartGame(ServerWorker serverWorker, Game game, Func<bool> isCancel)
         {
             GameStateEnum GameState = game.GameState;
             while (GameState != GameStateEnum.ACTIVE && GameState != GameStateEnum.WAIT)
             {
+                if (isCancel()) return false;
                 await Task.Delay(1000);
                 GameState = (await serverWorker.TaskPlayGame(idGame: game.IdGame)).GameState;
             }
