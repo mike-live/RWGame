@@ -62,8 +62,11 @@ namespace RWGame
             gamesListView.ItemSelected += async delegate {
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
+                
                 await GameProcesses.StartGame(serverWorker, game);
-                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
+                GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+
+                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 gamesListView.SelectedItem = null;
                 await UpdateGameList();
             };
@@ -83,7 +86,7 @@ namespace RWGame
                 Text = "PVP",
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 TextColor = Color.White,
-                IsEnabled = false
+                IsEnabled = true
             };
             PlayWithAnotherPlayer.Clicked += async delegate
             {
@@ -100,7 +103,9 @@ namespace RWGame
             PlayWithBot.Clicked += async delegate
             {
                 Game game = await GameProcesses.MakeGameWithBot(serverWorker);
-                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
+                GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+
+                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 await UpdateGameList();
             };
 

@@ -146,12 +146,14 @@ namespace RWGame.PagesGameChoise
                         alertMessage = "Game started. Wait for second player.";
                     }
                     Game game = await GameProcesses.MakeGameWithPlayer(serverWorker, selectedIdPlayer);
-
+                    
                     UserDialogs.Instance.ShowLoading(alertMessage);
                     await GameProcesses.StartGame(serverWorker, game);
                     UserDialogs.Instance.HideLoading();
 
-                    await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
+                    GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+
+                    await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 }
                 else
                 {

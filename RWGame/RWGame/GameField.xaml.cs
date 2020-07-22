@@ -50,8 +50,8 @@ namespace RWGame
         private float centerRadius = 300;
         private float cellSize;
         private float shiftX = 0;
-        private bool chooseRow = false;
         private int idTurn = 0;
+        private bool needCheckState = true;
         private List<SKPoint> gameTrajectory = new List<SKPoint> { };
         //new SKPoint(5, 5), new SKPoint(6, 5), new SKPoint( 6, 6 ), new SKPoint( 7, 6 ), new SKPoint( 6, 6 ), new SKPoint( 6, 7 )
 
@@ -256,6 +256,10 @@ namespace RWGame
             GameStateInfo gameStateInfo = await serverWorker.TaskMakeTurn(game.IdGame, gameControls.chosenTurn);
             while (gameStateInfo.GameState == GameStateEnum.WAIT)
             {
+                if (!needCheckState)
+                {
+                    return;
+                }
                 await Task.Delay(1000);
                 gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
             }
@@ -264,6 +268,7 @@ namespace RWGame
 
         public async void UpdateState(GameStateInfo gameStateInfo)
         {
+            
             gameTrajectory.Add(new SKPoint(gameStateInfo.PointState[0], gameStateInfo.PointState[1]));
             await gameControls.canvasView[gameControls.chosenTurn].FadeTo(0.75, 25);
             /*if (chooseRow)
@@ -291,16 +296,18 @@ namespace RWGame
         }
 
         public GameField(ServerWorker _serverWorker, SystemSettings _systemSettings,
-                         Game _game)
+                         Game _game, GameStateInfo gameStateInfo)
         {
             game = _game;
             systemSettings = _systemSettings;
             serverWorker = _serverWorker;
+
+
+            needCheckState = true;
             NavigationPage.SetHasNavigationBar(this, false);
 
             this.BackgroundColor = backgroundColor;
             this.BackgroundImageSource = ImageSource.FromFile("background.png");
-            chooseRow = game.GameSettings.TurnControls[game.IdPlayer] == "row";
             foreach (TurnInfo turn in game.Turns)
             {
                 gameTrajectory.Add(new SKPoint(turn.State[0], turn.State[1]));
@@ -392,7 +399,7 @@ namespace RWGame
             stackLayout.Children.Add(canvasView);
             stackLayout.Children.Add(InfoTurnLabel);
 
-            gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, systemSettings, backgroundColor, chooseRow);
+            gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor);
 
             stackLayout.Children.Add(gameControls.ControlsGrid);
             stackLayout.Children.Add(GoalLabel);
@@ -408,6 +415,7 @@ namespace RWGame
 
         protected override bool OnBackButtonPressed()
         {
+            needCheckState = false;
             CallPopAsync();
             return true;
         }
@@ -436,21 +444,31 @@ namespace RWGame
             { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
         };
 
-        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, SystemSettings systemSettings, 
-            Color backgroundColor, bool chooseRow)
+        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, SystemSettings systemSettings, 
+            Color backgroundColor)
         {
             this.MakeTurnAndWait = MakeTurnAndWait;
             this.systemSettings = systemSettings;
             this.backgroundColor = backgroundColor;
             this.InfoTurnLabel = InfoTurnLabel;
             this.game = game;
-            this.chooseRow = chooseRow;
+            chooseRow = game.GameSettings.TurnControls[game.IdPlayer] == "row";
+            
             MakeGameControl();
             canvasView[0].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 0);
             canvasView[1].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 1);
 
             canvasView[0].InvalidateSurface();
             canvasView[1].InvalidateSurface();
+
+            if (gameStateInfo.GameState == GameStateEnum.WAIT)
+            {
+                int idTurn = gameStateInfo.Turn[game.IdPlayer];
+                if (idTurn != -1)
+                {
+                    MakeTurn(idTurn);
+                }
+            }
         }
 
         public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, int width, int height, 
@@ -518,6 +536,37 @@ namespace RWGame
             }
         }
 
+        async void MakeTurn(int id)
+        {
+            SKCanvasView curCanvas = canvasView[id];
+            if (!canMakeTurn)
+            {
+                return;
+            }
+            canMakeTurn = false;
+            if (canAnimate)
+            {
+                canAnimate = false;
+
+                await curCanvas.FadeTo(0, 25);//, nghImage.FadeTo(0, 25));
+                await curCanvas.FadeTo(1, 100);//, nghImage.FadeTo(1, 100));
+                canAnimate = true;
+            }
+            string turnName;
+            chosenTurn = id;
+            if (chooseRow)
+            {
+                turnName = chosenTurn == 0 ? "upper row" : "bottom row";
+            }
+            else
+            {
+                turnName = chosenTurn == 0 ? "left column" : "right column";
+            }
+            InfoTurnLabel.Text = turnName + ". Wait...";
+            await Task.Delay(1000);
+            MakeTurnAndWait();
+        }
+
         void MakeGameControl()
         {
             ControlsGrid = new Grid
@@ -563,36 +612,13 @@ namespace RWGame
             for (int i = 0; i < 2; i++)
             {
                 SKCanvasView curCanvas = new SKCanvasView();
-                var actionTap = new TapGestureRecognizer();
+                canvasView[i] = curCanvas;
                 int id = i;
-                actionTap.Tapped += async (s, e) =>
-                {
-                    if (!canMakeTurn)
-                    {
-                        return;
-                    }
-                    canMakeTurn = false;
-                    if (canAnimate)
-                    {
-                        canAnimate = false;
 
-                        await curCanvas.FadeTo(0, 25);//, nghImage.FadeTo(0, 25));
-                        await curCanvas.FadeTo(1, 100);//, nghImage.FadeTo(1, 100));
-                        canAnimate = true;
-                    }
-                    string turnName;
-                    chosenTurn = id;
-                    if (chooseRow)
-                    {
-                        turnName = chosenTurn == 0 ? "upper row" : "bottom row";
-                    }
-                    else
-                    {
-                        turnName = chosenTurn == 0 ? "left column" : "right column";
-                    }
-                    InfoTurnLabel.Text = turnName + ". Wait...";
-                    await Task.Delay(1000);
-                    MakeTurnAndWait();
+                var actionTap = new TapGestureRecognizer();
+                actionTap.Tapped += (s, e) =>
+                {
+                    MakeTurn(id);
                 };
                 curCanvas.GestureRecognizers.Add(actionTap);
                 if (chooseRow)
@@ -609,9 +635,8 @@ namespace RWGame
                 }
 
                 curCanvas.Opacity = 0.75;
-
-                canvasView[i] = curCanvas;
             }
+
 
             /*SKCanvasView borderCanvas = new SKCanvasView();
             borderCanvas.PaintSurface += (sender, args) =>
