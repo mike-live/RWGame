@@ -215,16 +215,15 @@ namespace RWGame.PagesGameChoise
 
             grid.Children.Add(listPlayer, 0, 3);
             Grid.SetColumnSpan(listPlayer, 3);
-            Grid.SetRowSpan(listPlayer, 8);
+            Grid.SetRowSpan(listPlayer, 7);
 
-            grid.Children.Add(backButton, 0, 11);
+            /*grid.Children.Add(backButton, 0, 11);
             Grid.SetColumnSpan(backButton, 1);
-            Grid.SetRowSpan(backButton, 2);
+            Grid.SetRowSpan(backButton, 2);*/
 
-            grid.Children.Add(playButton, 2, 11);
-            Grid.SetColumnSpan(playButton, 1);
-            Grid.SetRowSpan(playButton, 2);
-
+            grid.Children.Add(playButton, 0, 11);
+            Grid.SetColumnSpan(playButton, 3);
+            Grid.SetRowSpan(playButton, 1);
 
             Content = grid;
 
