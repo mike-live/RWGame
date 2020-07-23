@@ -16,6 +16,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Classes\Helper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ResponseClases\JsonResponses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ServerWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\SystemSettings.cs" />
@@ -36,6 +37,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml">
@@ -50,5 +52,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\down.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\left.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\right.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\up.png" />
   </ItemGroup>
 </Project>

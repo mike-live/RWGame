@@ -8,7 +8,7 @@ namespace RWGame.Classes.ResponseClases
     class JsonResponses
     {
     }
-
+    class Empty : List<bool> { };
 
     //Классы для десериализации json ответов
 
@@ -58,11 +58,20 @@ namespace RWGame.Classes.ResponseClases
         [JsonProperty("id_player")]
         public int IdPlayer { get; set; }
 
+        [JsonProperty("player_user_name_1")]
+        public string PlayerUserName1 { get; set; }
+
+        [JsonProperty("player_user_name_2")]
+        public string PlayerUserName2 { get; set; }
+
         [JsonProperty("start")]
         public string Start { get; set; }
 
         [JsonProperty("finish")]
         public string Finish { get; set; }
+        
+        [JsonProperty("score")]
+        public int? Score { get; set; }
 
         [JsonProperty("user_error")]
         public string UserError { get; set; }

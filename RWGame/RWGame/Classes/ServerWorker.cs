@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Plugin.Connectivity;
@@ -65,7 +65,9 @@ namespace RWGame.Classes
         //string StandingsCommand = "game_actions/standings";
         /// <summary>+Команда поиска игрока</summary>
         string FindPlayerCommand = "game_actions/find_player";
-
+        /// <summary>+Команда отмены игры</summary>
+        string CancelGameCommand = "game_actions/cancel_game";
+        
         public ServerWorker()
         {
             URLServer = "https://scigames.ru/";
@@ -94,8 +96,28 @@ namespace RWGame.Classes
             }
             contentString = contentString.TrimEnd('&');
             var content = new StringContent(contentString, Encoding.UTF8, "application/x-www-form-urlencoded");
-            var response = await client.PostAsync(new Uri(URLServer + command), content);
-
+            HttpResponseMessage response = null;
+            while (response is null)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        response = await client.PostAsync(new Uri(URLServer + command), content);
+                        break;
+                    }
+                    catch (HttpRequestException)
+                    {
+                        await WaitInternetView.TryConnectStart(i + 1);
+                        await Task.Delay(1000);
+                    }
+                }
+                await WaitInternetView.TryConnectFinish();
+                if (response is null)
+                {
+                    await WaitInternetView.WaitUserReconnect();
+                }
+            }
             string responseJsonString = await response.Content.ReadAsStringAsync();
             Console.WriteLine(command);
             Console.WriteLine(responseJsonString);
@@ -140,6 +162,11 @@ namespace RWGame.Classes
         public async Task<PlayGameResponse> TaskPlayGame(int idGame = -1, int idPlayer = -1)
         {
             return await PlayGame(idGame, idPlayer);
+        }
+
+        public async Task<bool> TaskCancelGame(int idGame)
+        {
+            return await CancelGame(idGame);
         }
 
         public async Task<GameStateInfo> TaskGetGameState(int idGame)
@@ -318,7 +345,22 @@ namespace RWGame.Classes
                 return null;
             }
         }
-
+        private async Task<bool> CancelGame(int idGame)
+        {
+            try
+            {
+                await PostData<Empty>(CancelGameCommand,
+                    new Dictionary<string, object>() {
+                        { "id_game", idGame }
+                    }
+                );
+                return true;
+            }
+            catch (System.Net.WebException)
+            {
+                return false;
+            }
+        }
         private async Task<GameStateInfo> GetGameState(int idGame)
         {
             try

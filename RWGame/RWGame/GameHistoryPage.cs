@@ -13,8 +13,8 @@ namespace RWGame
 	{
         ServerWorker serverWorker;
         SystemSettings systemSettings;
-        ListView filesList;
-        List<ElementsOfViewCell> customListViewRecords;
+        ListView gamesListView;
+        List<UserPage.ElementsOfViewCell> customListViewRecords;
         public GameHistoryPage (ServerWorker _serverWorker, SystemSettings _systemSettings)
 		{
             serverWorker = _serverWorker;
@@ -23,14 +23,31 @@ namespace RWGame
             this.Title = "Games history";
             this.BackgroundColor = Color.FromHex("#39bafa");
 
-            filesList = new ListView();
-            StackLayout stackLayout = new StackLayout();
-            stackLayout.Children.Add(filesList);
+            gamesListView = new ListView();
+            StackLayout stackLayout = new StackLayout()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Fill,
+                Margin = new Thickness(10, 10, 10, 10),
+            };
+            stackLayout.Children.Add(gamesListView);
 
-            filesList.ItemTemplate = new DataTemplate(typeof(DateCellView));
-            filesList.ItemSelected += delegate { filesList.SelectedItem = null; };
+            gamesListView.ItemTemplate = new DataTemplate(typeof(UserPage.DateCellView));
+            gamesListView.ItemSelected += async delegate {
+                if ((UserPage.ElementsOfViewCell)gamesListView.SelectedItem == null) return;
+                Game game = await GameProcesses.MakeSavedGame(serverWorker, ((UserPage.ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
 
-            filesList.ItemsSource = customListViewRecords;
+                //await GameProcesses.StartGame(serverWorker, game, () => false);
+                GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+
+                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
+                gamesListView.SelectedItem = null;
+                await UpdateGameList();
+
+                //filesList.SelectedItem = null; 
+            };
+
+            gamesListView.ItemsSource = customListViewRecords;
 
             _ = UpdateGameList();
 
@@ -40,7 +57,7 @@ namespace RWGame
         public async Task UpdateGameList()
         {
             List<Game> gamesList = await serverWorker.TaskGetGamesList();
-            customListViewRecords = new List<ElementsOfViewCell>();
+            customListViewRecords = new List<UserPage.ElementsOfViewCell>();
 
             if (gamesList != null && gamesList.Count > 0)
             {
@@ -48,17 +65,14 @@ namespace RWGame
                 {
                     if (gamesList[i].GameState == GameStateEnum.END)
                     {
-                        customListViewRecords.Add(new ElementsOfViewCell(
-                            gamesList[i].IdGame,
-                            gamesList[i].Start.ToString(),
-                            "end.png"));
+                        customListViewRecords.Add(new UserPage.ElementsOfViewCell(gamesList[i]));
                     }
                 }
-                filesList.ItemsSource = customListViewRecords;
+                gamesListView.ItemsSource = customListViewRecords;
             }
             else
             {
-                filesList.ItemsSource = null;
+                gamesListView.ItemsSource = null;
             }
         }
 
@@ -77,7 +91,7 @@ namespace RWGame
             return true;
         }
 
-        class DateCellView : ViewCell
+        /*class DateCellView : ViewCell
         {
             public DateCellView()
             {
@@ -102,7 +116,8 @@ namespace RWGame
                     HorizontalOptions = LayoutOptions.EndAndExpand,
                     VerticalOptions = LayoutOptions.CenterAndExpand,
                     BackgroundColor = Color.FromHex("#39bafa"),
-                    Margin = new Thickness(25, 2, 25, 2)
+                    Margin = new Thickness(25, 2, 25, 2),
+                    Scale = 0.5
                 };
 
 
@@ -171,6 +186,6 @@ namespace RWGame
                 StateGame = _StateGame;
                 
             }
-        }
+        }*/
     }
 }

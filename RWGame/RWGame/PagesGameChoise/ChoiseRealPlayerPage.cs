@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
@@ -15,6 +16,20 @@ namespace RWGame.PagesGameChoise
         ListView listPlayer;
         ServerWorker serverWorker;
         private int selectedIdPlayer = -1;
+        List<Player> playersList;
+        private bool cancelGame = false;
+        public async void CallPopAsync()
+        {
+            await Navigation.PopAsync();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            cancelGame = true;
+            CallPopAsync();
+            return true;
+        }
+
         public ChoiseRealPlayerPage(ServerWorker _serverWorker, SystemSettings systemSettings)
         {
             serverWorker = _serverWorker;
@@ -23,27 +38,27 @@ namespace RWGame.PagesGameChoise
             Grid grid = new Grid
             {
                 RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-            },
+                {
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                },
                 ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-            },
+                {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                },
                 Margin = new Thickness( 5, 15, 5, 15),
             };
 
@@ -54,7 +69,7 @@ namespace RWGame.PagesGameChoise
                 Text = "Select player",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
             };
 
             Entry entryLogin = new Entry()
@@ -74,7 +89,7 @@ namespace RWGame.PagesGameChoise
                 {
                     if (entryLogin != null && entryLogin.Text != null && entryLogin.Text.Length > 0 && !hasLoginSelected)
                     {
-                        List<Player> playersList = await serverWorker.TaskGetPlayerList(entryLogin.Text);
+                        playersList = await serverWorker.TaskGetPlayerList(entryLogin.Text);
                         if (playersList != null)
                         {
                             List<ElementsOfViewCell> currentElementsList = new List<ElementsOfViewCell>();
@@ -134,7 +149,19 @@ namespace RWGame.PagesGameChoise
             playButton.Clicked += async delegate
             {
                 //проверим введённый ник
-                if (entryLogin.Text == "" || !(await serverWorker.TaskCheckLogin(entryLogin.Text)))
+                if (playersList != null)
+                {
+                    selectedIdPlayer = -1;
+                    foreach (var player in playersList)
+                    {
+                        if (player.Login == entryLogin.Text)
+                        {
+                            selectedIdPlayer = player.IdPlayer;
+                        }
+                    }
+                }
+
+                if (entryLogin.Text == "" || selectedIdPlayer != -1) // !(await serverWorker.TaskCheckLogin(entryLogin.Text))
                 {
                     string alertMessage;
                     if (entryLogin.Text == "")
@@ -143,15 +170,34 @@ namespace RWGame.PagesGameChoise
                     }
                     else
                     {
-                        alertMessage = "Game started. Wait for second player.";
+                        alertMessage = "Wait for " + entryLogin.Text;
                     }
                     Game game = await GameProcesses.MakeGameWithPlayer(serverWorker, selectedIdPlayer);
 
-                    UserDialogs.Instance.ShowLoading(alertMessage);
-                    await GameProcesses.StartGame(serverWorker, game);
-                    UserDialogs.Instance.HideLoading();
+                    var cancelSrc = new CancellationTokenSource();
+                    var config = new ProgressDialogConfig()
+                        .SetTitle(alertMessage)
+                        .SetIsDeterministic(false)
+                        .SetMaskType(MaskType.Clear)
+                        .SetCancel(onCancel: cancelSrc.Cancel);
 
-                    await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game));
+                    using (UserDialogs.Instance.Progress(config))
+                    {
+                        await GameProcesses.StartGame(serverWorker, game, () => cancelSrc.Token.IsCancellationRequested);
+                    }
+
+                    //UserDialogs.Instance.ShowLoading(alertMessage);
+                    cancelGame = cancelSrc.IsCancellationRequested;
+                    //UserDialogs.Instance.HideLoading();
+
+                    if (!cancelGame)
+                    {
+                        GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+                        await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
+                    } else
+                    {
+                        await serverWorker.TaskCancelGame(game.IdGame);
+                    }
                 }
                 else
                 {
@@ -169,16 +215,15 @@ namespace RWGame.PagesGameChoise
 
             grid.Children.Add(listPlayer, 0, 3);
             Grid.SetColumnSpan(listPlayer, 3);
-            Grid.SetRowSpan(listPlayer, 8);
+            Grid.SetRowSpan(listPlayer, 7);
 
-            grid.Children.Add(backButton, 0, 11);
+            /*grid.Children.Add(backButton, 0, 11);
             Grid.SetColumnSpan(backButton, 1);
-            Grid.SetRowSpan(backButton, 2);
+            Grid.SetRowSpan(backButton, 2);*/
 
-            grid.Children.Add(playButton, 2, 11);
-            Grid.SetColumnSpan(playButton, 1);
-            Grid.SetRowSpan(playButton, 2);
-
+            grid.Children.Add(playButton, 0, 11);
+            Grid.SetColumnSpan(playButton, 3);
+            Grid.SetRowSpan(playButton, 1);
 
             Content = grid;
 
