@@ -38,27 +38,27 @@ namespace RWGame.PagesGameChoise
             Grid grid = new Grid
             {
                 RowDefinitions =
-            {
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-            },
+                {
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                },
                 ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-            },
+                {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                },
                 Margin = new Thickness( 5, 15, 5, 15),
             };
 
@@ -69,7 +69,7 @@ namespace RWGame.PagesGameChoise
                 Text = "Select player",
                 TextColor = Color.White,
                 FontAttributes = FontAttributes.Bold,
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
             };
 
             Entry entryLogin = new Entry()
@@ -194,6 +194,9 @@ namespace RWGame.PagesGameChoise
                     {
                         GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
                         await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
+                    } else
+                    {
+                        await serverWorker.TaskCancelGame(game.IdGame);
                     }
                 }
                 else
