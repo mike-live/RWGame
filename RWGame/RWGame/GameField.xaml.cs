@@ -1,4 +1,4 @@
-using RWGame.Classes;
+﻿using RWGame.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -399,12 +399,13 @@ namespace RWGame
             stackLayout.Children.Add(canvasView);
             stackLayout.Children.Add(InfoTurnLabel);
 
-            gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor);
+            if (gameStateInfo.GameState != GameStateEnum.END)
+            {
+                gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor);
+                stackLayout.Children.Add(gameControls.ControlsGrid);
+            }
 
-            stackLayout.Children.Add(gameControls.ControlsGrid);
             stackLayout.Children.Add(GoalLabel);
-
-
             Content = stackLayout;
         }
 
