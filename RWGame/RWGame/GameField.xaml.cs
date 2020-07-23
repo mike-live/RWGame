@@ -1,4 +1,4 @@
-﻿using RWGame.Classes;
+using RWGame.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -350,7 +350,7 @@ namespace RWGame
 
             GameInfoLabel = new Label()
             {
-                Text = "Score: " + game.Turns.Count,
+                Text = "Score: " + gameStateInfo.LastIdTurn,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
