@@ -44,12 +44,15 @@ namespace RWGame
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(10, 10, 10, 10)
+                Margin = new Thickness(10, 10, 10, 10),
             };
 
-            gamesListView = new ListView();
-            gamesListView.ItemTemplate = new DataTemplate(typeof(DateCellView));
-            gamesListView.IsPullToRefreshEnabled = true;
+            gamesListView = new ListView
+            {
+                ItemTemplate = new DataTemplate(typeof(DateCellView)),
+                IsPullToRefreshEnabled = true,
+                
+            };
 
             gamesListView.RefreshCommand = new Command(async () =>
             {
@@ -79,26 +82,34 @@ namespace RWGame
                 Margin = new Thickness(20, 10, 20, 10),
                 Orientation = StackOrientation.Horizontal
             };
-            Button PlayWithAnotherPlayer = new Button()
+            ImageButton PlayWithAnotherPlayer = new ImageButton()
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
-                Text = "PVP",
-                BackgroundColor = Color.FromHex("#7ad3ff"),
-                TextColor = Color.White,
-                IsEnabled = true
+                //Text = "PVP",
+                BackgroundColor = Color.FromHex("#39bafa"),//7ad3ff
+                //TextColor = Color.White,
+                IsEnabled = true,
+                Source = "pvp.png",
+                HeightRequest = 40,
+                WidthRequest = 100,
+                Padding = 5
             };
             PlayWithAnotherPlayer.Clicked += async delegate
             {
                 await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
             };
-            Button PlayWithBot = new Button()
+            ImageButton PlayWithBot = new ImageButton()
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
-                Text = "Bot",
-                BackgroundColor = Color.FromHex("#7ad3ff"),
-                TextColor = Color.White
+                //Text = "Bot",
+                BackgroundColor = Color.FromHex("#39bafa"),
+                //TextColor = Color.White,
+                Source = "bot.png",
+                HeightRequest = 40,
+                WidthRequest = 100,
+                Padding = 5
             };
             PlayWithBot.Clicked += async delegate
             {
@@ -167,34 +178,75 @@ namespace RWGame
             return true;
         }
 
-        class DateCellView : ViewCell
+        public class DateCellView : ViewCell
         {
             public DateCellView()
             {
                 var gameidLabel = new Label()
                 {
                     HorizontalOptions = LayoutOptions.StartAndExpand,
-                    VerticalOptions = LayoutOptions.EndAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
                     BackgroundColor = Color.FromHex("#39bafa"),
-                    TextColor = Color.White,
-                    Margin = new Thickness(25, 0, 25, 1)
+                    TextColor = Color.FromHex("c5eeff"),
+                    //Margin = new Thickness(25, 0, 25, 1)
                 };
                 var dateLabel = new Label()
                 {
                     HorizontalOptions = LayoutOptions.StartAndExpand,
-                    VerticalOptions = LayoutOptions.StartAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
                     BackgroundColor = Color.FromHex("#39bafa"),
-                    Margin = new Thickness(25, 1, 25, 0),
-                    TextColor = Color.White,
+                    //Margin = new Thickness(25, 1, 25, 0),
+                    TextColor = Color.FromHex("c5eeff"),
                 };
-                Image gamestateLabel = new Image()
+                var player1Label = new Label()
+                {
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    BackgroundColor = Color.FromHex("#39bafa"),
+                    TextColor = Color.FromHex("#FFFFFF"), //Color.FromHex("#000000"),
+                    FontAttributes = FontAttributes.Bold,
+                    //Margin = new Thickness(25, 0, 25, 1),
+
+                };
+                var player2Label = new Label()
+                {
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    BackgroundColor = Color.FromHex("#39bafa"),
+                    //TextColor = Color.Orange,
+                    TextColor = Color.FromHex("#FFFFFF"), //Color.FromHex("#000000"), // ffd966 // FFC630
+                    FontAttributes = FontAttributes.Bold,
+                    HorizontalTextAlignment = TextAlignment.End,
+                    //Margin = new Thickness(25, 0, 25, 1)
+                };
+                var scoreLabel = new Label()
+                {
+                    HorizontalOptions = LayoutOptions.CenterAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    BackgroundColor = Color.FromHex("#39bafa"),
+                    //TextColor = Color.Orange,
+                    TextColor = Color.White,
+                    FontAttributes = FontAttributes.Bold,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    //Margin = new Thickness(25, 0, 25, 1)
+                };
+                
+                Image vsLabel = new Image()
                 {
                     HorizontalOptions = LayoutOptions.EndAndExpand,
                     VerticalOptions = LayoutOptions.CenterAndExpand,
                     BackgroundColor = Color.FromHex("#39bafa"),
-                    Margin = new Thickness(25, 2, 25, 2)
+                    Source = "lightning.png",
+                    Scale = 1
                 };
-
+                Image gamestateLabel = new Image()
+                {
+                    HorizontalOptions = LayoutOptions.CenterAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    BackgroundColor = Color.FromHex("#39bafa"),
+                    //Margin = new Thickness(25, 2, 25, 2),
+                    Scale = 0.9
+                };
 
                 Grid grid = new Grid
                 {
@@ -204,20 +256,28 @@ namespace RWGame
                         new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
                     },
                     ColumnDefinitions =
-
                     {
+                        new ColumnDefinition { Width = new GridLength(1.8, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(0.4, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
                     },
                     HorizontalOptions = LayoutOptions.FillAndExpand,
                     VerticalOptions = LayoutOptions.FillAndExpand,
                     BackgroundColor = Color.FromHex("#39bafa"),
+                    ColumnSpacing = 0,
+                    RowSpacing = 1,
                     //Margin = new Thickness(25, 2, 25, 2)
+                    Margin = new Thickness(1, 3, 1, 3),
+                    HeightRequest = 150
                 };
-
                 gameidLabel.SetBinding(Label.TextProperty, new Binding("IdGame"));
                 dateLabel.SetBinding(Label.TextProperty, new Binding("Date"));
                 gamestateLabel.SetBinding(Image.SourceProperty, new Binding("GameStateImage"));
+                player1Label.SetBinding(Label.TextProperty, new Binding("PlayerName1"));
+                player2Label.SetBinding(Label.TextProperty, new Binding("PlayerName2"));
+                scoreLabel.SetBinding(Label.TextProperty, new Binding("Score"));
 
                 gameidLabel.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
                 gameidLabel.FontAttributes = FontAttributes.Bold;
@@ -232,28 +292,48 @@ namespace RWGame
                 Grid.SetColumnSpan(dateLabel, 1);
                 Grid.SetRowSpan(dateLabel, 1);
 
-                grid.Children.Add(gamestateLabel, 1, 0);
+                grid.Children.Add(gamestateLabel, 4, 0);
                 Grid.SetColumnSpan(gamestateLabel, 1);
-                Grid.SetRowSpan(gamestateLabel, 2);
+                Grid.SetRowSpan(gamestateLabel, 1);
+
+                grid.Children.Add(scoreLabel, 4, 1);
+                Grid.SetColumnSpan(scoreLabel, 1);
+                Grid.SetRowSpan(scoreLabel, 1);
+
+                grid.Children.Add(player1Label, 1, 0);
+                Grid.SetColumnSpan(player1Label, 1);
+                Grid.SetRowSpan(player1Label, 2);
+
+                grid.Children.Add(vsLabel, 2, 0);
+                Grid.SetColumnSpan(vsLabel, 1);
+                Grid.SetRowSpan(vsLabel, 2);
+
+                grid.Children.Add(player2Label, 3, 0);
+                Grid.SetColumnSpan(player2Label, 1);
+                Grid.SetRowSpan(player2Label, 2);
 
                 View = grid;
             }
 
         }
 
-        class ElementsOfViewCell
+        public class ElementsOfViewCell
         {
             private readonly List<string> GameStateImages = new List<string> {
-                "new.png", "connect.svg", "start.png", "active.png", "end.png", "pause.svg", "wait.png"
+                //"new.png",           "connect.png",         "start.png",           "active.png",     "end.png",        "pause.svg",      "wait.png"
+                "state_star_gray.png", "state_star_gray.png", "state_star_gray.png", "state_star.png", "state_star.png", "state_star.png", "state_star.png"
             };
             public Game game { get; }
-            public int IdGame { get { return game.IdGame; } }
+            public string IdGame { get { return "#" + game.IdGame.ToString(); } }
             public string Date { get { return game.Start.ToString(); } }
+            public string PlayerName1 { get { return game.PlayerUserName1; } }
+            public string PlayerName2 { get { return game.PlayerUserName2; } }
             public string GameState { get { return game.GameState.ToString(); } }
             public string GameStateImage { get { return GameStateImages[(int)game.GameState]; } }
 
             public int Player1 { get { return game.Player1 == null ? -1 : (int)game.Player1; } }
             public int Player2 { get { return game.Player2 == null ? -1 : (int)game.Player2; } }
+            public string Score { get { return Convert.ToString(game.Score); } }
             public GameSettings Settings { get { return game.GameSettings; } }
 
             /// <summary>

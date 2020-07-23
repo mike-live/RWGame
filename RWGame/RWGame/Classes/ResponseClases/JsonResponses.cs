@@ -69,6 +69,9 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("finish")]
         public string Finish { get; set; }
+        
+        [JsonProperty("score")]
+        public int? Score { get; set; }
 
         [JsonProperty("user_error")]
         public string UserError { get; set; }
