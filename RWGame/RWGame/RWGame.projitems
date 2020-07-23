@@ -37,6 +37,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml">

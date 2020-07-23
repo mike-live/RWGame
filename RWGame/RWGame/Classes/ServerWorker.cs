@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Plugin.Connectivity;
@@ -96,8 +96,28 @@ namespace RWGame.Classes
             }
             contentString = contentString.TrimEnd('&');
             var content = new StringContent(contentString, Encoding.UTF8, "application/x-www-form-urlencoded");
-            var response = await client.PostAsync(new Uri(URLServer + command), content);
-
+            HttpResponseMessage response = null;
+            while (response is null)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        response = await client.PostAsync(new Uri(URLServer + command), content);
+                        break;
+                    }
+                    catch (HttpRequestException)
+                    {
+                        await WaitInternetView.TryConnectStart(i + 1);
+                        await Task.Delay(1000);
+                    }
+                }
+                await WaitInternetView.TryConnectFinish();
+                if (response is null)
+                {
+                    await WaitInternetView.WaitUserReconnect();
+                }
+            }
             string responseJsonString = await response.Content.ReadAsStringAsync();
             Console.WriteLine(command);
             Console.WriteLine(responseJsonString);
