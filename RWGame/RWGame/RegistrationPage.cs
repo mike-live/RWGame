@@ -914,7 +914,7 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 BackgroundColor = Color.FromHex("#35a6de"),
-                Margin = new Thickness(5, 15, 0, 15)
+                Margin = new Thickness(0, 15, 0, 15)
             };
 
             CheckBox agreementCheckBox = new CheckBox
