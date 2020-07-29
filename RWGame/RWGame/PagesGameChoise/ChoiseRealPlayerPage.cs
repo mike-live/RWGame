@@ -3,10 +3,7 @@ using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace RWGame.PagesGameChoise
@@ -59,7 +56,7 @@ namespace RWGame.PagesGameChoise
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
                 },
-                Margin = new Thickness( 5, 15, 5, 15),
+                Margin = new Thickness(5, 15, 5, 15),
             };
 
             Label headLabel = new Label()
@@ -194,7 +191,8 @@ namespace RWGame.PagesGameChoise
                     {
                         GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
                         await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
-                    } else
+                    }
+                    else
                     {
                         await serverWorker.TaskCancelGame(game.IdGame);
                     }

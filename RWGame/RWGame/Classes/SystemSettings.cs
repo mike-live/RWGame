@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RWGame.Classes
+﻿namespace RWGame.Classes
 {
     public class SystemSettings
     {

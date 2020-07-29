@@ -1,8 +1,4 @@
 ﻿using Acr.UserDialogs;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RWGame
@@ -20,11 +16,6 @@ namespace RWGame
                 .SetMaskType(MaskType.Clear);
             progress = UserDialogs.Instance.Progress(config);
             progress.Show();
-            //using ()
-            //{
-                
-                //await GameProcesses.StartGame(serverWorker, game, () => cancelSrc.Token.IsCancellationRequested);
-            //}
             return true;
         }
 

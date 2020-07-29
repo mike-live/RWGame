@@ -1,15 +1,11 @@
+using Newtonsoft.Json;
+using Plugin.Connectivity;
+using RWGame.Classes.ResponseClases;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using Plugin.Connectivity;
-using System.IO;
 using System.Net.Http;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using Newtonsoft.Json;
-using System.Net;
-using RWGame.Classes.ResponseClases;
 
 namespace RWGame.Classes
 {
@@ -18,7 +14,8 @@ namespace RWGame.Classes
 
         public string URLServer { get; private set; }
         private bool isDeviceConnect;
-        public bool IsDeviceConnect {
+        public bool IsDeviceConnect
+        {
             get { return isDeviceConnect; }
             private set
             {
@@ -67,11 +64,12 @@ namespace RWGame.Classes
         string FindPlayerCommand = "game_actions/find_player";
         /// <summary>+Команда отмены игры</summary>
         string CancelGameCommand = "game_actions/cancel_game";
-        
+
         public ServerWorker()
         {
             URLServer = "https://scigames.ru/";
-            CrossConnectivity.Current.ConnectivityChanged += delegate {
+            CrossConnectivity.Current.ConnectivityChanged += delegate
+            {
                 bool hasServerConnect = CrossConnectivity.Current.IsConnected;
                 if (!hasServerConnect)
                 {
@@ -191,12 +189,12 @@ namespace RWGame.Classes
             try
             {
                 Dictionary<string, object> data = new Dictionary<string, object>() {
-                    {"name", name}, 
-                    {"family", family}, 
-                    { "login", login }, 
-                    { "password", password}, 
-                    { "confirm_password", confirm_password}, 
-                    { "birthday", birthday}, 
+                    {"name", name},
+                    {"family", family},
+                    { "login", login },
+                    { "password", password},
+                    { "confirm_password", confirm_password},
+                    { "birthday", birthday},
                     { "email", email }
                 };
 
@@ -214,7 +212,7 @@ namespace RWGame.Classes
         {
             try
             {
-                bool currentResponse = await PostData<bool>(CheckLoginCommand, 
+                bool currentResponse = await PostData<bool>(CheckLoginCommand,
                     new Dictionary<string, object>() {
                         { "login", login }
                     }
@@ -274,7 +272,7 @@ namespace RWGame.Classes
                 };
 
                 ListPlayers currentResponse = await PostData<ListPlayers>(FindPlayerCommand, data);
-                
+
                 if (currentResponse != null && currentResponse.Players != null && currentResponse.Players.Count > 0)
                 {
                     return currentResponse.Players;

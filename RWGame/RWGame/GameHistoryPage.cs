@@ -1,22 +1,19 @@
 ﻿using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace RWGame
 {
-	public class GameHistoryPage : ContentPage
-	{
+    public class GameHistoryPage : ContentPage
+    {
         ServerWorker serverWorker;
         SystemSettings systemSettings;
         ListView gamesListView;
         List<UserPage.ElementsOfViewCell> customListViewRecords;
-        public GameHistoryPage (ServerWorker _serverWorker, SystemSettings _systemSettings)
-		{
+        public GameHistoryPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
+        {
             serverWorker = _serverWorker;
             systemSettings = _systemSettings;
             NavigationPage.SetHasNavigationBar(this, false);
@@ -33,7 +30,8 @@ namespace RWGame
             stackLayout.Children.Add(gamesListView);
 
             gamesListView.ItemTemplate = new DataTemplate(typeof(UserPage.DateCellView));
-            gamesListView.ItemSelected += async delegate {
+            gamesListView.ItemSelected += async delegate
+            {
                 if ((UserPage.ElementsOfViewCell)gamesListView.SelectedItem == null) return;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((UserPage.ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
 

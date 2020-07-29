@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RWGame.Classes.ResponseClases
 {
@@ -69,7 +68,7 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("finish")]
         public string Finish { get; set; }
-        
+
         [JsonProperty("score")]
         public int? Score { get; set; }
 

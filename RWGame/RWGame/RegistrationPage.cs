@@ -1,11 +1,12 @@
 ﻿using RWGame.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Xamarin.Forms;
-using Xamarin.Essentials;
 using System.Collections.ObjectModel;
+using System.Linq;
+
+using Xamarin.Essentials;
+using Xamarin.Forms;
+using System.Text.RegularExpressions;
+
 
 namespace RWGame
 {
@@ -16,7 +17,7 @@ namespace RWGame
         public RegistrationPage(ServerWorker serverWorker, SystemSettings systemSettings)
         {
             localServerWorker = serverWorker;
-            this.BackgroundColor = Color.FromHex("#39bafa"); 
+            this.BackgroundColor = Color.FromHex("#39bafa");
             NavigationPage.SetHasNavigationBar(this, false);
             StackLayout HeadStack = new StackLayout()
             {
@@ -73,7 +74,8 @@ namespace RWGame
                 Margin = new Thickness(15, 0, 0, 0),
                 Opacity = 0,
             };
-            Image labelRightImage = new Image() {
+            Image labelRightImage = new Image()
+            {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.End,
             };
@@ -86,7 +88,7 @@ namespace RWGame
                 Margin = LabelMargin,
                 Spacing = 0
             };
-            
+
             nameLabelStack.Children.Add(nameLabel);
             nameLabelStack.Children.Add(labelRightImage);
 
@@ -211,7 +213,7 @@ namespace RWGame
                 TextColor = Color.White,
                 BackgroundColor = Color.FromHex("#38b6f5"),
                 Margin = new Thickness(10, 0, 10, 0),
-                Keyboard = Keyboard.Text,            
+                Keyboard = Keyboard.Text,
             };
             surnameEntry.TextChanged += delegate
             {
@@ -780,7 +782,7 @@ namespace RWGame
                     string pattern = @"^(?("")(""[^""]+?""@)|(([0-9a-zA-Z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-zA-Z])@))" +
                 @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
                     if (Regex.IsMatch(emailEntry.Text,
-                        pattern, 
+                        pattern,
                         RegexOptions.CultureInvariant) && await serverWorker.TaskCheckEmail(emailEntry.Text))
                     {
                         isFieldsCorrect[6] = true;
@@ -855,7 +857,7 @@ namespace RWGame
 
             var policyLabelTapGestureRecognizer = new TapGestureRecognizer();
             var policyTapGestureRecognizer = new TapGestureRecognizer();
-            
+
             policyTapGestureRecognizer.Tapped += async (s, e) =>
             {
                 Uri uri = new Uri("https://scigames.ru/privacy_policy");
@@ -972,7 +974,7 @@ namespace RWGame
                 IsEnabled = false
             };
 
-            isFieldsCorrect.CollectionChanged += delegate 
+            isFieldsCorrect.CollectionChanged += delegate
             {
                 registrateButton.IsEnabled = isFieldsCorrect.All(x => x == true);
             };
@@ -983,7 +985,7 @@ namespace RWGame
                 {
                     await DisplayAlert("Error", "There are wrong entered fields", "OK");
                 }
-                else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true )
+                else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true)
                 {
                     if (await serverWorker.TaskRegistrateNewPlayer(nameEntry.Text, surnameEntry.Text,
                         loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))

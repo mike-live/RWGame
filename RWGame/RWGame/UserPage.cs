@@ -1,4 +1,4 @@
-﻿using RWGame.Classes;
+using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.PagesGameChoise;
 using System;
@@ -51,7 +51,7 @@ namespace RWGame
             {
                 ItemTemplate = new DataTemplate(typeof(DateCellView)),
                 IsPullToRefreshEnabled = true,
-                
+
             };
 
             gamesListView.RefreshCommand = new Command(async () =>
@@ -62,10 +62,11 @@ namespace RWGame
 
             _ = UpdateGameList();
 
-            gamesListView.ItemSelected += async delegate {
+            gamesListView.ItemSelected += async delegate
+            {
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
-                
+
                 await GameProcesses.StartGame(serverWorker, game, () => false);
                 GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
 
@@ -127,7 +128,7 @@ namespace RWGame
             userprofilStackLayout.Children.Add(buttonStack);
 
             Content = userprofilStackLayout;
-        }        
+        }
 
         public async Task UpdateGameList()
         {
@@ -230,7 +231,7 @@ namespace RWGame
                     HorizontalTextAlignment = TextAlignment.Center,
                     //Margin = new Thickness(25, 0, 25, 1)
                 };
-                
+
                 Image vsLabel = new Image()
                 {
                     HorizontalOptions = LayoutOptions.EndAndExpand,
