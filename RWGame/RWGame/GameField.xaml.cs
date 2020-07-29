@@ -1,28 +1,20 @@
 ﻿using RWGame.Classes;
+using RWGame.Classes.ResponseClases;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 //using System.Text;
 using System.Threading.Tasks;
-
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using SkiaSharp;
-using SkiaSharp.Views.Forms;
-using RWGame.Classes.ResponseClases;
-//using System.Reflection;
-//using System.IO;
-//using FFImageLoading;
-//using System.Drawing;
-//using AssetsLibrary;
-//using System.Runtime.CompilerServices;
-
 namespace RWGame
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class GameField : ContentPage
-	{
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class GameField : ContentPage
+    {
         private readonly Color backgroundColor = Color.Transparent;//Color.FromHex("#39bafa");
         private readonly SKColor backgroundSKColor = SKColors.Transparent;//SKColor.Parse("#39bafa");
         //private readonly Color backgroundColor = Color.FromHex("#15c1ff03");//Color.FromHex("#39bafa");
@@ -51,6 +43,7 @@ namespace RWGame
         private float cellSize;
         private float shiftX = 0;
         private int idTurn = 0;
+        private int numTurns = 0;
         private bool needCheckState = true;
         private List<SKPoint> gameTrajectory = new List<SKPoint> { };
         //new SKPoint(5, 5), new SKPoint(6, 5), new SKPoint( 6, 6 ), new SKPoint( 7, 6 ), new SKPoint( 6, 6 ), new SKPoint( 6, 7 )
@@ -155,7 +148,7 @@ namespace RWGame
             //canvas.DrawCircle(GetGridPoint(gameTrajectory.Last()), pointRadius, paint);
             //Console.WriteLine(names[0]);
             //string resourceID = "RWGame.Droid.Images.star.png";
-//            var names = assembly.GetManifestResourceNames();
+            //            var names = assembly.GetManifestResourceNames();
             //var filestream = new SKManagedStream();
             var bitmap = SKBitmap.Decode(Helper.getResourceStream("Images.star.png"));
             var scaled = bitmap.Resize(new SKImageInfo(pointRadius * 2, pointRadius * 2), SKFilterQuality.High);
@@ -201,7 +194,7 @@ namespace RWGame
             //}
 
             //ImageSource ims = ImageSource.FromFile("star.png");
-            
+
             //using (Stream stream = assembly.GetManifestResourceStream(resourceID))
             //{
             //    var bitmap = SKBitmap.Decode(stream);
@@ -225,7 +218,8 @@ namespace RWGame
             {
                 width = Math.Max(bitmap1.Width, bitmap2.Width);
                 height = bitmap1.Height + bitmap2.Height;
-            } else
+            }
+            else
             {
                 height = Math.Max(bitmap1.Height, bitmap2.Height);
                 width = bitmap1.Width + bitmap2.Width;
@@ -239,11 +233,12 @@ namespace RWGame
                     rect1 = SKRect.Create(0, 0, bitmap1.Width, bitmap1.Height);
                     rect2 = SKRect.Create(0, bitmap1.Height, bitmap2.Width, bitmap2.Height);
                 }
-                else {
+                else
+                {
                     rect1 = SKRect.Create(0, 0, bitmap1.Width, bitmap1.Height);
                     rect2 = SKRect.Create(bitmap1.Width, 0, bitmap2.Width, bitmap2.Height);
                 }
-                
+
                 canvas.DrawBitmap(bitmap1, rect1);
                 canvas.DrawBitmap(bitmap2, rect2);
                 result = tempSurface.Snapshot();
@@ -268,7 +263,7 @@ namespace RWGame
 
         public async void UpdateState(GameStateInfo gameStateInfo)
         {
-            
+
             gameTrajectory.Add(new SKPoint(gameStateInfo.PointState[0], gameStateInfo.PointState[1]));
             await gameControls.canvasView[gameControls.chosenTurn].FadeTo(0.75, 25);
             /*if (chooseRow)
@@ -282,12 +277,13 @@ namespace RWGame
             }*/
             gameControls.chosenTurn = -1;
             idTurn = gameStateInfo.LastIdTurn;
-            GameInfoLabel.Text = "Score: " + idTurn;
+            numTurns = idTurn;
+            GameInfoLabel.Text = "Score: " + numTurns;
 
             canvasView.InvalidateSurface();
             if (gameStateInfo.GameState == GameStateEnum.END)
             {
-                await DisplayAlert("Game finished", "You made " + idTurn.ToString() + " turns!" + "\n" + "Thanks for playing ;-)", "OK");
+                await DisplayAlert("Game finished", "You made " + numTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;-)", "OK");
                 await Navigation.PopAsync();
                 return;
             }
@@ -301,7 +297,7 @@ namespace RWGame
             game = _game;
             systemSettings = _systemSettings;
             serverWorker = _serverWorker;
-
+            numTurns = game.Turns.Count - 1;
 
             needCheckState = true;
             NavigationPage.SetHasNavigationBar(this, false);
@@ -319,7 +315,7 @@ namespace RWGame
                 //HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.FillAndExpand,
                 Margin = new Thickness(10, 0, 10, 0),
-                
+
             };
 
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
@@ -350,7 +346,7 @@ namespace RWGame
 
             GameInfoLabel = new Label()
             {
-                Text = "Score: " + gameStateInfo.LastIdTurn,
+                Text = "Score: " + numTurns,
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
@@ -387,7 +383,7 @@ namespace RWGame
             {
                 GameScoreLabel.Text = "Top score: 546";
             }
-            else if(game.GameSettings.Goals[game.IdPlayer] == "border")
+            else if (game.GameSettings.Goals[game.IdPlayer] == "border")
             {
                 GameScoreLabel.Text = "Top score: 29";
             }
@@ -445,7 +441,7 @@ namespace RWGame
             { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
         };
 
-        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, SystemSettings systemSettings, 
+        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, SystemSettings systemSettings,
             Color backgroundColor)
         {
             this.MakeTurnAndWait = MakeTurnAndWait;
@@ -454,7 +450,7 @@ namespace RWGame
             this.InfoTurnLabel = InfoTurnLabel;
             this.game = game;
             chooseRow = game.GameSettings.TurnControls[game.IdPlayer] == "row";
-            
+
             MakeGameControl();
             canvasView[0].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 0);
             canvasView[1].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 1);
@@ -472,7 +468,7 @@ namespace RWGame
             }
         }
 
-        public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, int width, int height, 
+        public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, int width, int height,
             bool vertical = true)
         {
             //int width, height;
@@ -486,12 +482,12 @@ namespace RWGame
                 height = Math.Max(bitmap1.Height, bitmap2.Height);
                 width = bitmap1.Width + bitmap2.Width;
             }*/
-            
+
             SKRect rect1, rect2;
             if (vertical)
             {
                 rect1 = SKRect.Create(0, 0, width, width);
-                rect2 = SKRect.Create(0, height - width, width, width); 
+                rect2 = SKRect.Create(0, height - width, width, width);
             }
             else
             {
@@ -510,7 +506,7 @@ namespace RWGame
 
             //canvas.Clear(backgroundSKColor);
             int controlSize = chooseRow ? info.Height : info.Width;
-            SKRect rect = chooseRow ? SKRect.Create(controlSize / 2, 0, info.Width - controlSize, info.Height) 
+            SKRect rect = chooseRow ? SKRect.Create(controlSize / 2, 0, info.Width - controlSize, info.Height)
                                     : SKRect.Create(0, controlSize / 2, info.Width, info.Height - controlSize);
             SKPaint paint = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill };
             canvas.DrawRect(rect, paint);
@@ -519,7 +515,7 @@ namespace RWGame
             {
                 canvas.DrawCircle(new SKPoint(info.Width - controlSize / 2, controlSize / 2), controlSize / 2, paint);
             }
-            else 
+            else
             {
                 canvas.DrawCircle(new SKPoint(controlSize / 2, info.Height - controlSize / 2), controlSize / 2, paint);
             }
@@ -584,12 +580,12 @@ namespace RWGame
 
             //if (chooseRow)
             //{
-                ControlsGrid.RowDefinitions = new RowDefinitionCollection {
+            ControlsGrid.RowDefinitions = new RowDefinitionCollection {
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
                     //new RowDefinition { Height = new GridLength(0.05, GridUnitType.Star) },
                     new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
                 };
-                ControlsGrid.ColumnDefinitions = new ColumnDefinitionCollection {
+            ControlsGrid.ColumnDefinitions = new ColumnDefinitionCollection {
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                     //new ColumnDefinition { Width = new GridLength(0.05, GridUnitType.Star) },
                     new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
