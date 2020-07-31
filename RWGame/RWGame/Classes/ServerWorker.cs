@@ -64,7 +64,11 @@ namespace RWGame.Classes
         string FindPlayerCommand = "game_actions/find_player";
         /// <summary>+Команда отмены игры</summary>
         string CancelGameCommand = "game_actions/cancel_game";
-
+        /// <summary>+Получить информацию об игроке и статистику</summary>
+        string GetPlayerInfoCommand = "game_actions/get_player_info";
+        /// <summary>+Получить таблицу рейтинга</summary>
+        string GetStandingsCommand = "game_actions/get_standings";
+        
         public ServerWorker()
         {
             URLServer = "https://scigames.ru/";
@@ -182,7 +186,14 @@ namespace RWGame.Classes
             return await GetGameTurns(idGame);
         }
 
-
+        public async Task<PlayerInfo> TaskGetPlayerInfo()
+        {
+            return await GetPlayerInfo();
+        }
+        public async Task<Standings> TaskGetStandings()
+        {
+            return await GetStandings();
+        }
 
         private async Task<bool> RegistrateNewPlayer(string name, string family, string login, string password, string confirm_password, string birthday, string email)
         {
@@ -404,6 +415,30 @@ namespace RWGame.Classes
                     }
                 );
                 return currentResponse.Turns;
+            }
+            catch (System.Net.WebException)
+            {
+                return null;
+            }
+        }
+        private async Task<PlayerInfo> GetPlayerInfo()
+        {
+            try
+            {
+                PlayerInfo currentResponse = await PostData<PlayerInfo>(GetPlayerInfoCommand);
+                return currentResponse;
+            }
+            catch (System.Net.WebException)
+            {
+                return null;
+            }
+        }
+        private async Task<Standings> GetStandings()
+        {
+            try
+            {
+                Standings currentResponse = await PostData<Standings>(GetStandingsCommand);
+                return currentResponse;
             }
             catch (System.Net.WebException)
             {

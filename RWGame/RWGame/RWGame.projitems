@@ -26,6 +26,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHistoryPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StandingsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LoginPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
