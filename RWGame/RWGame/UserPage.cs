@@ -18,7 +18,15 @@ namespace RWGame
         SystemSettings systemSettings;
         List<Game> gamesList;
         List<ElementsOfViewCell> customListViewRecords;
+        Label gameListViewEmptyMessage;
+        PlayerInfo playerInfo;
+        Label userName;
+        Label performanceCenterLabel;
+        Label performanceBorderLabel;
+        Label RatingLabel;
 
+
+        bool isGameStarted = false;
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -30,7 +38,7 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
             };
-            Label userName = new Label()
+            userName = new Label()
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Start,
@@ -38,20 +46,173 @@ namespace RWGame
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 Margin = new Thickness(20, 10, 20, 10),
-                Text = "Hi, " + serverWorker.UserLogin
             };
+
+            var statisticsInfoLabel = new Label()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                TextDecorations = TextDecorations.Underline,
+                HorizontalTextAlignment = TextAlignment.Center,
+                Text = "Statistics",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                Margin = new Thickness(0, 3, 0, 3),
+            };
+
+            performanceCenterLabel = new Label()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+            };
+
+            performanceBorderLabel = new Label()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+            };
+
+            RatingLabel = new Label()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+            };
+            var ratingInfoLabel = new Label()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                TextColor = Color.White,
+                FontAttributes = FontAttributes.Bold,
+                HorizontalTextAlignment = TextAlignment.Center,
+                Text = "Rating",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+            };
+
+            Image performanceBorderImage = new Image()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                Source = "top_score_border.png",
+                Margin = 0,
+                HeightRequest = ratingInfoLabel.FontSize
+            };
+
+            Image performanceCenterImage = new Image()
+            {
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                //BackgroundColor = Color.FromHex("#39bafa"),
+                Source = "top_score_center.png",
+                Margin = 0,
+                HeightRequest = ratingInfoLabel.FontSize
+            };
+
+            Grid gridPlayerInfo = new Grid
+            {
+                RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto },
+                        new RowDefinition { Height = GridLength.Auto },
+                        new RowDefinition { Height = GridLength.Auto },
+                    },
+                ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    },
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                ColumnSpacing = 1,
+                RowSpacing = 0,
+                Margin = new Thickness(0, 0, 5, 0)
+            };
+
+
+            gridPlayerInfo.Children.Add(userName, 0, 0);
+            Grid.SetColumnSpan(userName, 1);
+            Grid.SetRowSpan(userName, 3);
+            
+            gridPlayerInfo.Children.Add(performanceCenterLabel, 1, 2);
+            Grid.SetColumnSpan(performanceCenterLabel, 1);
+            Grid.SetRowSpan(performanceCenterLabel, 1);
+
+            gridPlayerInfo.Children.Add(performanceCenterImage, 1, 1);
+            Grid.SetColumnSpan(performanceCenterImage, 1);
+            Grid.SetRowSpan(performanceCenterImage, 1);
+
+            gridPlayerInfo.Children.Add(performanceBorderLabel, 2, 2);
+            Grid.SetColumnSpan(performanceBorderLabel, 1);
+            Grid.SetRowSpan(performanceBorderLabel, 1);
+
+            gridPlayerInfo.Children.Add(performanceBorderImage, 2, 1);
+            Grid.SetColumnSpan(performanceBorderImage, 1);
+            Grid.SetRowSpan(performanceBorderImage, 1);
+
+            gridPlayerInfo.Children.Add(RatingLabel, 3, 2);
+            Grid.SetColumnSpan(RatingLabel, 1);
+            Grid.SetRowSpan(RatingLabel, 1);
+
+            gridPlayerInfo.Children.Add(ratingInfoLabel, 3, 1);
+            Grid.SetColumnSpan(ratingInfoLabel, 1);
+            Grid.SetRowSpan(ratingInfoLabel, 1);
+            
+            gridPlayerInfo.Children.Add(statisticsInfoLabel, 1, 0);
+            Grid.SetColumnSpan(statisticsInfoLabel, 3);
+            Grid.SetRowSpan(statisticsInfoLabel, 1);
+
+
+            var actionStandings = new TapGestureRecognizer();
+            actionStandings.Tapped += async (s, e) =>
+            {
+                await Navigation.PushAsync(new StandingsPage(serverWorker, systemSettings));
+            };
+            gridPlayerInfo.GestureRecognizers.Add(actionStandings);
+
             StackLayout stackLayoutListView = new StackLayout()
             {
-                VerticalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
                 HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(10, 10, 10, 10),
+                Margin = new Thickness(10, 0, 0, 0),
             };
 
             gamesListView = new ListView
             {
                 ItemTemplate = new DataTemplate(typeof(DateCellView)),
                 IsPullToRefreshEnabled = true,
+            };
 
+            gameListViewEmptyMessage = new Label
+            {
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.White,
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                Margin = new Thickness(20, 10, 20, 10),
+                Text = "Here we place your current games.\nTo play tap bot or friend.",
+                HorizontalTextAlignment = TextAlignment.Center,
+                IsVisible = false
             };
 
             gamesListView.RefreshCommand = new Command(async () =>
@@ -65,6 +226,8 @@ namespace RWGame
             gamesListView.ItemSelected += async delegate
             {
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;
+                if (isGameStarted) return;
+                isGameStarted = true;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
 
                 await GameProcesses.StartGame(serverWorker, game, () => false);
@@ -74,6 +237,7 @@ namespace RWGame
                 gamesListView.SelectedItem = null;
                 await UpdateGameList();
             };
+            stackLayoutListView.Children.Add(gameListViewEmptyMessage);
             stackLayoutListView.Children.Add(gamesListView);
 
             StackLayout buttonStack = new StackLayout()
@@ -83,37 +247,72 @@ namespace RWGame
                 Margin = new Thickness(20, 10, 20, 10),
                 Orientation = StackOrientation.Horizontal
             };
+            var stackLayoutPlayWithAnotherPlayer = new StackLayout
+            {
+                Spacing = 0,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+            };
+            Label labelPlayWithAnotherPlayer = new Label()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.White,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                Text = "Friend"
+            };
+
             ImageButton PlayWithAnotherPlayer = new ImageButton()
             {
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
                 //Text = "PVP",
                 BackgroundColor = Color.FromHex("#39bafa"),//7ad3ff
                 //TextColor = Color.White,
                 IsEnabled = true,
                 Source = "pvp.png",
-                HeightRequest = 40,
+                HeightRequest = 30,
                 WidthRequest = 100,
-                Padding = 5
+                Padding = 0
             };
             PlayWithAnotherPlayer.Clicked += async delegate
             {
+                if (isGameStarted) return;
+                isGameStarted = true;
                 await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
+            };
+            
+
+            var stackLayoutPlayWithBot = new StackLayout
+            {
+                Spacing = 0,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+            };
+            Label labelPlayWithBot = new Label()
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.White,
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                Text = "Bot"
             };
             ImageButton PlayWithBot = new ImageButton()
             {
                 VerticalOptions = LayoutOptions.Center,
-                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
                 //Text = "Bot",
                 BackgroundColor = Color.FromHex("#39bafa"),
                 //TextColor = Color.White,
                 Source = "bot.png",
-                HeightRequest = 40,
+                HeightRequest = 30,
                 WidthRequest = 100,
-                Padding = 5
+                Padding = 0,
             };
             PlayWithBot.Clicked += async delegate
             {
+                if (isGameStarted) return;
+                isGameStarted = true;
                 Game game = await GameProcesses.MakeGameWithBot(serverWorker);
                 GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
 
@@ -121,17 +320,43 @@ namespace RWGame
                 await UpdateGameList();
             };
 
-            buttonStack.Children.Add(PlayWithAnotherPlayer);
-            buttonStack.Children.Add(PlayWithBot);
-            userprofilStackLayout.Children.Add(userName);
+            stackLayoutPlayWithAnotherPlayer.Children.Add(PlayWithAnotherPlayer);
+            stackLayoutPlayWithAnotherPlayer.Children.Add(labelPlayWithAnotherPlayer);
+
+            stackLayoutPlayWithBot.Children.Add(PlayWithBot);
+            stackLayoutPlayWithBot.Children.Add(labelPlayWithBot);
+
+            buttonStack.Children.Add(stackLayoutPlayWithAnotherPlayer);
+            buttonStack.Children.Add(stackLayoutPlayWithBot);
+
+            userprofilStackLayout.Children.Add(gridPlayerInfo);
             userprofilStackLayout.Children.Add(stackLayoutListView);
             userprofilStackLayout.Children.Add(buttonStack);
 
             Content = userprofilStackLayout;
         }
 
+        public async Task UpdatePlayerInfo()
+        {
+            playerInfo = await serverWorker.TaskGetPlayerInfo();
+            userName.Text = "Hi, " + playerInfo.PersonalInfo.Name;
+            if (playerInfo.PlayerStatistics.PerformanceBorderVsBot.HasValue)
+            {
+                performanceBorderLabel.Text = Math.Round(playerInfo.PlayerStatistics.PerformanceBorderVsBot.Value).ToString();
+            }
+            if (playerInfo.PlayerStatistics.PerformanceCenterVsBot.HasValue)
+            {
+                performanceCenterLabel.Text = Math.Round(playerInfo.PlayerStatistics.PerformanceCenterVsBot.Value).ToString();
+            }
+            if (playerInfo.PlayerStatistics.RatingVsBot.HasValue)
+            {
+                RatingLabel.Text = Math.Round(playerInfo.PlayerStatistics.RatingVsBot.Value).ToString();
+            }
+        }
+
         public async Task UpdateGameList()
         {
+            await UpdatePlayerInfo();
             gamesList = await serverWorker.TaskGetGamesList();
             customListViewRecords = new List<ElementsOfViewCell>();
 
@@ -149,6 +374,17 @@ namespace RWGame
             else
             {
                 gamesListView.ItemsSource = null;
+            }
+
+            if (customListViewRecords.Count == 0)
+            {
+                gamesListView.IsVisible = false;
+                gameListViewEmptyMessage.IsVisible = true;
+            }
+            else
+            {
+                gamesListView.IsVisible = true;
+                gameListViewEmptyMessage.IsVisible = false;
             }
         }
 
@@ -171,6 +407,7 @@ namespace RWGame
 
         protected override void OnAppearing()
         {
+            isGameStarted = false;
             CallUpdateGameList();
         }
 
@@ -220,6 +457,17 @@ namespace RWGame
                     HorizontalTextAlignment = TextAlignment.End,
                     //Margin = new Thickness(25, 0, 25, 1)
                 };
+
+
+                Image vsLabel = new Image()
+                {
+                    HorizontalOptions = LayoutOptions.EndAndExpand,
+                    VerticalOptions = LayoutOptions.CenterAndExpand,
+                    BackgroundColor = Color.FromHex("#39bafa"),
+                    Source = "lightning.png",
+                    Scale = 1
+                };
+
                 var scoreLabel = new Label()
                 {
                     HorizontalOptions = LayoutOptions.CenterAndExpand,
@@ -230,15 +478,6 @@ namespace RWGame
                     FontAttributes = FontAttributes.Bold,
                     HorizontalTextAlignment = TextAlignment.Center,
                     //Margin = new Thickness(25, 0, 25, 1)
-                };
-
-                Image vsLabel = new Image()
-                {
-                    HorizontalOptions = LayoutOptions.EndAndExpand,
-                    VerticalOptions = LayoutOptions.CenterAndExpand,
-                    BackgroundColor = Color.FromHex("#39bafa"),
-                    Source = "lightning.png",
-                    Scale = 1
                 };
                 Image gamestateLabel = new Image()
                 {
@@ -271,7 +510,7 @@ namespace RWGame
                     RowSpacing = 1,
                     //Margin = new Thickness(25, 2, 25, 2)
                     Margin = new Thickness(1, 3, 1, 3),
-                    HeightRequest = 150
+                    //HeightRequest = 150
                 };
                 gameidLabel.SetBinding(Label.TextProperty, new Binding("IdGame"));
                 dateLabel.SetBinding(Label.TextProperty, new Binding("Date"));
@@ -330,7 +569,18 @@ namespace RWGame
             public string PlayerName1 { get { return game.PlayerUserName1; } }
             public string PlayerName2 { get { return game.PlayerUserName2; } }
             public string GameState { get { return game.GameState.ToString(); } }
-            public string GameStateImage { get { return GameStateImages[(int)game.GameState]; } }
+            public string GameStateImage { 
+                get { 
+                    if (new[] { GameStateEnum.NEW, GameStateEnum.CONNECT, GameStateEnum.START }.Contains(game.GameState))
+                    {
+                        return "state_star_gray.png";
+                    }
+                    else
+                    {
+                        return "state_star_" + game.GameSettings.Goals[game.IdPlayer] + ".png";
+                    }
+                } 
+            }
 
             public int Player1 { get { return game.Player1 == null ? -1 : (int)game.Player1; } }
             public int Player2 { get { return game.Player2 == null ? -1 : (int)game.Player2; } }

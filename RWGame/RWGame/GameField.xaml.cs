@@ -4,6 +4,7 @@ using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 //using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +22,10 @@ namespace RWGame
         //private readonly SKColor backgroundSKColor = SKColor.Parse("#15c1ff03");//SKColor.Parse("#39bafa");
         //private StackLayout stackLayout;
         Label InfoTurnLabel;
-        Label GameInfoLabel;
         Label GameScoreLabel;
+        Image GameScoreImage;
+        Label GameTopScoreLabel;
+        Image GameTopScoreImage;
         Label GoalLabel;
         StackLayout labelLayout;
         //Grid ControlsGrid;
@@ -37,7 +40,7 @@ namespace RWGame
         private readonly Color defaultColor = Color.FromHex("#39bafa");
         private int gridSize;
         private readonly int marginX = 60;
-        private readonly int marginY = 30;
+        private readonly int marginY = 60;
         private readonly int pointRadius = 30;
         private float centerRadius = 300;
         private float cellSize;
@@ -63,6 +66,7 @@ namespace RWGame
             canvas.Clear(backgroundSKColor);
             DrawField(canvas);
             DrawTrajectory(canvas);
+            
         }
 
 
@@ -74,6 +78,48 @@ namespace RWGame
         SKPoint GetGridPoint(float x, float y)
         {
             return new SKPoint(marginX / 2 + cellSize * x + shiftX, marginY / 2 + cellSize * y);
+        }
+
+        
+        SKPoint MovePoint(SKPoint cur, string dir)
+        {
+            var dx = new Dictionary<string, int> { { "U", 0 }, { "D", 0 }, { "L", -1 }, { "R", +1 } };
+            var dy = new Dictionary<string, int> { { "U", -1 }, { "D", +1 }, { "L", 0 }, { "R", 0 } };
+
+            cur.X += dx[dir];
+            cur.Y += dy[dir];
+            return cur;
+        }
+
+        static readonly float[] dashArray = { 5, 10 };
+        void DrawChoice(SKCanvas canvas)
+        {
+            if (gameControls is null) return;
+            if (gameControls.chosenTurn != -1) {
+                SKPaint paint = new SKPaint
+                {
+                    Color = SKColors.White,//SKColor.Parse("#3949AB"),
+                    Style = SKPaintStyle.StrokeAndFill,
+                    PathEffect = SKPathEffect.CreateDash(dashArray, 20),
+                    StrokeWidth = 8,
+                    MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
+                };
+                SKPoint cur = gameTrajectory.Last();
+
+                string dir1, dir2;
+                if (gameControls.chooseRow) {
+                    dir1 = game.GameSettings.Controls[gameControls.chosenTurn][0];
+                    dir2 = game.GameSettings.Controls[gameControls.chosenTurn][1];
+                } 
+                else
+                {
+                    dir1 = game.GameSettings.Controls[0][gameControls.chosenTurn];
+                    dir2 = game.GameSettings.Controls[1][gameControls.chosenTurn];
+                }
+                
+                canvas.DrawLine(GetGridPoint(cur), GetGridPoint(MovePoint(cur, dir1)), paint);
+                canvas.DrawLine(GetGridPoint(cur), GetGridPoint(MovePoint(cur, dir2)), paint);
+            }
         }
 
         void DrawField(SKCanvas canvas)
@@ -105,14 +151,23 @@ namespace RWGame
                 canvas.DrawLine(GetGridPoint(i, 0), GetGridPoint(i, gridSize), paint);
                 canvas.DrawLine(GetGridPoint(0, i), GetGridPoint(gridSize, i), paint);
             }
-            paint.StrokeWidth = 4;
-            paint.Color = SKColor.Parse("#3949AB");
+            paint.StrokeWidth = 5;
+            
+
+            if (game.GameSettings.Goals[game.IdPlayer] == "center")
+            {
+                paint.Color = SKColor.Parse("#99897d"); //ffd119 fca821 f36f24 ead3c3 d6b9a5 96755d bdaa9d
+            } else if (game.GameSettings.Goals[game.IdPlayer] == "border")
+            {
+                paint.Color = SKColor.Parse("#9f18ff");
+            }
+
             SKPoint p1 = GetGridPoint(0, 0), p2 = GetGridPoint(gridSize, gridSize);
             canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
 
             paint = new SKPaint
             {
-                Color = SKColor.Parse("#3949AB").WithAlpha(48),
+                Color = paint.Color.WithAlpha(32), // SKColor.Parse("#3949AB").WithAlpha(48)
                 Style = SKPaintStyle.Fill,
                 StrokeWidth = 1,
                 //MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 5),
@@ -125,9 +180,9 @@ namespace RWGame
         {
             SKPaint paint = new SKPaint
             {
-                Color = SKColor.Parse("#3949AB"),
+                Color = SKColor.Parse("#3949AB"), //.WithAlpha(128) 3949AB 84add1 3d7eb8
                 Style = SKPaintStyle.StrokeAndFill,
-                StrokeWidth = 5,
+                StrokeWidth = 4,
                 MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
             };
             for (int i = 1; i < gameTrajectory.Count; i++)
@@ -150,13 +205,16 @@ namespace RWGame
             //string resourceID = "RWGame.Droid.Images.star.png";
             //            var names = assembly.GetManifestResourceNames();
             //var filestream = new SKManagedStream();
+
+            DrawChoice(canvas);
+            float starSize = cellSize * 0.75f;
             var bitmap = SKBitmap.Decode(Helper.getResourceStream("Images.star.png"));
-            var scaled = bitmap.Resize(new SKImageInfo(pointRadius * 2, pointRadius * 2), SKFilterQuality.High);
-            SKImage image = SKImage.FromBitmap(scaled);
+            //var scaled = bitmap.Resize(new SKImageInfo(starSize * 2, pointRstarSizeadius * 2), SKFilterQuality.High);
+            SKImage image = SKImage.FromBitmap(bitmap);
             SKRect rect = new SKRect
             {
-                Location = GetGridPoint(gameTrajectory.Last()) - new SKPoint(pointRadius, pointRadius),
-                Size = new SKSize(pointRadius * 2, pointRadius * 2)
+                Location = GetGridPoint(gameTrajectory.Last()) - new SKPoint(starSize, starSize),
+                Size = new SKSize(starSize * 2, starSize * 2)
             };
             canvas.DrawImage(image, rect);
 
@@ -266,24 +324,16 @@ namespace RWGame
 
             gameTrajectory.Add(new SKPoint(gameStateInfo.PointState[0], gameStateInfo.PointState[1]));
             await gameControls.canvasView[gameControls.chosenTurn].FadeTo(0.75, 25);
-            /*if (chooseRow)
-            {
-                //await Task.WhenAny(ControlsImages[gameControls.chosenTurn, 0].FadeTo(0.75, 25), ControlsImages[gameControls.chosenTurn, 1].FadeTo(0.75, 25));
-                
-            }
-            else
-            {
-                //await Task.WhenAny(ControlsImages[0, gameControls.chosenTurn].FadeTo(0.75, 25), ControlsImages[1, gameControls.chosenTurn].FadeTo(0.75, 25));
-            }*/
+            //await gameControls.canvasView[gameControls.chosenTurn].(0.75, 25);
             gameControls.chosenTurn = -1;
             idTurn = gameStateInfo.LastIdTurn;
             numTurns = idTurn;
-            GameInfoLabel.Text = "Score: " + numTurns;
+            GameScoreLabel.Text = numTurns.ToString();
 
             canvasView.InvalidateSurface();
             if (gameStateInfo.GameState == GameStateEnum.END)
             {
-                await DisplayAlert("Game finished", "You made " + numTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;-)", "OK");
+                await DisplayAlert("Game finished", "You made " + numTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
                 await Navigation.PopAsync();
                 return;
             }
@@ -303,22 +353,54 @@ namespace RWGame
             NavigationPage.SetHasNavigationBar(this, false);
 
             this.BackgroundColor = backgroundColor;
-            this.BackgroundImageSource = ImageSource.FromFile("background.png");
+            //this.BackgroundImageSource = ImageSource.FromFile("seashore2.png"); // background.png
+            
             foreach (TurnInfo turn in game.Turns)
             {
                 gameTrajectory.Add(new SKPoint(turn.State[0], turn.State[1]));
             }
 
+            AbsoluteLayout absoluteLayout = new AbsoluteLayout();
+            Image back = new Image
+            {
+                //HorizontalOptions = LayoutOptions.EndAndExpand,
+                VerticalOptions = LayoutOptions.Start,
+                Aspect = Aspect.AspectFill,
+                Source = ImageSource.FromFile("seashore2.png"),
+            };
+            absoluteLayout.Children.Add(back, new Rectangle(0, 0, systemSettings.ScreenWidth, systemSettings.ScreenWidth * 2));//systemSettings.ScreenHeight
+            /*AbsoluteLayout.SetLayoutFlags(back,
+                AbsoluteLayoutFlags.WidthProportional | AbsoluteLayoutFlags.PositionProportional);*/
+            /*AbsoluteLayout.SetLayoutBounds(back,
+                 new Rectangle(0, 0, AbsoluteLayout.AutoSize, AbsoluteLayout.AutoSize));*/
+            //AbsoluteLayout.SetLayoutFlags(back, AbsoluteLayoutFlags.All);
+
+
             // Create SKCanvasView to view result 
             canvasView = new SKCanvasView
             {
-                //HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Fill,
                 Margin = new Thickness(10, 0, 10, 0),
-
+                HeightRequest = systemSettings.ScreenWidth - 30,
+                WidthRequest = systemSettings.ScreenWidth,
             };
-
+            //canvasView.BindingContext = canvasView;
+            //canvasView.SetBinding(HeightProperty, new Binding("Width"));
+            /*Grid grid = new Grid
+            {
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                },
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition { Width = GridLength.Auto },
+                }
+            };*/
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
+            //grid.Children.Add(canvasView, 0, 0);
 
             stackLayout = new StackLayout()
             {
@@ -326,12 +408,26 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 Spacing = 0,
             };
-            labelLayout = new StackLayout()
+            Grid labelGrid = new Grid()
             {
+                //VerticalOptions = LayoutOptions.FillAndExpand,
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = GridLength.Auto },
+                },
+                ColumnDefinitions =
+                {
+                    //new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(2.2, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
+                    //new ColumnDefinition { Width = new GridLength(1.5, GridUnitType.Star) },
+                },
                 HorizontalOptions = LayoutOptions.Fill,
-                Orientation = StackOrientation.Horizontal,
-                Margin = new Thickness(10, 0, 10, 0),
-                Spacing = 0,
+                //Orientation = StackOrientation.Horizontal,
+                Margin = new Thickness(20, 0, 20, 0),
+                //Spacing = 0
+                BackgroundColor = Color.FromHex("#6bbaff").MultiplyAlpha(0.15),
             };
             InfoTurnLabel = new Label()
             {
@@ -339,70 +435,120 @@ namespace RWGame
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromHex("#15c1ff"),
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
-                BackgroundColor = backgroundColor
-            };
-
-            GameInfoLabel = new Label()
-            {
-                Text = "Score: " + numTurns,
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
-                FontAttributes = FontAttributes.Bold,
-                TextColor = Color.White,
-                HorizontalOptions = LayoutOptions.Fill,
-                HorizontalTextAlignment = TextAlignment.Start,
-                BackgroundColor = backgroundColor,
-                Margin = new Thickness(10, 0, 10, 0),
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                BackgroundColor = Color.FromHex("#f9ce6f").MultiplyAlpha(0.5)
             };
 
             GameScoreLabel = new Label()
             {
-                Text = "",
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                Text = numTurns.ToString(),
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                HorizontalTextAlignment = TextAlignment.End,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                //HorizontalTextAlignment = TextAlignment.Start,
                 BackgroundColor = backgroundColor,
-                Margin = new Thickness(10, 0, 10, 0),
+                
+            };
+            GameScoreImage = new Image()
+            {
+                //HorizontalOptions = LayoutOptions.Start,
+                //VerticalOptions = LayoutOptions.Center,
+                BackgroundColor = backgroundColor, //Color.FromHex("#39bafa"),
+                Source = "state_star_" + game.GameSettings.Goals[game.IdPlayer] + ".png",
+                Aspect = Aspect.AspectFit,
+                HeightRequest = GameScoreLabel.FontSize,
+                Scale = 1,
+                Margin = new Thickness(0, 3, 0, 3),
+            };
+            GameTopScoreLabel = new Label()
+            {
+                Text = "",
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                TextColor = Color.White,
+                HorizontalOptions = LayoutOptions.End,
+                //HorizontalTextAlignment = TextAlignment.End,
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                BackgroundColor = backgroundColor,
+                //Margin = new Thickness(0, 0, 10, 0),
+            };
+            GameTopScoreImage = new Image()
+            {
+                HorizontalOptions = LayoutOptions.End,
+                //VerticalOptions = LayoutOptions.Center,
+                BackgroundColor = backgroundColor, //Color.FromHex("#39bafa"),
+                Source = "top_score_" + game.GameSettings.Goals[game.IdPlayer] + ".png",
+                HeightRequest = GameTopScoreLabel.FontSize,
+                Scale = 1,
+                Margin = new Thickness(0, 3, 0, 3),
             };
 
             GoalLabel = new Label()
             {
-                Text = "Your goal: " + game.GameSettings.Goals[game.IdPlayer],
-                FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
+                Text = /*"Your goal: " + */CultureInfo.CurrentCulture.TextInfo.ToTitleCase(game.GameSettings.Goals[game.IdPlayer]),
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
-                TextColor = Color.FromHex("#15c1ff"),
-                HorizontalOptions = LayoutOptions.Center,
+                //TextColor = Color.FromHex("#15c1ff"),
+                TextColor = Color.White,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
                 VerticalOptions = LayoutOptions.Center,
                 BackgroundColor = backgroundColor
             };
 
             if (game.GameSettings.Goals[game.IdPlayer] == "center")
             {
-                GameScoreLabel.Text = "Top score: 546";
+                GameTopScoreLabel.Text = "546";
             }
             else if (game.GameSettings.Goals[game.IdPlayer] == "border")
             {
-                GameScoreLabel.Text = "Top score: 29";
+                GameTopScoreLabel.Text = "20";
             }
 
-            labelLayout.Children.Add(GameInfoLabel);
+            var stackLayoutScore = new StackLayout { Orientation = StackOrientation.Horizontal };
+            var stackLayoutTopScore = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.EndAndExpand };
+            stackLayoutScore.Children.Add(GameScoreImage);
+            stackLayoutScore.Children.Add(GameScoreLabel);
+            stackLayoutTopScore.Children.Add(GameTopScoreImage);
+            stackLayoutTopScore.Children.Add(GameTopScoreLabel);
+            /*labelLayout.Children.Add(GameScoreImage);
             labelLayout.Children.Add(GameScoreLabel);
+            labelLayout.Children.Add(GoalLabel);
+            labelLayout.Children.Add(GameTopScoreImage);
+            labelLayout.Children.Add(GameTopScoreLabel);*/
 
-            stackLayout.Children.Add(labelLayout);
+            /*labelGrid.Children.Add(
+
+                GameScoreImage, 0, 0);
+            labelGrid.Children.Add(GameScoreLabel, 1, 0);
+            labelGrid.Children.Add(GoalLabel, 2, 0);
+            labelGrid.Children.Add(GameTopScoreImage, 3, 0);
+            labelGrid.Children.Add(GameTopScoreLabel, 4, 0);*/
+
+            labelGrid.Children.Add(stackLayoutScore, 0, 0);
+            labelGrid.Children.Add(GoalLabel, 1, 0);
+            labelGrid.Children.Add(stackLayoutTopScore, 2, 0);
+
+            stackLayout.Children.Add(labelGrid);
             stackLayout.Children.Add(canvasView);
             stackLayout.Children.Add(InfoTurnLabel);
 
             if (gameStateInfo.GameState != GameStateEnum.END)
             {
-                gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor);
+                InfoTurnLabel.Text = "Make first turn!";
+                gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor, canvasView);
                 stackLayout.Children.Add(gameControls.ControlsGrid);
+            } else
+            {
+                InfoTurnLabel.Text = "Moves history";
             }
 
-            stackLayout.Children.Add(GoalLabel);
-            Content = stackLayout;
+            //AbsoluteLayout.SetLayoutFlags(stackLayout, AbsoluteLayoutFlags.All);
+            //stackLayout.Children.Add(GoalLabel);
+            absoluteLayout.Children.Add(stackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            Content = absoluteLayout;
         }
 
         public async void CallPopAsync()
@@ -428,8 +574,9 @@ namespace RWGame
         public SKCanvasView[] canvasView = new SKCanvasView[2];
         Label InfoTurnLabel;
         Action MakeTurnAndWait;
+        SKCanvasView canvasViewField;
 
-        bool chooseRow;
+        public bool chooseRow;
         readonly Game game;
         private bool canAnimate = true;
         public bool canMakeTurn = true;
@@ -442,13 +589,14 @@ namespace RWGame
         };
 
         public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, SystemSettings systemSettings,
-            Color backgroundColor)
+            Color backgroundColor, SKCanvasView canvasViewField)
         {
             this.MakeTurnAndWait = MakeTurnAndWait;
             this.systemSettings = systemSettings;
             this.backgroundColor = backgroundColor;
             this.InfoTurnLabel = InfoTurnLabel;
             this.game = game;
+            this.canvasViewField = canvasViewField;
             chooseRow = game.GameSettings.TurnControls[game.IdPlayer] == "row";
 
             MakeGameControl();
@@ -559,7 +707,9 @@ namespace RWGame
             {
                 turnName = chosenTurn == 0 ? "left column" : "right column";
             }
-            InfoTurnLabel.Text = turnName + ". Wait...";
+            //InfoTurnLabel.Text = turnName + ". Wait...";
+            InfoTurnLabel.Text = "Wait...";
+            canvasViewField.InvalidateSurface();
             await Task.Delay(1000);
             MakeTurnAndWait();
         }
@@ -568,9 +718,9 @@ namespace RWGame
         {
             ControlsGrid = new Grid
             {
-                Margin = new Thickness(10, 0, 10, 0),
+                Margin = new Thickness(10, 10, 10, 10),
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.StartAndExpand,
                 BackgroundColor = backgroundColor,
                 HeightRequest = systemSettings.ScreenWidth / 2.5,
                 WidthRequest = systemSettings.ScreenWidth / 2.5,

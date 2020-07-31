@@ -12,6 +12,8 @@ namespace RWGame
         SystemSettings systemSettings;
         ListView gamesListView;
         List<UserPage.ElementsOfViewCell> customListViewRecords;
+        Label gameListViewEmptyMessage;
+        bool isGameStarted = false;
         public GameHistoryPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             serverWorker = _serverWorker;
@@ -25,14 +27,30 @@ namespace RWGame
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(10, 10, 10, 10),
+                Margin = new Thickness(10, 10, 0, 10),
             };
             stackLayout.Children.Add(gamesListView);
+
+            gameListViewEmptyMessage = new Label
+            {
+                VerticalOptions = LayoutOptions.CenterAndExpand,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.White,
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                Margin = new Thickness(20, 10, 20, 10),
+                Text = "Here we place your finished games.\nThanks for playing =)",
+                HorizontalTextAlignment = TextAlignment.Center,
+                IsVisible = false
+            };
+            stackLayout.Children.Add(gameListViewEmptyMessage);
 
             gamesListView.ItemTemplate = new DataTemplate(typeof(UserPage.DateCellView));
             gamesListView.ItemSelected += async delegate
             {
                 if ((UserPage.ElementsOfViewCell)gamesListView.SelectedItem == null) return;
+                if (isGameStarted) return;
+                isGameStarted = true;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((UserPage.ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
 
                 //await GameProcesses.StartGame(serverWorker, game, () => false);
@@ -72,6 +90,16 @@ namespace RWGame
             {
                 gamesListView.ItemsSource = null;
             }
+            if (customListViewRecords.Count == 0)
+            {
+                gamesListView.IsVisible = false;
+                gameListViewEmptyMessage.IsVisible = true;
+            }
+            else
+            {
+                gamesListView.IsVisible = true;
+                gameListViewEmptyMessage.IsVisible = false;
+            }
         }
 
         public async void CallUpdateGameList()
@@ -81,6 +109,7 @@ namespace RWGame
 
         protected override void OnAppearing()
         {
+            isGameStarted = false;
             CallUpdateGameList();
         }
 

@@ -1,4 +1,4 @@
-﻿using RWGame.Classes;
+using RWGame.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -109,7 +109,7 @@ namespace RWGame
                 Text = "Login",
                 BackgroundColor = Color.FromHex("#7ad3ff"),
                 //WidthRequest = systemSettings.ScreenWidth / 2,
-                HeightRequest = 30,
+                HeightRequest = 40,
                 Padding = new Thickness(5, 0, 5, 0),
                 TextColor = Color.White,
             };

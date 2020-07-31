@@ -226,4 +226,73 @@ namespace RWGame.Classes.ResponseClases
         [JsonProperty("state")]
         public List<int> State { get; set; }
     }
+
+    public class PersonalInfo
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("family")]
+        public string Family{ get; set; }
+
+        [JsonProperty("birthday")]
+        public DateTime Birthday { get; set; }
+
+        [JsonProperty("age")]
+        public int Age { get; set; }
+    }
+
+    public class PlayerStatistics
+    {
+        [JsonProperty("rating_bot")]
+        public float? RatingVsBot { get; set; }
+
+        [JsonProperty("performance_1_bot")]
+        public float? PerformanceCenterVsBot { get; set; }
+
+        [JsonProperty("performance_2_bot")]
+        public float? PerformanceBorderVsBot { get; set; }
+
+        [JsonProperty("count_games_1")]
+        public int CountGamesCenter { get; set; }
+
+        [JsonProperty("count_games_2")]
+        public int CountGamesBorder { get; set; }    
+    }
+
+    public class PlayerInfo
+    {
+        [JsonProperty("personal_info")]
+        public PersonalInfo PersonalInfo { get; set; }
+
+        [JsonProperty("player_statistics")]
+        public PlayerStatistics PlayerStatistics { get; set; }
+    }
+
+    public class PlayerStanding
+    {
+        [JsonProperty("id_player")]
+        public int IdPlayer { get; set; }
+
+        [JsonProperty("login")]
+        public string UserName { get; set; }
+
+        [JsonProperty("rating")]
+        public float Rating { get; set; }
+
+        [JsonProperty("performance_1")]
+        public float PerformanceCenter { get; set; }
+
+        [JsonProperty("performance_2")]
+        public float PerformanceBorder { get; set; }
+    }
+
+    public class Standings
+    {
+        [JsonProperty("standings_vs_bot")]
+        public List<PlayerStanding> StandingsVsBot { get; set; }
+
+        [JsonProperty("man_vs_bot")]
+        public PlayerStanding ManVsBot { get; set; }
+    }
 }
