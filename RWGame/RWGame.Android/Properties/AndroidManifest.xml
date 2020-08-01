@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="6" android:versionName="1.0" package="com.scigames.RWGame" android:installLocation="preferExternal">
-	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="29" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="8" android:versionName="1.0" package="com.scigames.RWGame" android:installLocation="preferExternal">
+	<uses-sdk android:minSdkVersion="19" android:targetSdkVersion="29" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="Random Walk" android:icon="@drawable/RWIcon" android:fullBackupContent="@xml/auto_backup_rules"></application>
+	<application android:label="Random Walk" android:icon="@mipmap/ic_launcher" android:allowBackup="true"></application>
 </manifest>
