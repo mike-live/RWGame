@@ -227,15 +227,23 @@ namespace RWGame
             {
                 if ((ElementsOfViewCell)gamesListView.SelectedItem == null) return;
                 if (isGameStarted) return;
-                isGameStarted = true;
                 Game game = await GameProcesses.MakeSavedGame(serverWorker, ((ElementsOfViewCell)gamesListView.SelectedItem).game.IdGame);
 
-                await GameProcesses.StartGame(serverWorker, game, () => false);
-                GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+                bool cancelGame = await GameProcesses.StartGame(serverWorker, game);
 
-                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
+                if (!cancelGame)
+                {
+                    GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+                    await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
+                    isGameStarted = true;
+                }
+                else
+                {
+                    await serverWorker.TaskCancelGame(game.IdGame);
+                }
+
                 gamesListView.SelectedItem = null;
-                await UpdateGameList();
+                //await UpdateGameList();
             };
             stackLayoutListView.Children.Add(gameListViewEmptyMessage);
             stackLayoutListView.Children.Add(gamesListView);

@@ -178,33 +178,8 @@ namespace RWGame.PagesGameChoise
 
                 if (entryLogin.Text == "" || selectedIdPlayer != -1) // !(await serverWorker.TaskCheckLogin(entryLogin.Text))
                 {
-                    string alertMessage;
-                    if (entryLogin.Text == "")
-                    {
-                        alertMessage = "Try to find player...";
-                    }
-                    else
-                    {
-                        alertMessage = "Wait for " + entryLogin.Text;
-                    }
-                    alertMessage += "\n\nAsk your friend to update page - upper item in the list should be your game\n";
                     Game game = await GameProcesses.MakeGameWithPlayer(serverWorker, selectedIdPlayer);
-
-                    var cancelSrc = new CancellationTokenSource();
-                    var config = new ProgressDialogConfig()
-                        .SetTitle(alertMessage)
-                        .SetIsDeterministic(false)
-                        .SetMaskType(MaskType.Gradient)
-                        .SetCancel(onCancel: cancelSrc.Cancel);
-
-                    using (UserDialogs.Instance.Progress(config))
-                    {
-                        await GameProcesses.StartGame(serverWorker, game, () => cancelSrc.Token.IsCancellationRequested);
-                    }
-
-                    //UserDialogs.Instance.ShowLoading(alertMessage);
-                    cancelGame = cancelSrc.IsCancellationRequested;
-                    //UserDialogs.Instance.HideLoading();
+                    cancelGame = await GameProcesses.StartGame(serverWorker, game);
 
                     if (!cancelGame)
                     {

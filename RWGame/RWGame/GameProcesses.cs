@@ -1,6 +1,8 @@
-﻿using RWGame.Classes;
+﻿using Acr.UserDialogs;
+using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RWGame
@@ -30,7 +32,7 @@ namespace RWGame
             return game;
         }
 
-        static public async Task<bool> StartGame(ServerWorker serverWorker, Game game, Func<bool> isCancel)
+        static private async Task<bool> StartGame(ServerWorker serverWorker, Game game, Func<bool> isCancel)
         {
             GameStateEnum GameState = game.GameState;
             while (GameState != GameStateEnum.ACTIVE && GameState != GameStateEnum.WAIT)
@@ -40,6 +42,40 @@ namespace RWGame
                 GameState = (await serverWorker.TaskPlayGame(idGame: game.IdGame)).GameState;
             }
             return true;
+        }
+
+        static public async Task<bool> StartGame(ServerWorker serverWorker, Game game)
+        {
+            string alertMessage;
+            if (game.Player1 is null || game.Player2 is null)
+            {
+                alertMessage = "Try to find player...";
+            }
+            else
+            {
+                alertMessage = "Wait for " + (game.IdPlayer == 0 ? game.PlayerUserName2 : game.PlayerUserName1);
+            }
+            alertMessage += "\n\nAsk your friend to update page - upper item in the list should be your game\n";
+
+            var cancelSrc = new CancellationTokenSource();
+            var config = new ProgressDialogConfig()
+                .SetTitle(alertMessage)
+                .SetIsDeterministic(false)
+                .SetMaskType(MaskType.Gradient)
+                .SetCancel(onCancel: cancelSrc.Cancel);
+
+            if (game.GameState == GameStateEnum.CONNECT)
+            {
+                using (UserDialogs.Instance.Progress(config))
+                {
+                    await StartGame(serverWorker, game, () => cancelSrc.Token.IsCancellationRequested);
+                }
+            } else
+            {
+                await StartGame(serverWorker, game, () => false);
+            }
+            bool cancelGame = cancelSrc.IsCancellationRequested;
+            return cancelGame;
         }
     }
 }
