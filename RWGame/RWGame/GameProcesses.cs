@@ -55,7 +55,7 @@ namespace RWGame
             {
                 alertMessage = "Wait for " + (game.IdPlayer == 0 ? game.PlayerUserName2 : game.PlayerUserName1);
             }
-            alertMessage += "\n\nAsk your friend to update list of started games\nGame #" + game.IdGame.ToString() + "\n";
+            alertMessage += "\n\nAsk your friend to update list of started games\nAnd tap on game #" + game.IdGame.ToString() + "\n";
 
             var cancelSrc = new CancellationTokenSource();
             var config = new ProgressDialogConfig()

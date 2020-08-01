@@ -176,7 +176,7 @@ namespace RWGame.PagesGameChoise
                     }
                 }
 
-                if (entryLogin.Text == "" || selectedIdPlayer != -1) // !(await serverWorker.TaskCheckLogin(entryLogin.Text))
+                if (entryLogin.Text == "" || entryLogin.Text is null || selectedIdPlayer != -1) // !(await serverWorker.TaskCheckLogin(entryLogin.Text))
                 {
                     Game game = await GameProcesses.MakeGameWithPlayer(serverWorker, selectedIdPlayer);
                     cancelGame = await GameProcesses.StartGame(serverWorker, game);
@@ -201,7 +201,7 @@ namespace RWGame.PagesGameChoise
 
             Label promptLabel = new Label()
             {
-                HorizontalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Start,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 Text = "1. Choose your friend and ask them to open the app\n2. Enter their login and tap play",
                 TextColor = Color.White,
