@@ -8,7 +8,7 @@ namespace RWGame
         //static Mutex isExecuted = new Mutex();
         static Task<bool> task = null;
         static IProgressDialog progress = null;
-        public async static Task<bool> TryConnectStart(int id_attempt)
+        public static bool TryConnectStart(int id_attempt)
         {
             var config = new ProgressDialogConfig()
                 .SetTitle("Trying connect to internet...\n" + "Attempt: " + id_attempt)
@@ -19,7 +19,7 @@ namespace RWGame
             return true;
         }
 
-        public async static Task<bool> TryConnectFinish()
+        public static bool TryConnectFinish()
         {
             if (progress != null)
             {

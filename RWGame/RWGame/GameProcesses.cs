@@ -61,7 +61,7 @@ namespace RWGame
             var config = new ProgressDialogConfig()
                 .SetTitle(alertMessage)
                 .SetIsDeterministic(false)
-                .SetMaskType(MaskType.Gradient)
+                .SetMaskType(MaskType.Black)
                 .SetCancel(onCancel: cancelSrc.Cancel);
 
             if (game.GameState == GameStateEnum.CONNECT)

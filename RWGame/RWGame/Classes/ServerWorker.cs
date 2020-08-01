@@ -110,11 +110,11 @@ namespace RWGame.Classes
                     }
                     catch (HttpRequestException)
                     {
-                        await WaitInternetView.TryConnectStart(i + 1);
+                        WaitInternetView.TryConnectStart(i + 1);
                         await Task.Delay(1000);
                     }
                 }
-                await WaitInternetView.TryConnectFinish();
+                WaitInternetView.TryConnectFinish();
                 if (response is null)
                 {
                     await WaitInternetView.WaitUserReconnect();
