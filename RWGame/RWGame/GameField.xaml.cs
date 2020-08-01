@@ -321,13 +321,12 @@ namespace RWGame
 
         public async void UpdateState(GameStateInfo gameStateInfo)
         {
-
             gameTrajectory.Add(new SKPoint(gameStateInfo.PointState[0], gameStateInfo.PointState[1]));
             await gameControls.canvasView[gameControls.chosenTurn].FadeTo(0.75, 25);
             //await gameControls.canvasView[gameControls.chosenTurn].(0.75, 25);
             gameControls.chosenTurn = -1;
             idTurn = gameStateInfo.LastIdTurn;
-            numTurns = game.Turns.Count - 1;
+            numTurns = idTurn;
             GameScoreLabel.Text = numTurns.ToString();
 
             canvasView.InvalidateSurface();
@@ -442,7 +441,6 @@ namespace RWGame
 
             GameScoreLabel = new Label()
             {
-                Text = numTurns.ToString(),
                 FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.White,
@@ -546,7 +544,9 @@ namespace RWGame
             } else
             {
                 InfoTurnLabel.Text = "Moves history";
+                numTurns--;
             }
+            GameScoreLabel.Text = numTurns.ToString();
 
             //AbsoluteLayout.SetLayoutFlags(stackLayout, AbsoluteLayoutFlags.All);
             //stackLayout.Children.Add(GoalLabel);
