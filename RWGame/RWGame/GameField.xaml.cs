@@ -27,7 +27,7 @@ namespace RWGame
         Label GameTopScoreLabel;
         Image GameTopScoreImage;
         Label GoalLabel;
-        StackLayout labelLayout;
+        //StackLayout labelLayout;
         //Grid ControlsGrid;
         //Image[,] ControlsImages = new Image[2, 2];
         SKCanvasView canvasView;
@@ -39,9 +39,9 @@ namespace RWGame
         private readonly Color coloredColor = Color.FromHex("#6ecbfa");
         private readonly Color defaultColor = Color.FromHex("#39bafa");
         private int gridSize;
-        private readonly int marginX = 60;
-        private readonly int marginY = 60;
-        private readonly int pointRadius = 30;
+        private readonly int marginX = 100;
+        private readonly int marginY = 100;
+        //private readonly int pointRadius = 30;
         private float centerRadius = 300;
         private float cellSize;
         private float shiftX = 0;
@@ -327,7 +327,7 @@ namespace RWGame
             //await gameControls.canvasView[gameControls.chosenTurn].(0.75, 25);
             gameControls.chosenTurn = -1;
             idTurn = gameStateInfo.LastIdTurn;
-            numTurns = idTurn;
+            numTurns = game.Turns.Count - 1;
             GameScoreLabel.Text = numTurns.ToString();
 
             canvasView.InvalidateSurface();
@@ -381,8 +381,8 @@ namespace RWGame
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(10, 0, 10, 0),
-                HeightRequest = systemSettings.ScreenWidth - 30,
+                Margin = new Thickness(0, 0, 0, 0),
+                HeightRequest = systemSettings.ScreenWidth - 10,
                 WidthRequest = systemSettings.ScreenWidth,
             };
             //canvasView.BindingContext = canvasView;
@@ -537,7 +537,10 @@ namespace RWGame
 
             if (gameStateInfo.GameState != GameStateEnum.END)
             {
-                InfoTurnLabel.Text = "Make first turn!";
+                if (game.Turns.Count == 1)
+                {
+                    InfoTurnLabel.Text = "Make first turn!";
+                }
                 gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor, canvasView);
                 stackLayout.Children.Add(gameControls.ControlsGrid);
             } else
