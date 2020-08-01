@@ -237,11 +237,6 @@ namespace RWGame
                     await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                     isGameStarted = true;
                 }
-                else
-                {
-                    await serverWorker.TaskCancelGame(game.IdGame);
-                }
-
                 gamesListView.SelectedItem = null;
                 //await UpdateGameList();
             };
