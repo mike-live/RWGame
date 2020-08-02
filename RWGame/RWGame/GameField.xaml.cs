@@ -91,11 +91,14 @@ namespace RWGame
             return cur;
         }
 
-        static readonly float[] dashArray = { 5, 10 };
+        
         void DrawChoice(SKCanvas canvas)
         {
             if (gameControls is null) return;
             if (gameControls.chosenTurn != -1) {
+                int numDash = 5;
+                float dashLength = 2 * (numDash - 1) + numDash;
+                float[] dashArray = { cellSize / dashLength, 2 * cellSize / dashLength };
                 SKPaint paint = new SKPaint
                 {
                     Color = SKColors.White,//SKColor.Parse("#3949AB"),
@@ -696,7 +699,7 @@ namespace RWGame
             {
                 canAnimate = false;
 
-                await curCanvas.FadeTo(0, 25);//, nghImage.FadeTo(0, 25));
+                //await curCanvas.FadeTo(0, 25);//, nghImage.FadeTo(0, 25));
                 await curCanvas.FadeTo(1, 100);//, nghImage.FadeTo(1, 100));
                 canAnimate = true;
             }
