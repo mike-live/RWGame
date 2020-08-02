@@ -64,7 +64,7 @@ namespace RWGame
                 .SetMaskType(MaskType.Black)
                 .SetCancel(onCancel: cancelSrc.Cancel);
 
-            if (game.GameState == GameStateEnum.CONNECT)
+            if (game.GameState == GameStateEnum.CONNECT || game.GameState == GameStateEnum.START)
             {
                 using (UserDialogs.Instance.Progress(config))
                 {
