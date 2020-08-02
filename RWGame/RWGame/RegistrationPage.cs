@@ -110,12 +110,13 @@ namespace RWGame
             {
                 if (nameEntry != null && nameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(nameEntry.Text, @"^[\p{L}]+(([',. -][\p{L} ])?[\p{L}]*)*$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(nameEntry.Text, @"^\s*[\p{L}]+(([',. -][\p{L} ])?[\p{L}]*)*\s*$", RegexOptions.CultureInvariant))
                     {
                         isFieldsCorrect[0] = true;
                         labelRightImage.HeightRequest = nameLabel.Height;
                         labelRightImage.Source = "yes.png";
                         nameTipLabel.Opacity = 0;
+                        nameEntry.Text = nameEntry.Text.Trim();
                     }
                     else if (nameEntry.Text.Length < 1)
                     {
@@ -223,12 +224,13 @@ namespace RWGame
             {
                 if (surnameEntry != null && surnameEntry.Text != null)
                 {
-                    if (Regex.IsMatch(surnameEntry.Text, @"^[\p{L}]+(([',. -][\p{L} ])?[\p{L}]*)*$", RegexOptions.CultureInvariant))
+                    if (Regex.IsMatch(surnameEntry.Text, @"^\s*[\p{L}]+(([',. -][\p{L} ])?[\p{L}]*)*\s*$", RegexOptions.CultureInvariant))
                     {
                         isFieldsCorrect[1] = true;
                         surnameRightImage.HeightRequest = surnameLabel.Height;
                         surnameRightImage.Source = "yes.png";
                         surnameTipLabel.Opacity = 0;
+                        surnameEntry.Text = surnameEntry.Text.Trim();
                     }
                     else if (surnameEntry.Text.Length < 1)
                     {
@@ -336,6 +338,7 @@ namespace RWGame
             {
                 if (loginEntry != null && loginEntry.Text != null)
                 {
+                    loginEntry.Text = loginEntry.Text.Trim();
                     if (Regex.IsMatch(loginEntry.Text, @"^[a-zA-Z_][a-zA-Z0-9_\-\.]{1,255}$", RegexOptions.CultureInvariant))
                     {
                         if (await localServerWorker.TaskCheckLogin(loginEntry.Text))
@@ -392,7 +395,7 @@ namespace RWGame
                     isFieldsCorrect[2] = false;
                     loginRightImage.HeightRequest = loginLabel.Height;
                     loginRightImage.Source = "no.png";
-                    loginTipLabel.Text = "Login should be at least 2 charachters long";
+                    loginTipLabel.Text = "Login should be at least 2 characters long";
                     loginTipLabel.Opacity = 1;
                 }
             };
