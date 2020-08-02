@@ -97,7 +97,7 @@ namespace RWGame
                 FontAttributes = FontAttributes.Bold,
                 HorizontalTextAlignment = TextAlignment.Center,
                 FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
-                Text = "Human",
+                Text = "Humanity",
             };
 
             var standingsHeaderView = new StackLayout
@@ -166,7 +166,7 @@ namespace RWGame
                 FontSize = Device.GetNamedSize(NamedSize.Large, typeof(Label)),
                 FontAttributes = FontAttributes.Bold,
                 Margin = new Thickness(20, 10, 20, 10),
-                Text = "Human vs. bot"
+                Text = "Humanity vs. bot"
             };
             stackLayout.Children.Add(standingsLabel);
             stackLayout.Children.Add(standingsListView);
