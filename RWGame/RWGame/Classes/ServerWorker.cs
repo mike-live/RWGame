@@ -237,13 +237,13 @@ namespace RWGame.Classes
             }
         }
 
-        private async Task<bool> CheckEmail(string login)
+        private async Task<bool> CheckEmail(string email)
         {
             try
             {
                 bool currentResponse = await PostData<bool>(CheckEmailCommand,
                     new Dictionary<string, object>() {
-                        { "login", login }
+                        { "email", email }
                     }
                 );
 

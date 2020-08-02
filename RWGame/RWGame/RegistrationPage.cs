@@ -344,6 +344,14 @@ namespace RWGame
                             loginRightImage.HeightRequest = loginLabel.Height;
                             loginRightImage.Source = "yes.png";
                             loginTipLabel.Opacity = 0;
+                        } 
+                        else
+                        {
+                            isFieldsCorrect[2] = false;
+                            loginRightImage.HeightRequest = loginLabel.Height;
+                            loginRightImage.Source = "no.png";
+                            loginTipLabel.Text = "This login is already used";
+                            loginTipLabel.Opacity = 1;
                         }
                     }
                     else if (loginEntry.Text.Length < 2)
@@ -783,12 +791,23 @@ namespace RWGame
                 @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))$";
                     if (Regex.IsMatch(emailEntry.Text,
                         pattern,
-                        RegexOptions.CultureInvariant) && await serverWorker.TaskCheckEmail(emailEntry.Text))
+                        RegexOptions.CultureInvariant))
                     {
-                        isFieldsCorrect[6] = true;
-                        emailRightImage.HeightRequest = emailLabel.Height;
-                        emailRightImage.Source = "yes.png";
-                        emailTipLabel.Opacity = 0;
+                        if (await serverWorker.TaskCheckEmail(emailEntry.Text))
+                        {
+                            isFieldsCorrect[6] = true;
+                            emailRightImage.HeightRequest = emailLabel.Height;
+                            emailRightImage.Source = "yes.png";
+                            emailTipLabel.Opacity = 0;
+                        } 
+                        else
+                        {
+                            isFieldsCorrect[6] = false;
+                            emailRightImage.HeightRequest = emailLabel.Height;
+                            emailRightImage.Source = "no.png";
+                            emailTipLabel.Text = "This email is already used";
+                            emailTipLabel.Opacity = 1;
+                        }
                     }
                     else
                     {
