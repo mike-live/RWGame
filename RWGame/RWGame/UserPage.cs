@@ -341,7 +341,7 @@ namespace RWGame
             };
             SKCanvasView canvasView = new SKCanvasView
             {
-                HorizontalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
                 Margin = new Thickness(0, 0, 0, 0),
                 HeightRequest = systemSettings.ScreenHeight,
@@ -378,14 +378,15 @@ namespace RWGame
 
             userprofilStackLayout.Children.Add(gridPlayerInfo);
             userprofilStackLayout.Children.Add(stackLayoutListView);
-            //userprofilStackLayout.Children.Add(buttonStack);
+            userprofilStackLayout.Children.Add(canvasView);
+            userprofilStackLayout.Children.Add(buttonStack);
 
             globalStackLayout.Children.Add(userprofilStackLayout);
-            //globalStackLayout.Children.Add(canvasView);
+            globalStackLayout.Children.Add(canvasView);
 
-            absoluteLayout.Children.Add(canvasView, new Rectangle(butX, butY, tempImageButton.Width, tempImageButton.Height));
+            //absoluteLayout.Children.Add(canvasView, new Rectangle(butX, butY, tempImageButton.Width, tempImageButton.Height));
             absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
-            absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
+            //absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
             Content = absoluteLayout;
         }
         void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
@@ -393,7 +394,7 @@ namespace RWGame
             tempImageButton = button;
             guideLabel = label;
             tX = butX;
-            tY = butY;
+            tY = butY + 100;
             canvasView.InvalidateSurface();
         }
         void OnCanvasViewTapped(object sender, EventArgs args)
