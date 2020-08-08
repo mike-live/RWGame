@@ -4,10 +4,14 @@ using RWGame.PagesGameChoise;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SkiaSharp;
+using SkiaSharp.Views.Forms;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+//using Android.Graphics;
+//using Android.Graphics;
 
 namespace RWGame
 {
@@ -24,7 +28,10 @@ namespace RWGame
         Label performanceCenterLabel;
         Label performanceBorderLabel;
         Label RatingLabel;
-
+        Label guideLabel;
+        ImageButton tempImageButton;
+        //Button tempButton;
+        float tX, tY, butX, butY;
 
         bool isGameStarted = false;
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
@@ -34,6 +41,16 @@ namespace RWGame
             this.serverWorker = _serverWorker;
             this.Title = "Started games";
             StackLayout userprofilStackLayout = new StackLayout()
+            {
+                VerticalOptions = LayoutOptions.Fill,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+            StackLayout globalStackLayout = new StackLayout()
+            {
+                VerticalOptions = LayoutOptions.Fill,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+            AbsoluteLayout absoluteLayout = new AbsoluteLayout()
             {
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
@@ -247,7 +264,7 @@ namespace RWGame
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(20, 10, 20, 10),
+                Margin = new Thickness(20, 10, 20, 50),
                 Orientation = StackOrientation.Horizontal
             };
             var stackLayoutPlayWithAnotherPlayer = new StackLayout
@@ -322,7 +339,34 @@ namespace RWGame
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 await UpdateGameList();
             };
+            SKCanvasView canvasView = new SKCanvasView
+            {
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Fill,
+                Margin = new Thickness(0, 0, 0, 0),
+                HeightRequest = systemSettings.ScreenHeight,
+                WidthRequest = systemSettings.ScreenWidth,
+            };
+            Label infoLabel = new Label
+            {
+                Text = "Press button",
+                TextColor = Color.White,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+            };
 
+            canvasView.PaintSurface += OnCanvasViewPaintSurface;
+            TapGestureRecognizer canvasTappedRecognizer = new TapGestureRecognizer();
+            canvasTappedRecognizer.Tapped += OnCanvasViewTapped;
+            canvasView.GestureRecognizers.Add(canvasTappedRecognizer);
+
+            GuideStep(PlayWithBot, infoLabel, canvasView);
+            if (!Application.Current.Properties.ContainsKey("FirstUse"))
+            {
+                Application.Current.Properties["FirstUse"] = false;
+                //Do things when it IS the first use...
+            }
+            
             stackLayoutPlayWithAnotherPlayer.Children.Add(PlayWithAnotherPlayer);
             stackLayoutPlayWithAnotherPlayer.Children.Add(labelPlayWithAnotherPlayer);
 
@@ -334,9 +378,57 @@ namespace RWGame
 
             userprofilStackLayout.Children.Add(gridPlayerInfo);
             userprofilStackLayout.Children.Add(stackLayoutListView);
-            userprofilStackLayout.Children.Add(buttonStack);
+            //userprofilStackLayout.Children.Add(buttonStack);
 
-            Content = userprofilStackLayout;
+            globalStackLayout.Children.Add(userprofilStackLayout);
+            //globalStackLayout.Children.Add(canvasView);
+
+            absoluteLayout.Children.Add(canvasView, new Rectangle(butX, butY, tempImageButton.Width, tempImageButton.Height));
+            absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
+            Content = absoluteLayout;
+        }
+        void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
+        {
+            tempImageButton = button;
+            guideLabel = label;
+            tX = butX;
+            tY = butY;
+            canvasView.InvalidateSurface();
+        }
+        void OnCanvasViewTapped(object sender, EventArgs args)
+        {
+            (sender as SKCanvasView).InvalidateSurface();
+        }
+        void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+        {
+            SKImageInfo info = args.Info;
+            SKSurface surface = args.Surface;
+            SKCanvas canvas = surface.Canvas;
+
+            canvas.Clear();
+            DrawLightRect(canvas, tempImageButton);
+            DisplayLabel(canvas, guideLabel, tX, tY);
+        }
+        void DrawLightRect(SKCanvas canvas, ImageButton button)
+        {
+            SKPaint paint = new SKPaint
+            {
+                Color = SKColors.White,
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 5,
+            };
+            canvas.DrawRect(butX, butY, (float)button.Width, (float)button.Height, paint);
+        }
+        void DisplayLabel(SKCanvas canvas, Label label, float x, float y)
+        {
+            SKPaint paint = new SKPaint
+            {
+                Color = SKColors.White,
+                TextSize = 64.0f,
+                IsLinearText = true
+            };
+            canvas.DrawText(label.Text, x, y, paint);
         }
 
         public async Task UpdatePlayerInfo()
@@ -412,6 +504,8 @@ namespace RWGame
         {
             isGameStarted = false;
             CallUpdateGameList();
+            butX = (float)tempImageButton.X;
+            butY = (float)tempImageButton.Y;
         }
 
         protected override bool OnBackButtonPressed()
