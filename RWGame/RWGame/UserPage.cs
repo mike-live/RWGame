@@ -3,18 +3,24 @@ using RWGame.Classes.ResponseClases;
 using RWGame.PagesGameChoise;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
-using System.Text;
-using System.IO;
+//using System.Text;
+//using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-//using Android.Graphics;
-//using Android.Graphics;
+//using Xamarin.Forms.Platform.Android;
 
 namespace RWGame
 {
+    public class CarouselItem
+    {
+        public ImageSource Picture { get; set; }
+        public string text { get; set; }
+    }
+
     public class UserPage : ContentPage
     {
         ServerWorker serverWorker;
@@ -30,6 +36,7 @@ namespace RWGame
         Label RatingLabel;
         Label guideLabel;
         ImageButton tempImageButton;
+        AbsoluteLayout absoluteLayout;
         //Button tempButton;
         float tX, tY, butX, butY;
 
@@ -40,6 +47,7 @@ namespace RWGame
             this.systemSettings = _systemSettings;
             this.serverWorker = _serverWorker;
             this.Title = "Started games";
+            
             StackLayout userprofilStackLayout = new StackLayout()
             {
                 VerticalOptions = LayoutOptions.Fill,
@@ -50,7 +58,7 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
             };
-            AbsoluteLayout absoluteLayout = new AbsoluteLayout()
+            absoluteLayout = new AbsoluteLayout()
             {
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
@@ -169,7 +177,7 @@ namespace RWGame
             gridPlayerInfo.Children.Add(userName, 0, 0);
             Grid.SetColumnSpan(userName, 1);
             Grid.SetRowSpan(userName, 3);
-            
+
             gridPlayerInfo.Children.Add(performanceCenterLabel, 1, 2);
             Grid.SetColumnSpan(performanceCenterLabel, 1);
             Grid.SetRowSpan(performanceCenterLabel, 1);
@@ -193,7 +201,7 @@ namespace RWGame
             gridPlayerInfo.Children.Add(ratingInfoLabel, 3, 1);
             Grid.SetColumnSpan(ratingInfoLabel, 1);
             Grid.SetRowSpan(ratingInfoLabel, 1);
-            
+
             gridPlayerInfo.Children.Add(statisticsInfoLabel, 1, 0);
             Grid.SetColumnSpan(statisticsInfoLabel, 3);
             Grid.SetRowSpan(statisticsInfoLabel, 1);
@@ -301,7 +309,7 @@ namespace RWGame
                 isGameStarted = true;
                 await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
             };
-            
+
 
             var stackLayoutPlayWithBot = new StackLayout
             {
@@ -338,8 +346,34 @@ namespace RWGame
 
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 await UpdateGameList();
+            };  
+            var guide = new CarouselView
+            {
+                IsVisible = false,
+                IsEnabled = false,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Always
+            };  
+            
+            var guideImages = new ObservableCollection<CarouselItem>();
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guidePlayWithBot.png") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guidePlayWithFriend.png") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideRating") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideGoal") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideMove") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideScore") });
+            Button help = new Button
+            {
+                Text = "Help",
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                TextColor = Color.White,
+                IsEnabled = true
             };
-            SKCanvasView canvasView = new SKCanvasView
+            help.Clicked += delegate
+            {
+                StartGuide(guideImages, guide);
+            };
+            /*SKCanvasView canvasView = new SKCanvasView
             {
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
@@ -354,13 +388,15 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 VerticalOptions = LayoutOptions.Center,
             };
-
-            canvasView.PaintSurface += OnCanvasViewPaintSurface;
+            */
+            /*canvasView.PaintSurface += OnCanvasViewPaintSurface;
             TapGestureRecognizer canvasTappedRecognizer = new TapGestureRecognizer();
             canvasTappedRecognizer.Tapped += OnCanvasViewTapped;
             canvasView.GestureRecognizers.Add(canvasTappedRecognizer);
-
             GuideStep(PlayWithBot, infoLabel, canvasView);
+            */
+
+
             if (!Application.Current.Properties.ContainsKey("FirstUse"))
             {
                 Application.Current.Properties["FirstUse"] = false;
@@ -375,63 +411,101 @@ namespace RWGame
 
             buttonStack.Children.Add(stackLayoutPlayWithAnotherPlayer);
             buttonStack.Children.Add(stackLayoutPlayWithBot);
+            buttonStack.Children.Add(help);
 
             userprofilStackLayout.Children.Add(gridPlayerInfo);
             userprofilStackLayout.Children.Add(stackLayoutListView);
-            userprofilStackLayout.Children.Add(canvasView);
             userprofilStackLayout.Children.Add(buttonStack);
+            
 
             globalStackLayout.Children.Add(userprofilStackLayout);
-            globalStackLayout.Children.Add(canvasView);
+            //globalStackLayout.Children.Add(canvasView);
 
             //absoluteLayout.Children.Add(canvasView, new Rectangle(butX, butY, tempImageButton.Width, tempImageButton.Height));
             absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            
             //absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
             Content = absoluteLayout;
         }
-        void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
-        {
-            tempImageButton = button;
-            guideLabel = label;
-            tX = butX;
-            tY = butY + 100;
-            canvasView.InvalidateSurface();
-        }
-        void OnCanvasViewTapped(object sender, EventArgs args)
-        {
-            (sender as SKCanvasView).InvalidateSurface();
-        }
-        void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
-        {
-            SKImageInfo info = args.Info;
-            SKSurface surface = args.Surface;
-            SKCanvas canvas = surface.Canvas;
+        
+        /*void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
+         {
+             tempImageButton = button;
+             guideLabel = label;
+             tX = butX;
+             tY = butY + 100;
+             canvasView.InvalidateSurface();
+         }
+         void OnCanvasViewTapped(object sender, EventArgs args)
+         {
+             (sender as SKCanvasView).InvalidateSurface();
+         }
+         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
+         {
+             SKImageInfo info = args.Info;
+             SKSurface surface = args.Surface;
+             SKCanvas canvas = surface.Canvas;
 
-            canvas.Clear();
-            DrawLightRect(canvas, tempImageButton);
-            DisplayLabel(canvas, guideLabel, tX, tY);
-        }
-        void DrawLightRect(SKCanvas canvas, ImageButton button)
+             canvas.Clear();
+             DrawLightRect(canvas, tempImageButton);
+             DisplayLabel(canvas, guideLabel, tX, tY);
+         }
+         void DrawLightRect(SKCanvas canvas, ImageButton button)
+         {
+             SKPaint paint = new SKPaint
+             {
+                 Color = SKColors.White,
+                 Style = SKPaintStyle.Stroke,
+                 StrokeWidth = 5,
+             };
+             canvas.DrawRect(butX, butY, (float)button.Width, (float)button.Height, paint);
+         }
+         void DisplayLabel(SKCanvas canvas, Label label, float x, float y)
+         {
+             SKPaint paint = new SKPaint
+             {
+                 Color = SKColors.White,
+                 TextSize = 64.0f,
+                 IsLinearText = true
+             };
+             canvas.DrawText(label.Text, x, y, paint);
+         }*/
+         
+        void StartGuide(ObservableCollection<CarouselItem> images, CarouselView guide)
         {
-            SKPaint paint = new SKPaint
+            int i = 0;
+            DataTemplate template = new DataTemplate(() =>
             {
-                Color = SKColors.White,
-                Style = SKPaintStyle.Stroke,
-                StrokeWidth = 5,
-            };
-            canvas.DrawRect(butX, butY, (float)button.Width, (float)button.Height, paint);
-        }
-        void DisplayLabel(SKCanvas canvas, Label label, float x, float y)
-        {
-            SKPaint paint = new SKPaint
-            {
-                Color = SKColors.White,
-                TextSize = 64.0f,
-                IsLinearText = true
-            };
-            canvas.DrawText(label.Text, x, y, paint);
-        }
+                Image image = new Image();
+                TapGestureRecognizer guideImgTapped = new TapGestureRecognizer();
+                guideImgTapped.Tapped += delegate
+                {
+                    if (i + 1 < images.Count())
+                    {
+                        guide.ScrollTo(++i);
+                    }
+                    else
+                    {
+                        guide.IsEnabled = false;
+                        guide.IsVisible = false;
+                    }
+                };
+                image.GestureRecognizers.Add(guideImgTapped);
+                image.SetBinding(Image.SourceProperty, "Picture");
 
+                return image;
+            });
+
+            guide = new CarouselView
+            {
+                ItemsSource = images,
+                ItemTemplate = template,
+                IsVisible = true,
+                IsEnabled = true,
+                IsSwipeEnabled = false
+            };
+            absoluteLayout.Children.Add(guide, new Rectangle(20, 20, App.ScreenWidth - 40, App.ScreenHeight - 100));
+        }
         public async Task UpdatePlayerInfo()
         {
             playerInfo = await serverWorker.TaskGetPlayerInfo();
@@ -505,8 +579,8 @@ namespace RWGame
         {
             isGameStarted = false;
             CallUpdateGameList();
-            butX = (float)tempImageButton.X;
-            butY = (float)tempImageButton.Y;
+            //butX = (float)tempImageButton.X;
+            //butY = (float)tempImageButton.Y;
         }
 
         protected override bool OnBackButtonPressed()
