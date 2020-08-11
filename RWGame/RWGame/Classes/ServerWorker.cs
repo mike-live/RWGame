@@ -141,9 +141,9 @@ namespace RWGame.Classes
             return await CheckEmail(email);
         }
 
-        public async Task<bool> TaskLogin(string login, string password)
+        public async Task<LoginResponse> TaskLogin(string login, string password, string idToken = "")
         {
-            return await Login(login, password);
+            return await Login(login, password, idToken);
         }
 
         public async Task<List<Player>> TaskGetPlayerList(string loginPart)
@@ -255,22 +255,23 @@ namespace RWGame.Classes
             }
         }
 
-        private async Task<bool> Login(string login, string password)
+        private async Task<LoginResponse> Login(string login, string password, string idToken = "")
         {
             try
             {
                 Dictionary<string, object> data = new Dictionary<string, object>() {
                     { "login", login },
-                    { "password",  password }
+                    { "password",  password },
+                    { "id_token",  idToken },
                 };
 
                 LoginResponse currentResponse = await PostData<LoginResponse>(LoginCommand, data);
 
-                return currentResponse.IsAuthenticationSuccessful;
+                return currentResponse;
             }
             catch (System.Net.WebException)
             {
-                return false;
+                return null;
             }
         }
 

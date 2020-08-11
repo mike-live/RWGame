@@ -2,6 +2,7 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace RWGame
 {
@@ -18,7 +19,7 @@ namespace RWGame
                 ScreenHeight = ScreenHeight,
                 ScreenWidth = ScreenWidth
             };
-            MainPage = new NavigationPage(new LoginPage(systemSettings));
+            MainPage = new NavigationPage(new Views.LoginPage(systemSettings));
         }
 
         protected override void OnStart()

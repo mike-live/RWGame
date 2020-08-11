@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "551332498044",
+    "firebase_url": "https://rwgame-ad511.firebaseio.com",
+    "project_id": "rwgame-ad511",
+    "storage_bucket": "rwgame-ad511.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551332498044:android:0d5eff37cc9c025ab017f9",
+        "android_client_info": {
+          "package_name": "com.scigames.RWGame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "551332498044-ksgu3dbg1u5t2rs7rcs86ls846cjpe71.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scigames.RWGame",
+            "certificate_hash": "37213f70d07db4ae5a542e44eab6b9f5107190ea"
+          }
+        },
+        {
+          "client_id": "551332498044-oemspd76c5mi13c5bv098453u8e93qa9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChPNskWXHTCqUSshqdZDvwo029yXotn5M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "551332498044-oemspd76c5mi13c5bv098453u8e93qa9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

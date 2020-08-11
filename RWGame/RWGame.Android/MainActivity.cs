@@ -2,7 +2,12 @@
 using Acr.UserDialogs;
 using Android.App;
 using Android.Content.PM;
+using Android.Gms.Common.Apis.Internal;
 using Android.OS;
+using Newtonsoft.Json;
+using Plugin.GoogleClient;
+using RWGame.Classes;
+using System.Collections.Generic;
 using System.Net;
 
 namespace RWGame.Droid
@@ -25,7 +30,31 @@ namespace RWGame.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             UserDialogs.Init(this);
+
+            string client_id = Resources.GetString(Resource.String.Google_ClientID);            
+            GoogleClientManager.Initialize(this, client_id, client_id);
             LoadApplication(new App());
+        }
+
+        protected override void OnActivityResult(int requestCode, Result resultCode, Android.Content.Intent data)
+        {
+            base.OnActivityResult(requestCode, resultCode, data);
+            GoogleClientManager.OnAuthCompleted(requestCode, resultCode, data);
+        }
+
+        class ClientInfo
+        {
+            public string client_id;
+            public int client_type;
+        }
+        class ClientConfig
+        {
+            public List<ClientInfo> oauth_client;
+        }
+
+        class GoogleClientConfig
+        {
+            public List<ClientConfig> client;
         }
     }
 }
