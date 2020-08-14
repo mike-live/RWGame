@@ -36,6 +36,7 @@ namespace RWGame
         Label RatingLabel;
         Label guideLabel;
         ImageButton tempImageButton;
+        SKCanvasView canvasView;
         AbsoluteLayout absoluteLayout;
         //Button tempButton;
         float tX, tY, butX, butY;
@@ -357,23 +358,41 @@ namespace RWGame
             var guideImages = new ObservableCollection<CarouselItem>();
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guidePlayWithBot.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guidePlayWithFriend.png") });
-            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideRating") });
-            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideGoal") });
-            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideMove") });
-            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideScore") });
-            Button help = new Button
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideRating.png") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideGoal.png") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideMove.png") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideScore.png") });
+
+            StackLayout stackLayoutHelp = new StackLayout
             {
-                Text = "Help",
+                Spacing = 0,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+            };
+            Label helpLabel = new Label
+            {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Center,
                 TextColor = Color.White,
-                IsEnabled = true
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                FontAttributes = FontAttributes.Bold,
+                Text = "Help"
             };
-            help.Clicked += delegate
+            ImageButton helpButton = new ImageButton
+            {
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                BackgroundColor = Color.FromHex("#39bafa"),
+                Source = "help.png",
+                //IsEnabled = true,
+                HeightRequest = 30,
+                WidthRequest = 100,
+                Padding = 0
+            };
+            helpButton.Clicked += delegate
             {
                 StartGuide(guideImages, guide);
             };
-            /*SKCanvasView canvasView = new SKCanvasView
+            /*canvasView = new SKCanvasView
             {
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
@@ -388,13 +407,20 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 VerticalOptions = LayoutOptions.Center,
             };
-            */
-            /*canvasView.PaintSurface += OnCanvasViewPaintSurface;
+            
+            canvasView.PaintSurface += OnCanvasViewPaintSurface;
             TapGestureRecognizer canvasTappedRecognizer = new TapGestureRecognizer();
-            canvasTappedRecognizer.Tapped += OnCanvasViewTapped;
+            tempImageButton = PlayWithBot;
+            guideLabel = infoLabel;
+            canvasTappedRecognizer.Tapped += delegate
+            {
+                tempImageButton = PlayWithBot;
+                guideLabel = infoLabel;
+                GuideStep(tempImageButton, guideLabel, canvasView);
+            };
             canvasView.GestureRecognizers.Add(canvasTappedRecognizer);
-            GuideStep(PlayWithBot, infoLabel, canvasView);
             */
+            
 
 
             if (!Application.Current.Properties.ContainsKey("FirstUse"))
@@ -409,9 +435,12 @@ namespace RWGame
             stackLayoutPlayWithBot.Children.Add(PlayWithBot);
             stackLayoutPlayWithBot.Children.Add(labelPlayWithBot);
 
+            stackLayoutHelp.Children.Add(helpButton);
+            stackLayoutHelp.Children.Add(helpLabel);
+
             buttonStack.Children.Add(stackLayoutPlayWithAnotherPlayer);
             buttonStack.Children.Add(stackLayoutPlayWithBot);
-            buttonStack.Children.Add(help);
+            buttonStack.Children.Add(stackLayoutHelp);
 
             userprofilStackLayout.Children.Add(gridPlayerInfo);
             userprofilStackLayout.Children.Add(stackLayoutListView);
@@ -421,44 +450,55 @@ namespace RWGame
             globalStackLayout.Children.Add(userprofilStackLayout);
             //globalStackLayout.Children.Add(canvasView);
 
-            //absoluteLayout.Children.Add(canvasView, new Rectangle(butX, butY, tempImageButton.Width, tempImageButton.Height));
-            absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
             
+            absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            //absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
             //absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
             Content = absoluteLayout;
         }
         
-        /*void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
+        void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
          {
              tempImageButton = button;
              guideLabel = label;
-             tX = butX;
-             tY = butY + 100;
-             canvasView.InvalidateSurface();
-         }
+             tX = (float)button.X;
+             tY = (float)button.Y;
+             canvasView.InvalidateSurface();   
+        }
          void OnCanvasViewTapped(object sender, EventArgs args)
          {
-             (sender as SKCanvasView).InvalidateSurface();
+            (sender as SKCanvasView).InvalidateSurface();  
          }
          void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
          {
-             SKImageInfo info = args.Info;
-             SKSurface surface = args.Surface;
-             SKCanvas canvas = surface.Canvas;
+            SKImageInfo info = args.Info;
+            SKSurface surface = args.Surface;
+            SKCanvas canvas = surface.Canvas;
 
-             canvas.Clear();
-             DrawLightRect(canvas, tempImageButton);
-             DisplayLabel(canvas, guideLabel, tX, tY);
-         }
-         void DrawLightRect(SKCanvas canvas, ImageButton button)
+            canvas.Clear();
+            var x = tempImageButton.X;
+            var y = tempImageButton.Y;
+            var parent = tempImageButton.ParentView;
+            while (parent != null)
+            {
+                x += parent.X;
+                y += parent.Y;
+                parent = parent.ParentView;
+            }
+            Rectangle rect = new Rectangle(x, y, tempImageButton.Width, tempImageButton.Height);
+            DrawLightRect(canvas, rect);
+            DisplayLabel(canvas, guideLabel, (float)x, (float)y);
+            absoluteLayout.Children.Add(canvasView, new Rectangle(x, y, tempImageButton.Width, tempImageButton.Height));
+        }
+         void DrawLightRect(SKCanvas canvas, Rectangle rect)
          {
-             SKPaint paint = new SKPaint
-             {
-                 Color = SKColors.White,
-                 Style = SKPaintStyle.Stroke,
-                 StrokeWidth = 5,
-             };
-             canvas.DrawRect(butX, butY, (float)button.Width, (float)button.Height, paint);
+            SKPaint paint = new SKPaint
+            {
+                Color = SKColors.White,
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 5,
+            };
+            canvas.DrawRect((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height, paint);
          }
          void DisplayLabel(SKCanvas canvas, Label label, float x, float y)
          {
@@ -469,7 +509,7 @@ namespace RWGame
                  IsLinearText = true
              };
              canvas.DrawText(label.Text, x, y, paint);
-         }*/
+         }
          
         void StartGuide(ObservableCollection<CarouselItem> images, CarouselView guide)
         {
