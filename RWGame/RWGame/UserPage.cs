@@ -361,34 +361,37 @@ namespace RWGame
         {
             await UpdatePlayerInfo();
             gamesList = await serverWorker.TaskGetGamesList();
-            customListViewRecords = new List<ElementsOfViewCell>();
-
-            if (gamesList != null && gamesList.Count > 0)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                for (int i = 0; i < gamesList.Count; i++)
+                customListViewRecords = new List<ElementsOfViewCell>();
+
+                if (gamesList != null && gamesList.Count > 0)
                 {
-                    if (gamesList[i].GameState != GameStateEnum.END)
+                    for (int i = 0; i < gamesList.Count; i++)
                     {
-                        customListViewRecords.Add(new ElementsOfViewCell(gamesList[i]));
+                        if (gamesList[i].GameState != GameStateEnum.END)
+                        {
+                            customListViewRecords.Add(new ElementsOfViewCell(gamesList[i]));
+                        }
                     }
+                    gamesListView.ItemsSource = customListViewRecords;
                 }
-                gamesListView.ItemsSource = customListViewRecords;
-            }
-            else
-            {
-                gamesListView.ItemsSource = null;
-            }
+                else
+                {
+                    gamesListView.ItemsSource = null;
+                }
 
-            if (customListViewRecords.Count == 0)
-            {
-                gamesListView.IsVisible = false;
-                gameListViewEmptyMessage.IsVisible = true;
-            }
-            else
-            {
-                gamesListView.IsVisible = true;
-                gameListViewEmptyMessage.IsVisible = false;
-            }
+                if (customListViewRecords.Count == 0)
+                {
+                    gamesListView.IsVisible = false;
+                    gameListViewEmptyMessage.IsVisible = true;
+                }
+                else
+                {
+                    gamesListView.IsVisible = true;
+                    gameListViewEmptyMessage.IsVisible = false;
+                }
+            });
         }
 
         public Game GetGame(int idGame)
@@ -411,7 +414,7 @@ namespace RWGame
         protected override void OnAppearing()
         {
             isGameStarted = false;
-            CallUpdateGameList();
+            Task.Run(() => CallUpdateGameList());
         }
 
         protected override bool OnBackButtonPressed()

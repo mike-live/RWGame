@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviorsPack="clr-namespace:Xamarin.Forms.BehaviorsPack;assembly=Xamarin.Forms.BehaviorsPack"
+             x:Class="RWGame.Views.RegistrationPage"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             BackgroundColor="White"
+             BackgroundImageSource="background_2_art_1.png">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout>
+                <StackLayout x:Name="personalDataLayout"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="Fill" 
+                             Spacing="0" IsVisible="{Binding IsFirstStep}">
+                    <Label Text="Sign up" 
+                           FontSize="Title"
+                           TextColor="#0099e6"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Center"
+                           Margin="0,0,0,0"/>
+                
+                    <!--#region Name-->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0"
+                                     Margin="15,5,15,0" Orientation="Horizontal">
+                            <Label x:Name="nameLabel"
+                                   Text="Your name" 
+                                   FontSize="Caption"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="StartAndExpand"/>
+
+                            <Image x:Name="nameCorrectnessImage"
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="End"
+                                   HeightRequest="9"
+                                   Source="{Binding User.NameCorrectnessImage}"
+                                   Grid.Column="1" Aspect="AspectFit"/>
+                            <!--HeightRequest="{Binding Height, Source={x:Reference nameLabel}}"-->
+                        </StackLayout>
+
+                        <Entry x:Name="nameEntry"
+                               Placeholder="Your name"
+                               TextColor="#39bafa"
+                               Margin="10,0,10,0"
+                               Keyboard="Text"
+                               Text="{Binding User.Name}">
+                            <Entry.Behaviors>
+                                <behaviorsPack:EventToCommandBehavior 
+                                    EventName="Unfocused" 
+                                    Command="{Binding NameUnfocusedCommand}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label x:Name="nameTipLabel"
+                               Text="{Binding User.NameError}" FontSize="Micro"
+                               TextColor="Red"
+                               VerticalOptions="End"
+                               HorizontalOptions="Fill"
+                               Margin="15,0,0,0"
+                               />
+                    </StackLayout>
+                    <!--#endregion Name-->
+
+                    <!--#region Birthday -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0"
+                                     Margin="15,0,15,0">
+                            <Label x:Name="birthdayLabel"
+                                   Text="Your birthday" 
+                                   FontSize="Caption"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="StartAndExpand"/>
+                            <Image x:Name="birthdayCorrectnessImage"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="End"/>
+                        </StackLayout>
+                        <DatePicker x:Name="birthdayEntry"
+                                    Format="d"
+                                    TextColor="#39bafa"
+                                    MinimumDate="1900.01.01"
+                                    MaximumDate="{x:Static sys:DateTime.Now}"
+                                    Date="{Binding User.Birthday}"
+                                    Margin="10,0,10,0">
+                        </DatePicker>
+                        <Label x:Name="birthdayTipLabel"
+                               Text="" FontSize="Micro"
+                               TextColor="Red"
+                               VerticalOptions="End"
+                               HorizontalOptions="Fill"
+                               Margin="15,0,0,0"/>
+                        <Label x:Name="agePrivacyTip"
+                           Text="We collect your age for scientific purposes. All collected data will be anonimised in public reports." 
+                           FontSize="Small"
+                           TextColor="#0099e6"
+                           VerticalOptions="End"
+                           HorizontalOptions="Fill"
+                           Margin="15,0,0,0"/>
+                    </StackLayout>
+                    <!--#endregion Birthday-->
+
+                    <!--#region Privacy Policy + Terms and Conditions -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Margin="15,15,15,0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                            <Label x:Name="policyTextLabel"
+                                   Text="I have read and agree to" 
+                                   FontSize="Small"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="StartAndExpand"/>
+                        </StackLayout>
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Orientation="Horizontal">
+                            <CheckBox x:Name="privacyPolicyCheckBox"
+                                      IsChecked = "{Binding User.AcceptPrivacy}"/>
+
+                            <Label x:Name="policyHyperlinkLabel"
+                                   Text="Privacy policy" 
+                                   FontSize="Small"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="CenterAndExpand"
+                                   TextDecorations="Underline"
+                                   HorizontalOptions="StartAndExpand"/>
+                         </StackLayout>
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Orientation="Horizontal">
+                            <CheckBox x:Name="termsCheckBox"
+                                      IsChecked = "{Binding User.AcceptTerms}"/>
+
+                            <Label x:Name="termsHyperlinkLabel"
+                                   Text="Terms and Conditions" 
+                                   FontSize="Small"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="CenterAndExpand"
+                                   TextDecorations="Underline"
+                                   HorizontalOptions="StartAndExpand"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <!--#endregion Privacy Policy + Terms and Conditions -->
+
+
+                    <!--#region Next -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Margin="15,5,15,10">
+                        <Button Text="Continue" HorizontalOptions="End" 
+                                BackgroundColor="#f2fbff" 
+                                BorderColor="#39bafa"
+                                BorderWidth="2"
+                                TextColor="#39bafa"
+                                CornerRadius="5"
+                                Command="{Binding ContinueCommand}"
+                                IsEnabled="{Binding IsEnabledNextButton}"/>
+                    </StackLayout>
+                    <!--#endregion Next -->
+
+                </StackLayout>
+
+                <StackLayout x:Name="authorizationDataLayout"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="Fill" 
+                             Spacing="0" IsVisible="{Binding IsSecondStep}">
+                    <Label Text="Credentials" 
+                           FontSize="Title"
+                           TextColor="#0099e6"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Center"
+                           Margin="0,0,0,0"/>
+
+                    <!--#region E-mail -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0"
+                                     Margin="15,5,15,0">
+                            <Label x:Name="emailLabel"
+                                   Text="Email" 
+                                   FontSize="Caption"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="StartAndExpand"/>
+                            <Image x:Name="emailCorrectnessImage"
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="End"
+                                   HeightRequest="9"
+                                   Source="{Binding User.EmailCorrectnessImage}"/>
+                        </StackLayout>
+                        <Entry x:Name="emailEntry"
+                               Placeholder="Email"
+                               TextColor="#39bafa"
+                               Text="{Binding User.Email}"
+                               Margin="10,0,10,0"
+                               Keyboard="Email">
+                            <Entry.Behaviors>
+                                <behaviorsPack:EventToCommandBehavior 
+                                    EventName="Unfocused" 
+                                    Command="{Binding EmailUnfocusedCommand}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label x:Name="emailTipLabel"
+                               Text="{Binding User.EmailError}" FontSize="Micro"
+                               TextColor="Red"
+                               VerticalOptions="End"
+                               HorizontalOptions="Fill"
+                               Margin="15,0,0,0"/>
+                    </StackLayout>
+                    <!--#endregion E-mail-->
+
+                    <!--#region Login -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0"
+                                     Margin="15,5,15,0">
+                            <Label x:Name="loginLabel"
+                                   Text="Login" 
+                                   FontSize="Caption"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="StartAndExpand"/>
+                            <Image x:Name="loginCorrectnessImage"
+                                   VerticalOptions="Fill"
+                                   HorizontalOptions="End"
+                                   HeightRequest="9"
+                                   Source="{Binding User.LoginCorrectnessImage}"/>
+                        </StackLayout>
+                        <Entry x:Name="loginEntry"
+                               Placeholder="Login"
+                               TextColor="#39bafa"
+                               Margin="10,0,10,0"
+                               Keyboard="Text"
+                               Text="{Binding User.Login}">
+                            <Entry.Behaviors>
+                                <behaviorsPack:EventToCommandBehavior 
+                                    EventName="Unfocused" 
+                                    Command="{Binding LoginUnfocusedCommand}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label x:Name="loginTipLabel"
+                               Text="{Binding User.LoginError}" 
+                               FontSize="Micro"
+                               TextColor="Red"
+                               VerticalOptions="End"
+                               HorizontalOptions="Fill"
+                               Margin="15,0,0,0"/>
+                    </StackLayout>
+                    <!--#endregion Login-->
+
+
+                    <!--#region Password -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0"
+                                     Margin="15,5,15,0">
+                            <Label x:Name="passwordLabel"
+                                   Text="Password" 
+                                   FontSize="Caption"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="StartAndExpand"/>
+                            <Image x:Name="passwordCorrectnessImage"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="End"
+                                   HeightRequest="9"
+                                   Source="{Binding User.PasswordCorrectnessImage}"/>
+                        </StackLayout>
+                        <Entry x:Name="passwordEntry"
+                               Placeholder="Password"
+                               TextColor="#39bafa"
+                               Margin="10,0,10,0"
+                               Keyboard="Text"
+                               IsPassword="True"
+                               Text="{Binding User.Password}">
+                            <Entry.Behaviors>
+                                <behaviorsPack:EventToCommandBehavior 
+                                    EventName="Unfocused" 
+                                    Command="{Binding PasswordUnfocusedCommand}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label x:Name="passwordTipLabel"
+                               Text="{Binding User.PasswordError}" 
+                               FontSize="Micro"
+                               TextColor="Red"
+                               VerticalOptions="End"
+                               HorizontalOptions="Fill"
+                               Margin="15,0,0,0"/>
+                    </StackLayout>
+                    <!--#endregion Password-->
+
+                    <!--#region Confirm Password -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0">
+                        <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0"
+                                     Margin="15,5,15,0">
+                            <Label x:Name="confirmPasswordLabel"
+                                   Text="Confirm password" 
+                                   FontSize="Caption"
+                                   TextColor="#39bafa"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="End"
+                                   HorizontalOptions="StartAndExpand"/>
+                            <Image x:Name="confirmPasswordCorrectnessImage"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="End"
+                                   HeightRequest="9"
+                                   Source="{Binding User.ConfirmPasswordCorrectnessImage}"/>
+                        </StackLayout>
+                        <Entry x:Name="confirmPasswordEntry"
+                               Placeholder="Confirm password"
+                               TextColor="#39bafa"
+                               Margin="10,0,10,0"
+                               Keyboard="Text"
+                               IsPassword="True"
+                               Text="{Binding User.ConfirmPassword}">
+                            <Entry.Behaviors>
+                                <behaviorsPack:EventToCommandBehavior 
+                                    EventName="Unfocused" 
+                                    Command="{Binding ConfirmPasswordUnfocusedCommand}" />
+                            </Entry.Behaviors>
+                        </Entry>
+                        <Label x:Name="confirmPasswordTipLabel"
+                               Text="{Binding User.ConfirmPasswordError}" 
+                               FontSize="Micro"
+                               TextColor="Red"
+                               VerticalOptions="End"
+                               HorizontalOptions="Fill"
+                               Margin="15,0,0,0"/>
+                    </StackLayout>
+                    <!--#endregion Confirm Password-->
+                    <!--#region SignUp -->
+                    <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Margin="15,0,15,10">
+                        <Button Text="Sign Up"
+                                HorizontalOptions="End" 
+                                BackgroundColor="#f2fbff" 
+                                BorderColor="#39bafa"
+                                BorderWidth="2"
+                                TextColor="#39bafa"
+                                CornerRadius="5"
+                                Command="{Binding SignUpCommand}"
+                                IsEnabled="{Binding IsEnabledSignUpButton}"/>
+                    </StackLayout>
+                    <!--#endregion SignUp -->
+
+                </StackLayout>
+
+                <StackLayout x:Name="congratulationsLayout"
+                             VerticalOptions="CenterAndExpand" 
+                             HorizontalOptions="Fill" 
+                             Spacing="0" IsVisible="{Binding IsThirdStep}"
+                             Margin="15,0,15,0">
+                    <Label Text="Awesome!" 
+                           FontSize="Title"
+                           TextColor="#0099e6"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Center"
+                           Margin="0,0,0,30"/>
+
+                    <Label Text="You have succesfully created your account and became a part of the international science project team.&#x0a;&#x0a;Now let's play and make science with us =)" 
+                           FontSize="Subtitle"
+                           TextColor="#0099e6"
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,0,0,30"/>
+
+                    <Button Text="Let's Play"
+                            HorizontalOptions="Center" 
+                            BackgroundColor="#f2fbff" 
+                            BorderColor="#39bafa"
+                            BorderWidth="2"
+                            WidthRequest="150"
+                            TextColor="#39bafa"
+                            CornerRadius="5"
+                            Command="{Binding SignInCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

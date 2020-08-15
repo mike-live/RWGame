@@ -14,6 +14,7 @@ namespace RWGame
         List<UserPage.ElementsOfViewCell> customListViewRecords;
         Label gameListViewEmptyMessage;
         bool isGameStarted = false;
+        private List<Game> gamesList;
         public GameHistoryPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             serverWorker = _serverWorker;
@@ -69,37 +70,39 @@ namespace RWGame
 
             this.Content = stackLayout;
         }
-
+        
         public async Task UpdateGameList()
         {
-            List<Game> gamesList = await serverWorker.TaskGetGamesList();
-            customListViewRecords = new List<UserPage.ElementsOfViewCell>();
-
-            if (gamesList != null && gamesList.Count > 0)
+            gamesList = await serverWorker.TaskGetGamesList();
+            Device.BeginInvokeOnMainThread(() =>
             {
-                for (int i = 0; i < gamesList.Count; i++)
+                customListViewRecords = new List<UserPage.ElementsOfViewCell>();
+                if (gamesList != null && gamesList.Count > 0)
                 {
-                    if (gamesList[i].GameState == GameStateEnum.END)
+                    for (int i = 0; i < gamesList.Count; i++)
                     {
-                        customListViewRecords.Add(new UserPage.ElementsOfViewCell(gamesList[i]));
+                        if (gamesList[i].GameState == GameStateEnum.END)
+                        {
+                            customListViewRecords.Add(new UserPage.ElementsOfViewCell(gamesList[i]));
+                        }
                     }
+                    gamesListView.ItemsSource = customListViewRecords;
                 }
-                gamesListView.ItemsSource = customListViewRecords;
-            }
-            else
-            {
-                gamesListView.ItemsSource = null;
-            }
-            if (customListViewRecords.Count == 0)
-            {
-                gamesListView.IsVisible = false;
-                gameListViewEmptyMessage.IsVisible = true;
-            }
-            else
-            {
-                gamesListView.IsVisible = true;
-                gameListViewEmptyMessage.IsVisible = false;
-            }
+                else
+                {
+                    gamesListView.ItemsSource = null;
+                }
+                if (customListViewRecords.Count == 0)
+                {
+                    gamesListView.IsVisible = false;
+                    gameListViewEmptyMessage.IsVisible = true;
+                }
+                else
+                {
+                    gamesListView.IsVisible = true;
+                    gameListViewEmptyMessage.IsVisible = false;
+                }
+            });
         }
 
         public async void CallUpdateGameList()
@@ -110,7 +113,7 @@ namespace RWGame
         protected override void OnAppearing()
         {
             isGameStarted = false;
-            CallUpdateGameList();
+            Task.Run(() => CallUpdateGameList());
         }
 
         protected override bool OnBackButtonPressed()

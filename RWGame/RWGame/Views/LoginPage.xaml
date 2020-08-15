@@ -2,20 +2,22 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RWGame.Views.LoginPage"
-             BackgroundColor="#39bafa">
+             BackgroundColor="#f2fbff">
+    <!--#39bafa-->
     <ContentPage.Content>
         <ScrollView>
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand"
+                             IsVisible="{Binding IsNotAuthentication}">
                     <Image HorizontalOptions="Center" VerticalOptions="Center"
                            WidthRequest="{Binding logoSize}" 
                            HeightRequest="{Binding logoSize}"
-                           Margin="10, 30, 10, 0"
+                           Margin="10, 15, 10, 0"
                            Source="HeadLogo.png"/>
                     <Label Text="Random Walk"
                        HorizontalOptions="Center" VerticalOptions="Start"
                        FontSize="Large"
-                       TextColor="White"
+                       TextColor="#39bafa"
                        FontAttributes="Bold"
                        Margin="0,0,0,0"/>
 
@@ -28,28 +30,27 @@
                                HorizontalOptions = "FillAndExpand"
                                VerticalOptions = "End"
                                Text = "{Binding login}"
-                               TextColor="White"
-                               PlaceholderColor="White"/>
+                               TextColor="#39bafa"
+                               PlaceholderColor="#39bafa"/>
                         <Entry Placeholder="Enter password"
                                HorizontalOptions = "FillAndExpand"
                                VerticalOptions = "Start"
                                Text = "{Binding password}"
-                               TextColor="White"
-                               PlaceholderColor="White"
+                               TextColor="#39bafa"
+                               PlaceholderColor="#39bafa"
                                IsPassword="True"/>
                         <Button Text="Login"
                                 VerticalOptions="EndAndExpand"
                                 HorizontalOptions = "FillAndExpand"
                                 Command="{Binding LoginNormalCommand}"
-                                Padding="5,0,5,0"
                                 TextColor="White"
                                 HeightRequest="40"
-                                BackgroundColor="#7ad3ff"/>
+                                BackgroundColor="#39bafa"/>
                         <Label Text="No account yet? Create one"
                                HorizontalOptions="Center" VerticalOptions="Center"
                                FontSize="Small"
-                               TextColor="LightBlue"
-                               Margin="0,0,0,0">
+                               TextColor="#0099e6"
+                               Margin="0,10,0,10">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding RegistrationCommand}"/>
@@ -97,17 +98,33 @@
                                    Grid.Row="0"    Grid.RowSpan="1"
                                    WidthRequest="20" HeightRequest="20" Margin="0,0,0,0" InputTransparent="True"/>
                         </Grid>
-                        <Button Text="Logout"
+                        <!--<Button Text="Logout"
                                 VerticalOptions="EndAndExpand"
                                 HorizontalOptions = "FillAndExpand"
                                 Command="{Binding LogoutCommand}"
                                 Padding="5,0,5,0"
                                 TextColor="White"
                                 HeightRequest="40"
-                                BackgroundColor="#7ad3ff"/>
+                                BackgroundColor="#7ad3ff"/>-->
                     </StackLayout>
                 </StackLayout>
 
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                             IsVisible="{Binding IsAuthentication}">
+                    <Label Text="Connecting..."
+                            VerticalOptions="EndAndExpand"
+                            HorizontalOptions = "Fill"
+                            HorizontalTextAlignment="Center"
+                            VerticalTextAlignment="Center"
+                            FontAttributes="Bold"
+                            TextColor="#39bafa"
+                            FontSize="Title"/>
+                    <ActivityIndicator IsRunning="true" 
+                                    HeightRequest="50"
+                                    Color="#39bafa"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="StartAndExpand"/>
+                </StackLayout>
             </StackLayout>
         </ScrollView>
     </ContentPage.Content>

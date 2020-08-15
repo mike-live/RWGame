@@ -91,11 +91,19 @@
     <PackageReference Include="Acr.UserDialogs">
       <Version>7.1.0.446</Version>
     </PackageReference>
+    <PackageReference Include="Fody">
+      <Version>6.2.4</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
     <PackageReference Include="Plugin.GoogleClient">
       <Version>2.1.12</Version>
+    </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody">
+      <Version>3.2.8</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp">
       <Version>2.80.1</Version>
@@ -136,6 +144,9 @@
     <PackageReference Include="Xamarin.Forms">
       <Version>4.7.0.1179</Version>
     </PackageReference>
+    <PackageReference Include="Xamarin.Forms.BehaviorsPack">
+      <Version>2.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Plus">
       <Version>71.1600.4</Version>
     </PackageReference>
@@ -143,7 +154,7 @@
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignalsPlay.cs" />
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
@@ -283,6 +294,14 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\ic_google.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\strings.xml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\background_2_art_1.png" />
   </ItemGroup>
   <Import Project="..\RWGame\RWGame.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

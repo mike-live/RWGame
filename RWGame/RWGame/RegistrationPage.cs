@@ -1015,7 +1015,7 @@ namespace RWGame
                         await SecureStorage.SetAsync("login", loginEntry.Text);
                         await DisplayAlert("Success", "Registration successful! =)", "OK");
                         await DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
-                        await Navigation.PushAsync(new LoginPage(systemSettings));
+                        await Navigation.PushAsync(new Views.LoginPage(systemSettings));
                     }
                     else
                     {

@@ -18,6 +18,7 @@ namespace RWGame.ViewModels
         ServerWorker serverWorker;
         SystemSettings systemSettings;
 
+        public bool NeedAuth { get; set; } = false;
         public string login { get; set; }
         public string password { get; set; }
         public double logoSize { get { return 100; } } // DeviceDisplay.MainDisplayInfo.Width / 3
@@ -47,6 +48,7 @@ namespace RWGame.ViewModels
             set => User.Picture = value;
         }
 
+        public bool IsGoogleSignIn { get; set; }
         public bool IsLoggedIn { get; set; }
         private bool isLoggingIn;
         public bool IsLoggingIn {
@@ -61,6 +63,8 @@ namespace RWGame.ViewModels
             }
         }
         public bool IsNotLoggingIn { get { return !IsLoggingIn; } }
+        public bool IsAuthentication { get; set; }
+        public bool IsNotAuthentication { get { return !IsAuthentication; } }
 
         public string Token { get; set; }
 
@@ -80,9 +84,16 @@ namespace RWGame.ViewModels
 
         public LoginPageViewModel(SystemSettings systemSettings, INavigation navigation)
         {
+            this.systemSettings = systemSettings;
+            this.Navigation = navigation;
+            serverWorker = new ServerWorker();
+
+            //Task.Run(() => ContinueSession()).Wait();
+            ContinueSession();
+
             LoginNormalCommand = new Command(LoginNormal);
             RegistrationCommand = new Command(Registration);
-            LoginCommand = new Command(LoginAsync);
+            LoginCommand = new Command(() => LoginAsync());
             LogoutCommand = new Command(Logout);
 
             googleClientManager = CrossGoogleClient.Current;
@@ -90,16 +101,39 @@ namespace RWGame.ViewModels
 
             IsLoggedIn = false;
             IsLoggingIn = false;
+        }
 
-            this.systemSettings = systemSettings;
-            this.Navigation = navigation;
-            serverWorker = new ServerWorker();
+        public async void ContinueSession()
+        {
+            IsAuthentication = true;
+            LoginResponse loginResponse = await serverWorker.TaskIsAuth();
+            if (loginResponse != null && loginResponse.IsAuthenticationSuccessful)
+            {
+                serverWorker.UserLogin = loginResponse.Login;
+                await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+            }
+            IsAuthentication = false;
         }
 
         public async void LoginNormal()
         {
             saveCredentials(login, password);
+            IsGoogleSignIn = false;
             await Auth(login, password);
+        }
+
+        public void LoginAny()
+        {
+            IsAuthentication = true;
+            if (IsGoogleSignIn)
+            {
+                LoginAsync(false);
+            } 
+            else
+            {
+                LoginNormal();
+            }
+            IsAuthentication = false;
         }
 
         public async Task<bool> Auth(string login, string password, string idToken = "")
@@ -107,37 +141,53 @@ namespace RWGame.ViewModels
             if (idToken != "")
             {
                 LoginResponse loginResponse = await serverWorker.TaskLogin(login, password, idToken);
-                if (loginResponse.IsAuthenticationSuccessful)
+                if (loginResponse != null)
                 {
-                    serverWorker.UserLogin = loginResponse.Login;
-                    await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
-                }
-                else
-                {
-                    if (loginResponse.ErrorId == 3)
+                    if (loginResponse.IsAuthenticationSuccessful)
                     {
-                        await App.Current.MainPage.DisplayAlert("Error", "Please, provide additional information", "OK");
-                    } else 
-                    if (loginResponse.ErrorId == 1)
-                    {
-                        await App.Current.MainPage.DisplayAlert("Error", "Expired token", "OK");
-                    } else
-                    {
-                        await App.Current.MainPage.DisplayAlert("Error", "Ooops. Problem with server", "OK");
+                        serverWorker.UserLogin = loginResponse.Login;
+                        await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
                     }
+                    else
+                    {
+                        if (loginResponse.ErrorId == 3)
+                        {
+                            await App.Current.MainPage.DisplayAlert("Great!", "3 steps left to start playing", "Continue");
+                            Registration();
+                        }
+                        else
+                        if (loginResponse.ErrorId == 1)
+                        {
+                            await App.Current.MainPage.DisplayAlert("Error", "Expired token", "OK");
+                        }
+                        else
+                        {
+                            await App.Current.MainPage.DisplayAlert("Error", "Ooops. Problem with server", "OK");
+                        }
+                    }
+                } else
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Ooops. Problem with server", "OK");
                 }
             } else
             if (!string.IsNullOrEmpty(login) && !string.IsNullOrEmpty(password))
             {
                 LoginResponse loginResponse = await serverWorker.TaskLogin(login, password);
-                if (loginResponse.IsAuthenticationSuccessful)
+                if (loginResponse != null)
                 {
-                    serverWorker.UserLogin = loginResponse.Login;
-                    await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+                    if (loginResponse.IsAuthenticationSuccessful)
+                    {
+                        serverWorker.UserLogin = loginResponse.Login;
+                        await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+                    }
+                    else
+                    {
+                        await App.Current.MainPage.DisplayAlert("Error", "Incorrect login/password pair", "OK");
+                    }
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", "Incorrect login/password pair", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", "Ooops. Problem with server", "OK");
                 }
             }
             else
@@ -149,13 +199,18 @@ namespace RWGame.ViewModels
 
         public async void Registration()
         {
-            await Navigation.PushAsync(new RegistrationPage(serverWorker, systemSettings));
+            await Navigation.PushAsync(new Views.RegistrationPage(serverWorker, this));//serverWorker, systemSettings
         }
 
-        public async void LoginAsync()
+        public async void LoginAsync(bool needLogout = true)
         {
+            if (needLogout)
+            {
+                Logout();
+            }
             IsLoggingIn = true;
-            
+            IsGoogleSignIn = true;
+
             googleClientManager.OnLogin += OnLoginCompleted;
             try
             {
@@ -198,21 +253,18 @@ namespace RWGame.ViewModels
                 User.Picture = googleUser.Picture;
                 var GivenName = googleUser.GivenName;
                 var FamilyName = googleUser.FamilyName;
-
-
-                // Log the current User email
-                //Debug.WriteLine(User.Email);
+                
                 IsLoggedIn = true;
 
                 var token = CrossGoogleClient.Current.AccessToken;
                 var idToken = CrossGoogleClient.Current.IdToken;
 
-                Token = token;
+                Token = idToken;
                 await Auth("", "", idToken);
             }
             else
             {
-                Application.Current.MainPage.DisplayAlert("Error", loginEventArgs.Message, "OK");
+                await Application.Current.MainPage.DisplayAlert("Error", loginEventArgs.Message, "OK");
             }
             googleClientManager.OnLogin -= OnLoginCompleted;
         }

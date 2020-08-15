@@ -41,20 +41,5 @@ namespace RWGame.Droid
             base.OnActivityResult(requestCode, resultCode, data);
             GoogleClientManager.OnAuthCompleted(requestCode, resultCode, data);
         }
-
-        class ClientInfo
-        {
-            public string client_id;
-            public int client_type;
-        }
-        class ClientConfig
-        {
-            public List<ClientInfo> oauth_client;
-        }
-
-        class GoogleClientConfig
-        {
-            public List<ClientConfig> client;
-        }
     }
 }
