@@ -11,6 +11,11 @@ using SkiaSharp.Views.Forms;
 //using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Essentials;
+using Android.Renderscripts;
+using Android.Hardware.Camera2.Params;
+using Android.Graphics.Text;
+using Android.Animation;
 //using Xamarin.Forms.Platform.Android;
 
 namespace RWGame
@@ -20,6 +25,27 @@ namespace RWGame
         public ImageSource Picture { get; set; }
         public string text { get; set; }
     }
+    
+    public class GuideStep
+    {
+        public View button { get; set; }
+        public string guidePhrase { get; set; }
+        public SKCanvasView canvasView { get; set; }
+
+        public GuideStep()
+        {
+            button = new Button();
+            guidePhrase = "";
+            canvasView = new SKCanvasView();
+        }
+        public GuideStep(View _button, string _guidePhrase, SKCanvasView _canvasView)
+        {
+            button = _button;
+            guidePhrase = _guidePhrase;
+            canvasView = _canvasView;
+        }
+    }
+
 
     public class UserPage : ContentPage
     {
@@ -34,13 +60,15 @@ namespace RWGame
         Label performanceCenterLabel;
         Label performanceBorderLabel;
         Label RatingLabel;
-        Label guideLabel;
-        ImageButton tempImageButton;
+        String guidePhrase;
         SKCanvasView canvasView;
+        View tempView;
         AbsoluteLayout absoluteLayout;
-        //Button tempButton;
-        float tX, tY, butX, butY;
-
+        List<GuideStep> introGuide;
+        List<string> guidePhrases;
+        int widening = 2;
+        int dpi = (int)Android.App.Application.Context.Resources.DisplayMetrics.DensityDpi;
+        bool isGuideActive = true;
         bool isGameStarted = false;
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
@@ -157,55 +185,75 @@ namespace RWGame
                 RowDefinitions =
                     {
                         new RowDefinition { Height = GridLength.Auto },
-                        new RowDefinition { Height = GridLength.Auto },
-                        new RowDefinition { Height = GridLength.Auto },
                     },
                 ColumnDefinitions =
                     {
                         new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
                     },
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Center,
                 ColumnSpacing = 1,
                 RowSpacing = 0,
+                Margin = new Thickness(0, 10, 5, 0)
+            };
+
+            Grid gridPlayerScore = new Grid
+            {
+                ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    },
+                RowDefinitions =
+                    {
+                        new RowDefinition { Height = GridLength.Auto },
+                        new RowDefinition { Height = GridLength.Auto },
+                        new RowDefinition { Height = GridLength.Auto },
+                    },
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Center,
+                ColumnSpacing = 5,
+                RowSpacing = 0,
                 Margin = new Thickness(0, 0, 5, 0)
             };
 
-
             gridPlayerInfo.Children.Add(userName, 0, 0);
-            Grid.SetColumnSpan(userName, 1);
+            Grid.SetColumnSpan(userName, 3);
             Grid.SetRowSpan(userName, 3);
 
-            gridPlayerInfo.Children.Add(performanceCenterLabel, 1, 2);
+            gridPlayerScore.Children.Add(performanceCenterLabel, 0, 2);
             Grid.SetColumnSpan(performanceCenterLabel, 1);
             Grid.SetRowSpan(performanceCenterLabel, 1);
 
-            gridPlayerInfo.Children.Add(performanceCenterImage, 1, 1);
+            gridPlayerScore.Children.Add(performanceCenterImage, 0, 1);
             Grid.SetColumnSpan(performanceCenterImage, 1);
             Grid.SetRowSpan(performanceCenterImage, 1);
 
-            gridPlayerInfo.Children.Add(performanceBorderLabel, 2, 2);
+            gridPlayerScore.Children.Add(performanceBorderLabel, 1, 2);
             Grid.SetColumnSpan(performanceBorderLabel, 1);
             Grid.SetRowSpan(performanceBorderLabel, 1);
 
-            gridPlayerInfo.Children.Add(performanceBorderImage, 2, 1);
+            gridPlayerScore.Children.Add(performanceBorderImage, 1, 1);
             Grid.SetColumnSpan(performanceBorderImage, 1);
             Grid.SetRowSpan(performanceBorderImage, 1);
 
-            gridPlayerInfo.Children.Add(RatingLabel, 3, 2);
+            gridPlayerScore.Children.Add(RatingLabel, 2, 2);
             Grid.SetColumnSpan(RatingLabel, 1);
             Grid.SetRowSpan(RatingLabel, 1);
 
-            gridPlayerInfo.Children.Add(ratingInfoLabel, 3, 1);
+            gridPlayerScore.Children.Add(ratingInfoLabel, 2, 1);
             Grid.SetColumnSpan(ratingInfoLabel, 1);
             Grid.SetRowSpan(ratingInfoLabel, 1);
 
-            gridPlayerInfo.Children.Add(statisticsInfoLabel, 1, 0);
+            gridPlayerScore.Children.Add(statisticsInfoLabel, 0, 0);
             Grid.SetColumnSpan(statisticsInfoLabel, 3);
             Grid.SetRowSpan(statisticsInfoLabel, 1);
+
+            gridPlayerInfo.Children.Add(gridPlayerScore, 1, 0 );
+            Grid.SetColumnSpan(gridPlayerScore, 3);
+            Grid.SetRowSpan(gridPlayerScore, 3);
 
 
             var actionStandings = new TapGestureRecognizer();
@@ -213,7 +261,7 @@ namespace RWGame
             {
                 await Navigation.PushAsync(new StandingsPage(serverWorker, systemSettings));
             };
-            gridPlayerInfo.GestureRecognizers.Add(actionStandings);
+            gridPlayerScore.GestureRecognizers.Add(actionStandings);
 
             StackLayout stackLayoutListView = new StackLayout()
             {
@@ -362,7 +410,7 @@ namespace RWGame
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideGoal.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideMove.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideScore.png") });
-
+         
             StackLayout stackLayoutHelp = new StackLayout
             {
                 Spacing = 0,
@@ -392,11 +440,13 @@ namespace RWGame
             {
                 StartGuide(guideImages, guide);
             };
-            /*canvasView = new SKCanvasView
+            canvasView = new SKCanvasView
             {
                 HorizontalOptions = LayoutOptions.Fill,
                 VerticalOptions = LayoutOptions.Fill,
                 Margin = new Thickness(0, 0, 0, 0),
+                IsEnabled = false,
+                IsVisible = false,
                 HeightRequest = systemSettings.ScreenHeight,
                 WidthRequest = systemSettings.ScreenWidth,
             };
@@ -407,26 +457,26 @@ namespace RWGame
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
                 VerticalOptions = LayoutOptions.Center,
             };
+
+            introGuide = new List<GuideStep>();
+            guidePhrases = new List<String>();
+            guidePhrases.Add("Play with a bot!");
+            guidePhrases.Add("Play with a friend!");
+            guidePhrases.Add("Check out your rating!");
+            guidePhrases.Add("Check out our guide!");
+            introGuide.Add(new GuideStep(stackLayoutHelp, guidePhrases[3], canvasView));
+            introGuide.Add(new GuideStep(stackLayoutPlayWithBot, guidePhrases[0], canvasView));
+            introGuide.Add(new GuideStep(stackLayoutPlayWithAnotherPlayer, guidePhrases[1], canvasView));
+            introGuide.Add(new GuideStep(gridPlayerScore, guidePhrases[2], canvasView));
             
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
-            TapGestureRecognizer canvasTappedRecognizer = new TapGestureRecognizer();
-            tempImageButton = PlayWithBot;
-            guideLabel = infoLabel;
-            canvasTappedRecognizer.Tapped += delegate
-            {
-                tempImageButton = PlayWithBot;
-                guideLabel = infoLabel;
-                GuideStep(tempImageButton, guideLabel, canvasView);
-            };
-            canvasView.GestureRecognizers.Add(canvasTappedRecognizer);
-            */
-            
-
 
             if (!Application.Current.Properties.ContainsKey("FirstUse"))
             {
                 Application.Current.Properties["FirstUse"] = false;
                 //Do things when it IS the first use...
+                isGuideActive = true;
+                StartIntroGuide(introGuide);
             }
             
             stackLayoutPlayWithAnotherPlayer.Children.Add(PlayWithAnotherPlayer);
@@ -452,64 +502,175 @@ namespace RWGame
 
             
             absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
-            //absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
             //absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
             Content = absoluteLayout;
         }
         
-        void GuideStep(ImageButton button, Label label, SKCanvasView canvasView)
-         {
-             tempImageButton = button;
-             guideLabel = label;
-             tX = (float)button.X;
-             tY = (float)button.Y;
-             canvasView.InvalidateSurface();   
+        void StartIntroGuide(List<GuideStep> guide)
+        {
+            int countTapped = 0;
+            canvasView.IsVisible = true;
+            canvasView.IsEnabled = true;
+            PerformGuideStep(guide[0]);
+            TapGestureRecognizer localCanvasTappedRecognizer = new TapGestureRecognizer();
+            canvasView.GestureRecognizers.Add(localCanvasTappedRecognizer);
+            localCanvasTappedRecognizer.Tapped += delegate
+            {          
+                if (countTapped + 1 < guide.Count() && guide[countTapped] != null)
+                {
+                    countTapped++;
+                    PerformGuideStep(guide[(countTapped)]);
+                }
+                else
+                {
+                    canvasView.IsVisible = false;
+                    canvasView.IsEnabled = false;
+                    countTapped = 0;
+                    return;
+                }   
+            };
+            countTapped = 0;
         }
-         void OnCanvasViewTapped(object sender, EventArgs args)
+        void PerformGuideStep(GuideStep step)
          {
-            (sender as SKCanvasView).InvalidateSurface();  
-         }
+            tempView = step.button;
+            guidePhrase = step.guidePhrase;
+            canvasView.InvalidateSurface();
+        }
          void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
          {
             SKImageInfo info = args.Info;
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
-
             canvas.Clear();
-            var x = tempImageButton.X;
-            var y = tempImageButton.Y;
-            var parent = tempImageButton.ParentView;
+            //float vx = GetAbsoluteX(canvasView);
+            float vy = GetAbsoluteY(canvasView);
+            if (isGuideActive)
+            {
+                if (tempView != null)
+                {
+                    float x = GetAbsoluteX(tempView);
+                    float y = GetAbsoluteY(tempView);
+                    Rectangle rect = new Rectangle( // White rectangle around a clickable item
+                        DpToPx(x - widening), 
+                        DpToPx(y - vy - widening), 
+                        DpToPx(tempView.Width + widening * 2), 
+                        DpToPx(tempView.Height + widening));
+                    Darken(canvas, rect);
+                    DrawLightRect(canvas, rect);
+                    DisplayText(canvas, guidePhrase, rect);
+                    absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+                }
+            }
+        }
+        float DpToPx(double value)
+        {
+            return (float)(value * dpi / 160f);
+        }
+        float GetAbsoluteX(View view)
+        {
+            var parent = view.ParentView;
+            double x = view.X;
             while (parent != null)
             {
                 x += parent.X;
+                parent = parent.ParentView;
+            }
+            return (float)x;
+        }
+        float GetAbsoluteY(View view)
+        {
+            var parent = view.ParentView;
+            double y = view.Y;
+            while (parent != null)
+            {
                 y += parent.Y;
                 parent = parent.ParentView;
             }
-            Rectangle rect = new Rectangle(x, y, tempImageButton.Width, tempImageButton.Height);
-            DrawLightRect(canvas, rect);
-            DisplayLabel(canvas, guideLabel, (float)x, (float)y);
-            absoluteLayout.Children.Add(canvasView, new Rectangle(x, y, tempImageButton.Width, tempImageButton.Height));
+            return (float)y;
         }
-         void DrawLightRect(SKCanvas canvas, Rectangle rect)
-         {
+        void Darken(SKCanvas canvas, Rectangle rect)
+        {
+            SKColor hex;
+            SKColor.TryParse("#66000000", out hex);
             SKPaint paint = new SKPaint
+            {
+                Color = hex,
+                Style = SKPaintStyle.Fill,
+            };
+            canvas.DrawRect(0, 0, (float)rect.X, DpToPx(App.ScreenHeight), paint); // left
+            canvas.DrawRect((float)(rect.X + rect.Width), 0, 
+              (float)(DpToPx(App.ScreenWidth) - (rect.X + rect.Width)), DpToPx(App.ScreenHeight), paint); // right
+            canvas.DrawRect((float)rect.X, 0, (float)rect.Width, (float)rect.Y, paint); // center top
+            canvas.DrawRect((float)rect.X, (float)(rect.Y + rect.Height),
+                (float)rect.Width, (float)(DpToPx(App.ScreenHeight) - rect.Y - rect.Height), paint); // center bottom
+        }
+        void DrawLightRect(SKCanvas canvas, Rectangle rect)
+         {
+            SKPaint paintStroke = new SKPaint
             {
                 Color = SKColors.White,
                 Style = SKPaintStyle.Stroke,
-                StrokeWidth = 5,
+                StrokeWidth = 3,
             };
-            canvas.DrawRect((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height, paint);
-         }
-         void DisplayLabel(SKCanvas canvas, Label label, float x, float y)
+            canvas.DrawRect((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height, paintStroke);
+        }
+         void DisplayText(SKCanvas canvas, string text, Rectangle whiteRect)
          {
-             SKPaint paint = new SKPaint
-             {
-                 Color = SKColors.White,
-                 TextSize = 64.0f,
-                 IsLinearText = true
-             };
-             canvas.DrawText(label.Text, x, y, paint);
-         }
+            SKPaint textPaint = new SKPaint
+            {
+                Color = SKColors.White,
+                TextSize = 45.0f,
+                IsLinearText = true
+            };
+            SKPaint strokePaint = new SKPaint
+            {
+                Color = SKColors.White,
+                Style = SKPaintStyle.Stroke,
+                StrokeWidth = 3
+            };
+            int textWidening = 5;
+            float tlX, tlY, brX, brY; // top left X, top left Y, bottom right X, bottom right Y
+            float textWidth = textPaint.MeasureText(text);
+            float radius = 50.0f;
+            float mgn = 60;
+            //if (whiteRect.Y < DpToPx(App.ScreenHeight / 2))
+            //    mgn = -mgn - (float)whiteRect.Height;
+            tlX = (float)(whiteRect.X - DpToPx(textWidening));
+            tlY = (float)(whiteRect.Y - DpToPx(textWidening + mgn));
+            brX = (float)(whiteRect.X + textWidth + DpToPx(2 * textWidening));
+            brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) - DpToPx(mgn));           
+            if (tlX < 0)
+            {
+                tlX = 0;
+                tlY = (float)(whiteRect.Y - DpToPx(textWidening));
+                brX = (float)(2 * Math.Abs(whiteRect.X) + textWidth + DpToPx(2 * textWidening + mgn));
+                brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) - DpToPx(mgn));
+            }
+            if (brX > DpToPx(App.ScreenWidth))
+            {
+                if (whiteRect.Y > DpToPx(App.ScreenHeight / 2))
+                {
+                    tlX = (DpToPx(App.ScreenWidth) - (textWidth + DpToPx(2 * textWidening)));
+                    tlY = (float)(whiteRect.Y - DpToPx(textWidening + mgn));
+                    brX = DpToPx(App.ScreenWidth);
+                    brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) - DpToPx(mgn));
+                }
+                else
+                {
+                    tlX = (DpToPx(App.ScreenWidth) - (textWidth + DpToPx(2 * textWidening)));
+                    tlY = (float)(whiteRect.Y + DpToPx(textWidening + mgn));
+                    brX = DpToPx(App.ScreenWidth);
+                    brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) + DpToPx(mgn));
+                }
+                    
+            }
+            SKRect rect = new SKRect(tlX, tlY, brX, brY);
+            SKRoundRect roundRect = new SKRoundRect(rect, radius);
+            canvas.DrawRoundRect(roundRect, strokePaint);
+            canvas.DrawText(text, tlX + DpToPx(textWidening), tlY + (brY - tlY + textPaint.TextSize) / 2, textPaint);
+        }      
          
         void StartGuide(ObservableCollection<CarouselItem> images, CarouselView guide)
         {
