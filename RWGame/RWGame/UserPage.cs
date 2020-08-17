@@ -12,10 +12,6 @@ using SkiaSharp.Views.Forms;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
-using Android.Renderscripts;
-using Android.Hardware.Camera2.Params;
-using Android.Graphics.Text;
-using Android.Animation;
 //using Xamarin.Forms.Platform.Android;
 
 namespace RWGame
@@ -616,6 +612,7 @@ namespace RWGame
             };
             canvas.DrawRect((float)rect.X, (float)rect.Y, (float)rect.Width, (float)rect.Height, paintStroke);
         }
+
          void DisplayText(SKCanvas canvas, string text, Rectangle whiteRect)
          {
             SKPaint textPaint = new SKPaint
@@ -624,52 +621,58 @@ namespace RWGame
                 TextSize = 45.0f,
                 IsLinearText = true
             };
+            SKColor hex;
+            SKColor.TryParse("#39bafa", out hex);
             SKPaint strokePaint = new SKPaint
             {
-                Color = SKColors.White,
-                Style = SKPaintStyle.Stroke,
+                Color = hex,
+                Style = SKPaintStyle.Fill,
                 StrokeWidth = 3
             };
             int textWidening = 5;
-            float tlX, tlY, brX, brY; // top left X, top left Y, bottom right X, bottom right Y
+            float tlX = 0, tlY = 0, brX = 0, brY = 0; // top left X, top left Y, bottom right X, bottom right Y
             float textWidth = textPaint.MeasureText(text);
-            float radius = 50.0f;
+            float radius = 25.0f;
             float mgn = 60;
-            //if (whiteRect.Y < DpToPx(App.ScreenHeight / 2))
-            //    mgn = -mgn - (float)whiteRect.Height;
+
             tlX = (float)(whiteRect.X - DpToPx(textWidening));
-            tlY = (float)(whiteRect.Y - DpToPx(textWidening + mgn));
-            brX = (float)(whiteRect.X + textWidth + DpToPx(2 * textWidening));
-            brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) - DpToPx(mgn));           
-            if (tlX < 0)
+            brX = (float)(whiteRect.X + textWidth + 2 * DpToPx(textWidening));
+
+            float widthDiff = (float)Math.Abs(whiteRect.Width - (brX - tlX));
+
+            if (tlX > 0 && brX < DpToPx(App.ScreenWidth))
             {
-                tlX = 0;
-                tlY = (float)(whiteRect.Y - DpToPx(textWidening));
-                brX = (float)(2 * Math.Abs(whiteRect.X) + textWidth + DpToPx(2 * textWidening + mgn));
-                brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) - DpToPx(mgn));
+                tlX = tlX - widthDiff / 2;
+                brX = brX - widthDiff / 2;
             }
+
+            if (whiteRect.Y < DpToPx(App.ScreenHeight / 2)) // upper half
+            {
+                tlY = (float)(whiteRect.Y + whiteRect.Height + mgn - DpToPx(textWidening));
+                brY = (float)(whiteRect.Y + whiteRect.Height + mgn + textPaint.TextSize + 2 * DpToPx(textWidening));
+            }
+            else  // lower half
+            {     
+                tlY = (float)(whiteRect.Y - mgn - textPaint.TextSize - DpToPx(textWidening));
+                brY = (float)(whiteRect.Y - mgn + 2 * DpToPx(textWidening));
+            }
+
             if (brX > DpToPx(App.ScreenWidth))
             {
-                if (whiteRect.Y > DpToPx(App.ScreenHeight / 2))
-                {
-                    tlX = (DpToPx(App.ScreenWidth) - (textWidth + DpToPx(2 * textWidening)));
-                    tlY = (float)(whiteRect.Y - DpToPx(textWidening + mgn));
-                    brX = DpToPx(App.ScreenWidth);
-                    brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) - DpToPx(mgn));
-                }
-                else
-                {
-                    tlX = (DpToPx(App.ScreenWidth) - (textWidth + DpToPx(2 * textWidening)));
-                    tlY = (float)(whiteRect.Y + DpToPx(textWidening + mgn));
-                    brX = DpToPx(App.ScreenWidth);
-                    brY = (float)(whiteRect.Y + DpToPx(textPaint.TextSize) + DpToPx(2 * textWidening) + DpToPx(mgn));
-                }
-                    
+                tlX = tlX - (brX - DpToPx(App.ScreenWidth));
+                brX = DpToPx(App.ScreenWidth);
+            }    
+
+            if (tlX < 0)
+            {
+                brX = brX - tlX;
+                tlX = 0;
             }
+
             SKRect rect = new SKRect(tlX, tlY, brX, brY);
             SKRoundRect roundRect = new SKRoundRect(rect, radius);
             canvas.DrawRoundRect(roundRect, strokePaint);
-            canvas.DrawText(text, tlX + DpToPx(textWidening), tlY + (brY - tlY + textPaint.TextSize) / 2, textPaint);
+            canvas.DrawText(text, rect.MidX - textWidth / 2, rect.MidY, textPaint);
         }      
          
         void StartGuide(ObservableCollection<CarouselItem> images, CarouselView guide)
