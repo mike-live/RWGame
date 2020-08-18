@@ -37,6 +37,7 @@
       <DependentUpon>TabbedUserPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)TourGuide.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
   </ItemGroup>

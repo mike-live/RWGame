@@ -514,19 +514,6 @@ namespace RWGame
             stackLayoutScore.Children.Add(GameScoreLabel);
             stackLayoutTopScore.Children.Add(GameTopScoreImage);
             stackLayoutTopScore.Children.Add(GameTopScoreLabel);
-            /*labelLayout.Children.Add(GameScoreImage);
-            labelLayout.Children.Add(GameScoreLabel);
-            labelLayout.Children.Add(GoalLabel);
-            labelLayout.Children.Add(GameTopScoreImage);
-            labelLayout.Children.Add(GameTopScoreLabel);*/
-
-            /*labelGrid.Children.Add(
-
-                GameScoreImage, 0, 0);
-            labelGrid.Children.Add(GameScoreLabel, 1, 0);
-            labelGrid.Children.Add(GoalLabel, 2, 0);
-            labelGrid.Children.Add(GameTopScoreImage, 3, 0);
-            labelGrid.Children.Add(GameTopScoreLabel, 4, 0);*/
 
             labelGrid.Children.Add(stackLayoutScore, 0, 0);
             labelGrid.Children.Add(GoalLabel, 1, 0);
@@ -554,6 +541,8 @@ namespace RWGame
             //AbsoluteLayout.SetLayoutFlags(stackLayout, AbsoluteLayoutFlags.All);
             //stackLayout.Children.Add(GoalLabel);
             absoluteLayout.Children.Add(stackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+
+            
             Content = absoluteLayout;
         }
 
