@@ -18,7 +18,7 @@ namespace RWGame.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
+            Xamarin.Forms.Forms.SetFlags("CarouselView_Experimental");
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
             RequestedOrientation = ScreenOrientation.Portrait;
