@@ -581,7 +581,6 @@ namespace RWGame
             {
                 Application.Current.Properties["FirstUseGame"] = false;
                 Application.Current.SavePropertiesAsync();
-                //Do things when it IS the first use...
                 tourGuide.StartIntroGuide(introGuide);
             }
 
