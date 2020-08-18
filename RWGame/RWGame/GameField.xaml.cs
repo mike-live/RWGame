@@ -545,10 +545,10 @@ namespace RWGame
             string goalPhrase;
             if (game.GameSettings.Goals[game.IdPlayer] == "center")
             {
-                goalPhrase = "keep star inside field as long as you can.";
+                goalPhrase = "keep the star inside the field for as long as you can.";
             } else
             {
-                goalPhrase = "reach border as fast as you can.";
+                goalPhrase = "reach the border as fast as you can.";
             }
 
             List<GuideStep> introGuide = new List<GuideStep>
@@ -557,9 +557,9 @@ namespace RWGame
                 new GuideStep(null, "You can have one of 2 goals:\n1. Center (yellow)\n2. Border (violet)"),
                 new GuideStep(GoalLabel, "Your goal"),
                 new GuideStep(null, "Moves of star done by 2 players each turn"),
-                new GuideStep(gameControls.ControlsGrid, "One choose row and the another - column"),
-                new GuideStep(null, "Star moves in one of 4 direction that occur on the intersection of chosen row and column: left, right, up or down. " + 
-                                    "Both players don't know about choice of the opponent =)"),
+                new GuideStep(gameControls.ControlsGrid, "One picks a row, and the other – a column"),
+                new GuideStep(null, "The star moves in one of the 4 directions that occur on the intersection of the chosen row and column: left, right, up or down. " +
+                                    "Neither player knows about the opponent's choice =)"),
                 new GuideStep(null, "Now you should " + goalPhrase),
                 new GuideStep(stackLayoutScore, "Current score"),
                 new GuideStep(stackLayoutTopScore, "Top score"),

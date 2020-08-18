@@ -18,11 +18,11 @@ using System.Text;
 
 namespace RWGame
 {
-    public class CarouselItem
+    /*public class CarouselItem
     {
         public ImageSource Picture { get; set; }
         public string text { get; set; }
-    }
+    }*/
 
 
     public class UserPage : ContentPage
@@ -39,8 +39,10 @@ namespace RWGame
         Label performanceBorderLabel;
         Label RatingLabel;
         AbsoluteLayout absoluteLayout;
+        RelativeLayout relativeLayout;
         List<GuideStep> introGuide;
         bool isGameStarted = false;
+        StackLayout userprofilStackLayout;
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
             NavigationPage.SetHasNavigationBar(this, false);
@@ -48,7 +50,7 @@ namespace RWGame
             this.serverWorker = _serverWorker;
             this.Title = "Started games";
 
-            StackLayout userprofilStackLayout = new StackLayout()
+            userprofilStackLayout = new StackLayout()
             {
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
@@ -58,6 +60,12 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
             };
+            relativeLayout = new RelativeLayout()
+            {
+                VerticalOptions = LayoutOptions.FillAndExpand,
+                HorizontalOptions = LayoutOptions.Fill
+            };
+
             absoluteLayout = new AbsoluteLayout()
             {
                 VerticalOptions = LayoutOptions.Fill,
@@ -163,8 +171,8 @@ namespace RWGame
                         new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) },
                     },
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.Center,
-                ColumnSpacing = 1,
+                VerticalOptions = LayoutOptions.Start,
+                //ColumnSpacing = 1,
                 RowSpacing = 0,
                 Margin = new Thickness(0, 10, 5, 0)
             };
@@ -175,7 +183,7 @@ namespace RWGame
                     {
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1.3, GridUnitType.Star) },
                     },
                 RowDefinitions =
                     {
@@ -184,16 +192,13 @@ namespace RWGame
                         new RowDefinition { Height = GridLength.Auto },
                     },
                 HorizontalOptions = LayoutOptions.FillAndExpand,
-                VerticalOptions = LayoutOptions.Center,
-                ColumnSpacing = 5,
+                VerticalOptions = LayoutOptions.Start,
+                //ColumnSpacing = 5,
                 RowSpacing = 0,
-                Margin = new Thickness(0, 0, 5, 0)
+                Margin = new Thickness(0, 0, 0, 0)
             };
 
-            gridPlayerInfo.Children.Add(userName, 0, 0);
-            Grid.SetColumnSpan(userName, 3);
-            Grid.SetRowSpan(userName, 3);
-
+            
             gridPlayerScore.Children.Add(performanceCenterLabel, 0, 2);
             Grid.SetColumnSpan(performanceCenterLabel, 1);
             Grid.SetRowSpan(performanceCenterLabel, 1);
@@ -222,9 +227,14 @@ namespace RWGame
             Grid.SetColumnSpan(statisticsInfoLabel, 3);
             Grid.SetRowSpan(statisticsInfoLabel, 1);
 
+
+            gridPlayerInfo.Children.Add(userName, 0, 0);
+            Grid.SetColumnSpan(userName, 1);
+            Grid.SetRowSpan(userName, 1);
+
             gridPlayerInfo.Children.Add(gridPlayerScore, 1, 0);
-            Grid.SetColumnSpan(gridPlayerScore, 3);
-            Grid.SetRowSpan(gridPlayerScore, 3);
+            Grid.SetColumnSpan(gridPlayerScore, 1);
+            Grid.SetRowSpan(gridPlayerScore, 1);
 
 
             var actionStandings = new TapGestureRecognizer();
@@ -243,6 +253,7 @@ namespace RWGame
 
             gamesListView = new ListView
             {
+                VerticalOptions = LayoutOptions.CenterAndExpand,
                 ItemTemplate = new DataTemplate(typeof(DateCellView)),
                 IsPullToRefreshEnabled = true,
             };
@@ -292,7 +303,7 @@ namespace RWGame
             {
                 VerticalOptions = LayoutOptions.Center,
                 HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(20, 10, 20, 50),
+                Margin = new Thickness(20, 10, 20, 10),
                 Orientation = StackOrientation.Horizontal
             };
             var stackLayoutPlayWithAnotherPlayer = new StackLayout
@@ -367,20 +378,20 @@ namespace RWGame
                 await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 await UpdateGameList();
             };
-            var guide = new CarouselView
+            /*var guide = new CarouselView
             {
                 IsVisible = false,
                 IsEnabled = false,
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Always
-            };
+            };*/
 
-            var guideImages = new ObservableCollection<CarouselItem>();
+            /*var guideImages = new ObservableCollection<CarouselItem>();
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guidePlayWithBot.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guidePlayWithFriend.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideRating.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideGoal.png") });
             guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideMove.png") });
-            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideScore.png") });
+            guideImages.Add(new CarouselItem { Picture = ImageSource.FromFile("guideScore.png") });*/
 
             StackLayout stackLayoutHelp = new StackLayout
             {
@@ -419,7 +430,7 @@ namespace RWGame
 
             introGuide = new List<GuideStep>
             {
-                new GuideStep(null, "Welcome to Random Walk!\nTap to see guide for the game"),
+                new GuideStep(null, "Welcome to Random Walk!\nTap to see game guide"),
                 new GuideStep(stackLayoutHelp, "Check out our guide!"),
                 new GuideStep(stackLayoutPlayWithBot, "Play with a bot!"),
                 new GuideStep(stackLayoutPlayWithAnotherPlayer, "Play with a friend!"),
@@ -470,17 +481,39 @@ namespace RWGame
             userprofilStackLayout.Children.Add(buttonStack);
 
 
-            globalStackLayout.Children.Add(userprofilStackLayout);
+            //globalStackLayout.Children.Add(userprofilStackLayout);
             //globalStackLayout.Children.Add(canvasView);
 
-
-            absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
-            absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            //absoluteLayout.Children.Add(globalStackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+            //absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
             //absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
-            Content = absoluteLayout;
+
+            relativeLayout.Children.Add(userprofilStackLayout, 
+                xConstraint: Constraint.Constant(0), 
+                yConstraint: Constraint.Constant(0),
+                widthConstraint: Constraint.RelativeToParent((parent) =>
+                {
+                    return parent.Width;
+                }),
+                heightConstraint: Constraint.RelativeToParent((parent) =>
+                {
+                    return parent.Height;
+                }));
+            relativeLayout.Children.Add(canvasView,
+                xConstraint: Constraint.Constant(0),
+                yConstraint: Constraint.Constant(0),
+                widthConstraint: Constraint.RelativeToParent((parent) =>
+                {
+                    return parent.Width;
+                }),
+                heightConstraint: Constraint.RelativeToParent((parent) =>
+                {
+                    return parent.Height;
+                }));
+            Content = relativeLayout;
         }
 
-        void StartGuide(ObservableCollection<CarouselItem> images, CarouselView guide)
+        /*void StartGuide(ObservableCollection<CarouselItem> images, CarouselView guide)
         {
             int i = 0;
             DataTemplate template = new DataTemplate(() =>
@@ -514,7 +547,8 @@ namespace RWGame
                 IsSwipeEnabled = false
             };
             absoluteLayout.Children.Add(guide, new Rectangle(20, 20, App.ScreenWidth - 40, App.ScreenHeight - 100));
-        }
+        }*/
+
         public async Task UpdatePlayerInfo()
         {
             playerInfo = await serverWorker.TaskGetPlayerInfo();
