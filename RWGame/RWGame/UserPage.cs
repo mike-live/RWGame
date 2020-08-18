@@ -38,10 +38,8 @@ namespace RWGame
         Label performanceCenterLabel;
         Label performanceBorderLabel;
         Label RatingLabel;
-        SKCanvasView canvasView;
         AbsoluteLayout absoluteLayout;
         List<GuideStep> introGuide;
-        List<string> guidePhrases;
         bool isGameStarted = false;
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
         {
@@ -322,7 +320,7 @@ namespace RWGame
                 IsEnabled = true,
                 Source = "pvp.png",
                 HeightRequest = 30,
-                WidthRequest = 100,
+                WidthRequest = 60,
                 Padding = 0
             };
             PlayWithAnotherPlayer.Clicked += async delegate
@@ -356,7 +354,7 @@ namespace RWGame
                 //TextColor = Color.White,
                 Source = "bot.png",
                 HeightRequest = 30,
-                WidthRequest = 100,
+                WidthRequest = 60,
                 Padding = 0,
             };
             PlayWithBot.Clicked += async delegate
@@ -406,7 +404,7 @@ namespace RWGame
                 Source = "help.png",
                 //IsEnabled = true,
                 HeightRequest = 30,
-                WidthRequest = 100,
+                WidthRequest = 60,
                 Padding = 0
             };
             

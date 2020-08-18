@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace RWGame
@@ -24,7 +25,7 @@ namespace RWGame
         string guidePhrase;
         View tempView;
         int widening = 2;
-        int dpi = (int)Android.App.Application.Context.Resources.DisplayMetrics.DensityDpi;
+        double dpi = DeviceDisplay.MainDisplayInfo.Density;
         bool isGuideActive = true;
 
         SKCanvasView canvasView;
@@ -109,7 +110,7 @@ namespace RWGame
         }
         float DpToPx(double value)
         {
-            return (float)(value * dpi / 160f);
+            return (float)(value * dpi);
         }
         float GetAbsoluteX(View view)
         {
