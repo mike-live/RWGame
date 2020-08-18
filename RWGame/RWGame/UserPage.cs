@@ -441,10 +441,10 @@ namespace RWGame
             };
             TourGuide tourGuide = new TourGuide(canvasView);
 
-            //if (!Application.Current.Properties.ContainsKey("FirstUse"))
+            if (!Application.Current.Properties.ContainsKey("FirstUse"))
             {
                 Application.Current.Properties["FirstUse"] = false;
-                //Do things when it IS the first use...
+                Application.Current.SavePropertiesAsync();
                 tourGuide.StartIntroGuide(introGuide);
             }
 
