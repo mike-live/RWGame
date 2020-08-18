@@ -3,15 +3,17 @@ using Plugin.Connectivity;
 using RWGame.Classes.ResponseClases;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 
 namespace RWGame.Classes
 {
     public class ServerWorker
     {
-
         public string URLServer { get; private set; }
         private bool isDeviceConnect;
         public bool IsDeviceConnect
@@ -20,8 +22,7 @@ namespace RWGame.Classes
             private set
             {
                 isDeviceConnect = value;
-                if (ChangeConnectionStateEvent != null)
-                    ChangeConnectionStateEvent();
+                ChangeConnectionStateEvent?.Invoke();
             }
         }
         public delegate void ChangeConnectionStateHandler();
@@ -29,46 +30,61 @@ namespace RWGame.Classes
 
         private HttpClient client;
         private HttpClientHandler clientHandler;
-        //private CookieContainer cookieContainer;
+        private CookieContainer cookieContainer;
 
         public string CurrentLogin = "";
         public string CurrentPassword = "";
         public string UserLogin = "";
         public int UserID = -1;
 
-        /// <summary>+Команда логирования</summary>
-        string LoginCommand = "game_actions/login";
+        /// <summary>+Команда входа</summary>
+        readonly string LoginCommand = "game_actions/login";
+
+        /// <summary>+Проверка аутентификации</summary>
+        readonly string IsAuthCommand = "game_actions/is_auth";
+
         /// <summary>Команда разлогирования</summary>
         //string LogoutCommand = "game_actions/logout";
+
         /// <summary>+Команда проверки ранее зарегистрированного пользователя с аналогичным логином</summary>
-        string CheckLoginCommand = "game_actions/check_login";
+        readonly string CheckLoginCommand = "game_actions/check_login";
+
         /// <summary>+Команда проверки ранее зарегистрированного пользователя с аналогичным почтовым ящиком</summary>
-        string CheckEmailCommand = "game_actions/check_email";
+        readonly string CheckEmailCommand = "game_actions/check_email";
+
         /// <summary>+Команда регистрации</summary>
-        string RegistrationCommand = "game_actions/join";
+        readonly string RegistrationCommand = "game_actions/join";
+
         /// <summary>+Команда начала игры</summary>
-        string PlayGameCommand = "game_actions/play";
+        readonly string PlayGameCommand = "game_actions/play";
+
         /// <summary>+Команда получения статуса игры</summary>
-        string GameStateCommand = "game_actions/game_state";
+        readonly string GameStateCommand = "game_actions/game_state";
+
         /// <summary>+Команда совершения хода в игре</summary>
-        string MakeTurnCommand = "game_actions/make_turn";
+        readonly string MakeTurnCommand = "game_actions/make_turn";
+
         /// <summary>+Команда получения списка игр</summary>
-        string MyGamesCommand = "game_actions/my_games";
+        readonly string MyGamesCommand = "game_actions/my_games";
+
         /// <summary>+Команда получения игры</summary>
-        string GetGameCommand = "game_actions/game_info";
+        readonly string GetGameCommand = "game_actions/game_info";
+
         /// <summary>+Команда получения ходов игры</summary>
-        string GameTurnsCommand = "game_actions/game_turns";
-        /// <summary>Команда standings</summary>
-        //string StandingsCommand = "game_actions/standings";
+        readonly string GameTurnsCommand = "game_actions/game_turns";
+
         /// <summary>+Команда поиска игрока</summary>
-        string FindPlayerCommand = "game_actions/find_player";
+        readonly string FindPlayerCommand = "game_actions/find_player";
+
         /// <summary>+Команда отмены игры</summary>
-        string CancelGameCommand = "game_actions/cancel_game";
+        readonly string CancelGameCommand = "game_actions/cancel_game";
+
         /// <summary>+Получить информацию об игроке и статистику</summary>
-        string GetPlayerInfoCommand = "game_actions/get_player_info";
+        readonly string GetPlayerInfoCommand = "game_actions/get_player_info";
+
         /// <summary>+Получить таблицу рейтинга</summary>
-        string GetStandingsCommand = "game_actions/get_standings";
-        
+        readonly string GetStandingsCommand = "game_actions/get_standings";
+
         public ServerWorker()
         {
             URLServer = "https://scigames.ru/";
@@ -83,6 +99,23 @@ namespace RWGame.Classes
             isDeviceConnect = false;
             clientHandler = new HttpClientHandler();
             client = new HttpClient(clientHandler);
+            cookieContainer = new CookieContainer();
+            clientHandler.CookieContainer = cookieContainer;
+
+            Task.Run(() => SetCookies()).Wait();
+        }
+
+        private async Task SetCookies()
+        {
+            try
+            {
+                string cookiesHeader = await SecureStorage.GetAsync("cookies");
+                cookieContainer.SetCookies(new Uri(URLServer), cookiesHeader);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private async Task<TResponse> PostData<TResponse>(string command, Dictionary<string, object> data = null)
@@ -120,15 +153,29 @@ namespace RWGame.Classes
                     await WaitInternetView.WaitUserReconnect();
                 }
             }
+            IEnumerable<string> cookies = response.Headers.SingleOrDefault(header => header.Key == "Set-Cookie").Value;
+            string cookiesHeader = cookies?.FirstOrDefault();
+            if (cookiesHeader != null)
+            {
+                await SecureStorage.SetAsync("cookies", cookiesHeader);
+                Console.WriteLine($"Cookies: {cookiesHeader}");
+            }
+
             string responseJsonString = await response.Content.ReadAsStringAsync();
             Console.WriteLine(command);
             Console.WriteLine(responseJsonString);
             return JsonConvert.DeserializeObject<TResponse>(responseJsonString);
         }
 
-        public async Task<bool> TaskRegistrateNewPlayer(string name, string family, string login, string password, string confirm_password, string birthday, string email)
+        public async Task<LoginResponse> TaskIsAuth()
         {
-            return await RegistrateNewPlayer(name, family, login, password, confirm_password, birthday, email);
+            return await IsAuth();
+        }
+
+        public async Task<bool> TaskRegistrateNewPlayer(string name, string family, string login, string password,
+            string confirm_password, string birthday, string email, string token = "")
+        {
+            return await RegistrateNewPlayer(name, family, login, password, confirm_password, birthday, email, token);
         }
 
         public async Task<bool> TaskCheckLogin(string login)
@@ -141,9 +188,9 @@ namespace RWGame.Classes
             return await CheckEmail(email);
         }
 
-        public async Task<bool> TaskLogin(string login, string password)
+        public async Task<LoginResponse> TaskLogin(string login, string password, string idToken = "")
         {
-            return await Login(login, password);
+            return await Login(login, password, idToken);
         }
 
         public async Task<List<Player>> TaskGetPlayerList(string loginPart)
@@ -195,18 +242,33 @@ namespace RWGame.Classes
             return await GetStandings();
         }
 
-        private async Task<bool> RegistrateNewPlayer(string name, string family, string login, string password, string confirm_password, string birthday, string email)
+        private async Task<LoginResponse> IsAuth()
+        {
+            try
+            {
+                LoginResponse currentResponse = await PostData<LoginResponse>(IsAuthCommand);
+                return currentResponse;
+            }
+            catch (System.Net.WebException)
+            {
+                return null;
+            }
+        }
+
+        private async Task<bool> RegistrateNewPlayer(string name, string family, string login, string password,
+            string confirm_password, string birthday, string email, string token)
         {
             try
             {
                 Dictionary<string, object> data = new Dictionary<string, object>() {
-                    {"name", name},
-                    {"family", family},
+                    { "name", name },
+                    { "family", family },
                     { "login", login },
-                    { "password", password},
-                    { "confirm_password", confirm_password},
-                    { "birthday", birthday},
-                    { "email", email }
+                    { "password", password },
+                    { "confirm_password", confirm_password },
+                    { "birthday", birthday },
+                    { "email", email },
+                    { "token", token },
                 };
 
                 RegistrationResponse currentResponse = await PostData<RegistrationResponse>(RegistrationCommand, data);
@@ -255,22 +317,23 @@ namespace RWGame.Classes
             }
         }
 
-        private async Task<bool> Login(string login, string password)
+        private async Task<LoginResponse> Login(string login, string password, string idToken = "")
         {
             try
             {
                 Dictionary<string, object> data = new Dictionary<string, object>() {
                     { "login", login },
-                    { "password",  password }
+                    { "password",  password },
+                    { "id_token",  idToken },
                 };
 
                 LoginResponse currentResponse = await PostData<LoginResponse>(LoginCommand, data);
 
-                return currentResponse.IsAuthenticationSuccessful;
+                return currentResponse;
             }
             catch (System.Net.WebException)
             {
-                return false;
+                return null;
             }
         }
 

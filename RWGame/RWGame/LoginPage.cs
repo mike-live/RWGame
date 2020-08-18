@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Essentials;
+using RWGame.Classes.ResponseClases;
 
 namespace RWGame
 {
@@ -153,6 +154,11 @@ namespace RWGame
             //stackLayout.Children.Add(registrationButton);
             //stackLayout.Children.Add(buttonStack);
 
+            //com.google.android.gms.common.SignInButton
+            //var GoogleButton = new Android.Gms.Common.SignInButton(Forms.Context);
+            //stackLayout.Children.Add(GoogleButton);
+            
+
             Content = stackLayout;
 
             if (loginEntry.Text.Length > 0 && passwordEntry.Text.Length > 0)
@@ -165,7 +171,8 @@ namespace RWGame
         {
             if (login != null && password != null)
             {
-                if (await serverWorker.TaskLogin(login, password))
+                LoginResponse loginResponse = await serverWorker.TaskLogin(login, password);
+                if (loginResponse.IsAuthenticationSuccessful)
                 {
                     serverWorker.UserLogin = login;
                     await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
@@ -174,7 +181,7 @@ namespace RWGame
                 {
                     await DisplayAlert("Error", "Incorrect login/password pair", "OK");
                 }
-}
+            }
             else
             {
                 await DisplayAlert("Error", "Fields cannot be empty", "OK");

@@ -165,7 +165,9 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("message_error")]
         public string MessageError { get; set; }
-
+        
+        [JsonProperty("error_id")]
+        public int ErrorId { get; set; }
     }
 
     public class PlayGameResponse
