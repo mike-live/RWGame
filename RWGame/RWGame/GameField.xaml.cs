@@ -508,7 +508,7 @@ namespace RWGame
                 GameTopScoreLabel.Text = "20";
             }
 
-            var stackLayoutScore = new StackLayout { Orientation = StackOrientation.Horizontal };
+            var stackLayoutScore = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.Start };
             var stackLayoutTopScore = new StackLayout { Orientation = StackOrientation.Horizontal, HorizontalOptions = LayoutOptions.EndAndExpand };
             stackLayoutScore.Children.Add(GameScoreImage);
             stackLayoutScore.Children.Add(GameScoreLabel);
@@ -542,7 +542,56 @@ namespace RWGame
             //stackLayout.Children.Add(GoalLabel);
             absoluteLayout.Children.Add(stackLayout, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
 
-            
+            string goalPhrase;
+            if (game.GameSettings.Goals[game.IdPlayer] == "center")
+            {
+                goalPhrase = "keep star inside field as long as you can.";
+            } else
+            {
+                goalPhrase = "reach border as fast as you can.";
+            }
+
+            List<GuideStep> introGuide = new List<GuideStep>
+            {
+                new GuideStep(canvasView, "In the center of the square field you see the star"),
+                new GuideStep(null, "You can have one of 2 goals:\n1. Center (yellow)\n2. Border (violet)"),
+                new GuideStep(GoalLabel, "Your goal"),
+                new GuideStep(null, "Moves of star done by 2 players each turn"),
+                new GuideStep(gameControls.ControlsGrid, "One choose row and the another - column"),
+                new GuideStep(null, "Star moves in one of 4 direction that occur on the intersection of chosen row and column: left, right, up or down. " + 
+                                    "Both players don't know about choice of the opponent =)"),
+                new GuideStep(null, "Now you should " + goalPhrase),
+                new GuideStep(stackLayoutScore, "Current score"),
+                new GuideStep(stackLayoutTopScore, "Top score"),
+                new GuideStep(null, "Good luck!")
+            };
+            SKCanvasView tourGuideCanvasView = new SKCanvasView
+            {
+                HorizontalOptions = LayoutOptions.Fill,
+                VerticalOptions = LayoutOptions.Fill,
+                Margin = new Thickness(0, 0, 0, 0),
+                IsEnabled = false,
+                IsVisible = false,
+                HeightRequest = systemSettings.ScreenHeight,
+                WidthRequest = systemSettings.ScreenWidth,
+            };
+            TourGuide tourGuide = new TourGuide(tourGuideCanvasView);
+
+            //if (!Application.Current.Properties.ContainsKey("FirstUseGame"))
+            {
+                Application.Current.Properties["FirstUseGame"] = false;
+                //Do things when it IS the first use...
+                tourGuide.StartIntroGuide(introGuide);
+            }
+
+            /*helpButton.Clicked += delegate
+            {
+                //StartGuide(guideImages, guide);
+                tourGuide.StartIntroGuide(introGuide);
+            };*/
+            absoluteLayout.Children.Add(tourGuideCanvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+
+
             Content = absoluteLayout;
         }
 

@@ -29,7 +29,8 @@ namespace RWGame
 
         SKCanvasView canvasView;
         private int countTapped = 0;
-
+        List<GuideStep> guide;
+        TapGestureRecognizer localCanvasTappedRecognizer;
         public TourGuide(SKCanvasView canvasView)
         {
             this.canvasView = canvasView;
@@ -38,29 +39,34 @@ namespace RWGame
         }
         public void StartIntroGuide(List<GuideStep> guide)
         {
+            this.guide = guide;
+            countTapped = 1;
             isGuideActive = true;
             canvasView.IsVisible = true;
             canvasView.IsEnabled = true;
             PerformGuideStep(guide[0]);
-            TapGestureRecognizer localCanvasTappedRecognizer = new TapGestureRecognizer();
+            localCanvasTappedRecognizer = new TapGestureRecognizer();
             canvasView.GestureRecognizers.Add(localCanvasTappedRecognizer);
-            localCanvasTappedRecognizer.Tapped += delegate
-            {
-                if (countTapped < guide.Count && guide[countTapped] != null)
-                {
-                    PerformGuideStep(guide[countTapped]);
-                    countTapped++;
-                }
-                else
-                {
-                    canvasView.IsVisible = false;
-                    canvasView.IsEnabled = false;
-                    countTapped = 0;
-                    return;
-                }
-            };
-            countTapped = 1;
+            localCanvasTappedRecognizer.Tapped += TapGuide;
         }
+
+        private void TapGuide(Object obj, Object args)
+        {
+            if (countTapped<guide.Count && guide[countTapped] != null)
+            {
+                PerformGuideStep(guide[countTapped]);
+                countTapped++;
+            }
+            else
+            {
+                canvasView.IsVisible = false;
+                canvasView.IsEnabled = false;
+                countTapped = 1;
+                localCanvasTappedRecognizer.Tapped -= TapGuide;
+                return;
+            }
+        }
+
         void PerformGuideStep(GuideStep step)
         {
             tempView = step.View;
@@ -184,7 +190,6 @@ namespace RWGame
 
             SKRoundRect roundRect = new SKRoundRect(areaUpdated, radius);
 
-
             canvas.DrawRoundRect(roundRect, strokePaint);
             strokePaint.Style = SKPaintStyle.Stroke;
             strokePaint.Color = SKColors.White;
@@ -199,18 +204,40 @@ namespace RWGame
             public float Width { get; set; }
         }
 
-        private (SKRect, Line[], float) MeasureMultilineText(string text, SKRect area, SKPaint paint)
+        private (SKRect, Line[], float) MeasureMultilineText(string text, SKRect area, SKPaint paint, 
+            TextAlignment verticalTextAlignment = TextAlignment.Center)
         {
+            float marginHorizontal = DpToPx(5);
             float lineHeight = paint.FontMetrics.Descent - paint.FontMetrics.Ascent;
-            var lines = SplitLines(text, paint, area.Width);
+            var lines = SplitLines(text, paint, area.Width - 2 * marginHorizontal);
             var height = lines.Count() * lineHeight;
 
-            return (new SKRect(area.Left, area.MidY - height / 2, area.Right,
-                area.MidY + height / 2 + paint.FontMetrics.Descent), lines, lineHeight);
+            var areaUpdated = new SKRect(area.Left, area.MidY - height / 2, area.Right,
+                area.MidY + height / 2 + paint.FontMetrics.Descent);
+
+            if (verticalTextAlignment == TextAlignment.Center)
+            {
+                areaUpdated.Top = area.MidY - height / 2;
+                areaUpdated.Bottom = area.MidY + height / 2;
+                areaUpdated.Bottom += paint.FontMetrics.Descent;
+            }
+            if (verticalTextAlignment == TextAlignment.Start)
+            {
+                areaUpdated.Top = area.Top;
+                areaUpdated.Bottom = area.Top + height;
+                areaUpdated.Bottom += paint.FontMetrics.Descent;
+            }
+            if (verticalTextAlignment == TextAlignment.End)
+            {
+                areaUpdated.Top = area.Bottom - height - paint.FontMetrics.Descent;
+                areaUpdated.Bottom = area.Bottom;
+            }
+            return (areaUpdated, lines, lineHeight);
         }
-        private void DrawMultilineText(SKCanvas canvas, string text, SKRect area, SKPaint paint)
+        private void DrawMultilineText(SKCanvas canvas, string text, SKRect area, SKPaint paint,
+            TextAlignment verticalTextAlignment = TextAlignment.Center)
         {
-            var (areaUpdated, lines, lineHeight) = MeasureMultilineText(text, area, paint);
+            var (areaUpdated, lines, lineHeight) = MeasureMultilineText(text, area, paint, verticalTextAlignment);
 
             var y = areaUpdated.Top;
             foreach (var line in lines)
@@ -242,7 +269,7 @@ namespace RWGame
 
                     if (width + wordWidth > maxWidth)
                     {
-                        result.Add(new Line() { Value = lineResult.ToString(), Width = width });
+                        result.Add(new Line() { Value = lineResult.ToString(), Width = width - spaceWidth });
                         lineResult = new StringBuilder(wordWithSpace);
                         width = wordWithSpaceWidth;
                     }
@@ -253,7 +280,7 @@ namespace RWGame
                     }
                 }
 
-                result.Add(new Line() { Value = lineResult.ToString(), Width = width });
+                result.Add(new Line() { Value = lineResult.ToString(), Width = width - spaceWidth });
 
                 return result.ToArray();
             }).ToArray();
@@ -273,30 +300,38 @@ namespace RWGame
                 Color = SKColor.Parse("#33a5de"),
                 Style = SKPaintStyle.Fill,
             };
-            int textWidening = 5;
             float tlX = 0, tlY = 0, brX = 0, brY = 0; // top left X, top left Y, bottom right X, bottom right Y
             float textWidth = textPaint.MeasureText(text);
             float radius = DpToPx(5);
-            float mgn = 60;
+            float mgn = DpToPx(20);
             float marginEdge = DpToPx(15);
+            float textMargin = DpToPx(5);
+            float textWidening = textMargin;
 
-            tlX = (float)(whiteRect.X - DpToPx(textWidening));
-            brX = (float)(whiteRect.X + textWidth + DpToPx(textWidening));
+            tlX = (float)(whiteRect.X + whiteRect.Width / 2 - textWidth / 2 - textWidening);
+            brX = (float)(whiteRect.X + whiteRect.Width / 2 + textWidth / 2 + textWidening);
 
+            /*
+            tlX = (float)(whiteRect.X - textWidening);
+            brX = (float)(whiteRect.X + textWidth + textWidening);
             float widthDiff = (float)(whiteRect.Width - textWidth);
 
             tlX = tlX + widthDiff / 2;
-            brX = brX + widthDiff / 2;
+            brX = brX + widthDiff / 2;*/
+
+            TextAlignment textAlignment;
 
             if (whiteRect.Y < DpToPx(App.ScreenHeight / 2)) // upper half
             {
-                tlY = (float)(whiteRect.Y + whiteRect.Height + mgn - DpToPx(textWidening));
-                brY = (float)(whiteRect.Y + whiteRect.Height + mgn + textPaint.TextSize + 2 * DpToPx(textWidening));
+                tlY = (float)(whiteRect.Y + whiteRect.Height + mgn - textWidening);
+                brY = (float)(whiteRect.Y + whiteRect.Height + mgn + textPaint.TextSize + textWidening);
+                textAlignment = TextAlignment.Start;
             }
             else  // lower half
             {
-                tlY = (float)(whiteRect.Y - mgn - textPaint.TextSize - DpToPx(textWidening));
-                brY = (float)(whiteRect.Y - mgn + 2 * DpToPx(textWidening));
+                tlY = (float)(whiteRect.Y - mgn - textPaint.TextSize - textWidening);
+                brY = (float)(whiteRect.Y - mgn + textWidening);
+                textAlignment = TextAlignment.End;
             }
 
             float leftScreenEdge = marginEdge;
@@ -312,8 +347,12 @@ namespace RWGame
                 brX = brX - tlX + leftScreenEdge;
                 tlX = leftScreenEdge;
             }
+            if (brX > rightScreenEdge)
+            {
+                brX = rightScreenEdge;
+            }
 
-            SKRect rect = new SKRect(tlX, tlY, brX, brY);
+            /*SKRect rect = new SKRect(tlX, tlY, brX, brY);
             SKRoundRect roundRect = new SKRoundRect(rect, radius);
 
             canvas.DrawRoundRect(roundRect, strokePaint);
@@ -323,7 +362,21 @@ namespace RWGame
 
             float textHeight = textPaint.FontMetrics.Descent - textPaint.FontMetrics.Ascent;
             float textOffset = (textHeight / 2) - textPaint.FontMetrics.Descent;
-            canvas.DrawText(text, rect.MidX - textWidth / 2, rect.MidY + textOffset, textPaint);
+            canvas.DrawText(text, rect.MidX - textWidth / 2, rect.MidY + textOffset, textPaint);*/
+
+            SKRect rect = new SKRect(tlX, tlY, brX, brY);
+            var (areaUpdated, lines, lineHeight) = MeasureMultilineText(text, rect, textPaint, textAlignment);
+            areaUpdated.Top -= textMargin;
+            areaUpdated.Bottom += textMargin;
+
+            SKRoundRect roundRect = new SKRoundRect(areaUpdated, radius);
+
+            canvas.DrawRoundRect(roundRect, strokePaint);
+            strokePaint.Style = SKPaintStyle.Stroke;
+            strokePaint.Color = SKColors.White;
+            canvas.DrawRoundRect(roundRect, strokePaint);
+
+            DrawMultilineText(canvas, text, rect, textPaint, textAlignment);
         }
 
     }
