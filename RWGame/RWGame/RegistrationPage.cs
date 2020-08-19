@@ -1005,7 +1005,7 @@ namespace RWGame
             {
                 if (isFieldsCorrect.Contains(false))
                 {
-                    await DisplayAlert("Error", "There are wrong entered fields", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", "There are wrong entered fields", "OK");
                 }
                 else if (policyCheckBox.IsChecked == true && agreementCheckBox.IsChecked == true)
                 {
@@ -1013,26 +1013,26 @@ namespace RWGame
                         loginEntry.Text, passwordEntry.Text, passwordConfirmEntry.Text, String.Format("{0:dd-MM-yyyy}", datePicker.Date), emailEntry.Text))
                     {
                         await SecureStorage.SetAsync("login", loginEntry.Text);
-                        await DisplayAlert("Success", "Registration successful! =)", "OK");
-                        await DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
+                        await App.Current.MainPage.DisplayAlert("Success", "Registration successful! =)", "OK");
+                        await App.Current.MainPage.DisplayAlert("Thank you!", "Your participation in the project means a world to us and we would like to thank you for choosing to help science!", "OK");
                         await Navigation.PushAsync(new Views.LoginPage(systemSettings));
                     }
                     else
                     {
-                        await DisplayAlert("Error", "Registration unsuccessful =( Try again later", "OK");
+                        await App.Current.MainPage.DisplayAlert("Error", "Registration unsuccessful =( Try again later", "OK");
                     }
                 }
                 else if (!policyCheckBox.IsChecked && agreementCheckBox.IsChecked)
                 {
-                    await DisplayAlert("Error", "Agree to the Privacy Policy!", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", "Agree to the Privacy Policy!", "OK");
                 }
                 else if (policyCheckBox.IsChecked && !agreementCheckBox.IsChecked)
                 {
-                    await DisplayAlert("Error", "Agree to the Terms and Conditions!", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", "Agree to the Terms and Conditions!", "OK");
                 }
                 else if (!policyCheckBox.IsChecked && !agreementCheckBox.IsChecked)
                 {
-                    await DisplayAlert("Error", "Agree to the Privacy Policy and the Terms and Conditions!", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", "Agree to the Privacy Policy and the Terms and Conditions!", "OK");
                 }
             };
 

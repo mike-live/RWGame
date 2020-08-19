@@ -195,7 +195,7 @@ namespace RWGame.PagesGameChoise
                 }
                 else
                 {
-                    await DisplayAlert("Error", "Enter player doesn't exist", "OK");
+                    await App.Current.MainPage.DisplayAlert("Error", "Enter player doesn't exist", "OK");
                 }
             };
 

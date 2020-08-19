@@ -335,7 +335,7 @@ namespace RWGame
             canvasView.InvalidateSurface();
             if (gameStateInfo.GameState == GameStateEnum.END)
             {
-                await DisplayAlert("Game finished", "You made " + numTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
+                await App.Current.MainPage.DisplayAlert("Game finished", "You made " + numTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
                 await Navigation.PopAsync();
                 return;
             }
