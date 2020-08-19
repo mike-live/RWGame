@@ -551,37 +551,43 @@ namespace RWGame
                 goalPhrase = "reach the border as fast as you can.";
             }
 
-            List<GuideStep> introGuide = new List<GuideStep>
+            if (gameStateInfo.GameState != GameStateEnum.END) 
             {
-                new GuideStep(canvasView, "In the center of the square field you see the star"),
-                new GuideStep(null, "You can have one of 2 goals:\n1. Center (yellow)\n2. Border (violet)"),
-                new GuideStep(GoalLabel, "Your goal"),
-                new GuideStep(null, "Moves of star done by 2 players each turn"),
-                new GuideStep(gameControls.ControlsGrid, "One picks a row, and the other – a column"),
-                new GuideStep(null, "The star moves in one of the 4 directions that occur on the intersection of the chosen row and column: left, right, up or down. " +
-                                    "Neither player knows about the opponent's choice =)"),
-                new GuideStep(null, "Now you should " + goalPhrase),
-                new GuideStep(stackLayoutScore, "Current score"),
-                new GuideStep(stackLayoutTopScore, "Top score"),
-                new GuideStep(null, "Good luck!")
-            };
-            SKCanvasView tourGuideCanvasView = new SKCanvasView
-            {
-                HorizontalOptions = LayoutOptions.Fill,
-                VerticalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(0, 0, 0, 0),
-                IsEnabled = false,
-                IsVisible = false,
-                HeightRequest = systemSettings.ScreenHeight,
-                WidthRequest = systemSettings.ScreenWidth,
-            };
-            TourGuide tourGuide = new TourGuide(tourGuideCanvasView);
+                List<GuideStep> introGuide = new List<GuideStep>
+                {
+                    new GuideStep(canvasView, "In the center of the square field you see the star"),
+                    new GuideStep(null, "You can have one of 2 goals:\n1. Center (yellow)\n2. Border (violet)"),
+                    new GuideStep(GoalLabel, "Your goal"),
+                    new GuideStep(null, "Both players contributes to the star's movement each turn"),
+                    new GuideStep(gameControls?.ControlsGrid, "One picks a row, and the other – a column"),
+                    new GuideStep(null, "The star moves in one of the 4 directions that occur on the intersection " +
+                                        "of the chosen row and column: left, right, up or down. " +
+                                        "Neither player knows about the opponent's choice =)"),
+                    new GuideStep(null, "Now you should " + goalPhrase),
+                    new GuideStep(stackLayoutScore, "Current score"),
+                    new GuideStep(stackLayoutTopScore, "Top score"),
+                    new GuideStep(null, "Good luck!")
+                };
+                SKCanvasView tourGuideCanvasView = new SKCanvasView
+                {
+                    HorizontalOptions = LayoutOptions.Fill,
+                    VerticalOptions = LayoutOptions.Fill,
+                    Margin = new Thickness(0, 0, 0, 0),
+                    IsEnabled = false,
+                    IsVisible = false,
+                    HeightRequest = systemSettings.ScreenHeight,
+                    WidthRequest = systemSettings.ScreenWidth,
+                };
+                TourGuide tourGuide = new TourGuide(tourGuideCanvasView);
 
-            if (!Application.Current.Properties.ContainsKey("FirstUseGame"))
-            {
-                Application.Current.Properties["FirstUseGame"] = false;
-                Application.Current.SavePropertiesAsync();
-                tourGuide.StartIntroGuide(introGuide);
+                absoluteLayout.Children.Add(tourGuideCanvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
+
+                if (!Application.Current.Properties.ContainsKey("FirstUseGame"))
+                {
+                    Application.Current.Properties["FirstUseGame"] = false;
+                    Application.Current.SavePropertiesAsync();
+                    tourGuide.StartIntroGuide(introGuide);
+                }
             }
 
             /*helpButton.Clicked += delegate
@@ -589,8 +595,7 @@ namespace RWGame
                 //StartGuide(guideImages, guide);
                 tourGuide.StartIntroGuide(introGuide);
             };*/
-            absoluteLayout.Children.Add(tourGuideCanvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
-
+            
 
             Content = absoluteLayout;
         }

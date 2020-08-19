@@ -332,7 +332,7 @@ namespace RWGame
                 Source = "pvp.png",
                 HeightRequest = 30,
                 WidthRequest = 60,
-                Padding = 0
+                Padding = 0,
             };
             PlayWithAnotherPlayer.Clicked += async delegate
             {
