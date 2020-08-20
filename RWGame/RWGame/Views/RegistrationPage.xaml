@@ -124,8 +124,14 @@
                                    FontAttributes="Bold"
                                    VerticalOptions="CenterAndExpand"
                                    TextDecorations="Underline"
-                                   HorizontalOptions="StartAndExpand"/>
-                         </StackLayout>
+                                   HorizontalOptions="StartAndExpand">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding PolicyHyperlinkCommand}"
+                                        CommandParameter="Image1" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </StackLayout>
                         <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Orientation="Horizontal">
                             <CheckBox x:Name="termsCheckBox"
                                       IsChecked = "{Binding User.AcceptTerms}"/>
@@ -137,7 +143,13 @@
                                    FontAttributes="Bold"
                                    VerticalOptions="CenterAndExpand"
                                    TextDecorations="Underline"
-                                   HorizontalOptions="StartAndExpand"/>
+                                   HorizontalOptions="StartAndExpand">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding TermsHyperlinkCommand}"
+                                        CommandParameter="Image1" />
+                                </Label.GestureRecognizers>
+                            </Label>
                         </StackLayout>
                     </StackLayout>
                     <!--#endregion Privacy Policy + Terms and Conditions -->

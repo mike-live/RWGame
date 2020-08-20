@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using RWGame.Models;
 using RWGame.Classes;
+using Xamarin.Essentials;
 
 namespace RWGame.ViewModels
 {
@@ -30,12 +31,12 @@ namespace RWGame.ViewModels
         public bool IsEnabledSignUpButton =>
                     User.AcceptPrivacy && User.AcceptTerms
                     && (User.NameIsCorrect ?? false)
-                    && (User.EmailIsCorrect ?? false) 
+                    && (User.EmailIsCorrect ?? false)
                     && (User.LoginIsCorrect ?? false)
-                    && (User.PasswordIsCorrect ?? false) 
+                    && (User.PasswordIsCorrect ?? false)
                     && (User.ConfirmPasswordIsCorrect ?? false);
         public int RegistrationStep { get; set; }
-        public bool IsFirstStep { get { return RegistrationStep == 1;  } }
+        public bool IsFirstStep { get { return RegistrationStep == 1; } }
         public bool IsSecondStep { get { return RegistrationStep == 2; } }
         public bool IsThirdStep { get { return RegistrationStep == 3; } }
 
@@ -47,6 +48,10 @@ namespace RWGame.ViewModels
         public ICommand LoginUnfocusedCommand { get; set; }
         public ICommand PasswordUnfocusedCommand { get; set; }
         public ICommand ConfirmPasswordUnfocusedCommand { get; set; }
+
+        public ICommand TermsHyperlinkCommand { get; set; }
+        public ICommand PolicyHyperlinkCommand { get; set; }
+
         /*public ICommand TermsUnfocusedCommand { get; set; }
         public ICommand PrivacyUnfocusedCommand { get; set; }*/
         public INavigation Navigation { get; set; }
@@ -62,10 +67,10 @@ namespace RWGame.ViewModels
             ContinueCommand = new Command(NextPage);
             SignUpCommand = new Command(SignUp);
             SignInCommand = new Command(SignIn);
-            
+
             User = new NewUserProfile(serverWorker);
             User.PropertyChanged += (obj, args) => {
-                
+
                 OnPropertyChanged("IsEnabledNextButton");
                 OnPropertyChanged("IsEnabledSignUpButton");
             };
@@ -74,11 +79,21 @@ namespace RWGame.ViewModels
             EmailUnfocusedCommand = new Command(User.CheckEmailCorrectness);
             LoginUnfocusedCommand = new Command(User.CheckLoginCorrectness);
             PasswordUnfocusedCommand = new Command(() => {
-                    User.CheckPasswordCorrectness();
-                    User.CheckConfirmPasswordCorrectness(false);
-                }
+                User.CheckPasswordCorrectness();
+                User.CheckConfirmPasswordCorrectness(false);
+            }
             );
             ConfirmPasswordUnfocusedCommand = new Command(() => User.CheckConfirmPasswordCorrectness());
+            TermsHyperlinkCommand = new Command(async () =>
+            {
+                Uri uri = new Uri("https://scigames.ru/terms");
+                await Launcher.OpenAsync(uri);
+            });
+            PolicyHyperlinkCommand = new Command(async () =>
+            {
+                Uri uri = new Uri("https://scigames.ru/privacy_policy");
+                await Launcher.OpenAsync(uri);
+            });
         }
 
         public void NextPage()
