@@ -26,7 +26,7 @@ namespace RWGame
         View tempView;
         int widening = 2;
         double dpi = DeviceDisplay.MainDisplayInfo.Density;
-        bool isGuideActive = true;
+        public bool isGuideActive = true;
 
         SKCanvasView canvasView;
         private int countTapped = 0;
@@ -51,6 +51,15 @@ namespace RWGame
             localCanvasTappedRecognizer.Tapped += TapGuide;
         }
 
+        public void StopGuide()
+        {
+            canvasView.IsVisible = false;
+            canvasView.IsEnabled = false;
+            countTapped = 1;
+            localCanvasTappedRecognizer.Tapped -= TapGuide;
+            isGuideActive = false;
+        }
+
         private void TapGuide(Object obj, Object args)
         {
             if (countTapped<guide.Count && guide[countTapped] != null)
@@ -60,10 +69,7 @@ namespace RWGame
             }
             else
             {
-                canvasView.IsVisible = false;
-                canvasView.IsEnabled = false;
-                countTapped = 1;
-                localCanvasTappedRecognizer.Tapped -= TapGuide;
+                StopGuide();
                 return;
             }
         }

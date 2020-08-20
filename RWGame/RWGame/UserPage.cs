@@ -41,6 +41,7 @@ namespace RWGame
         AbsoluteLayout absoluteLayout;
         RelativeLayout relativeLayout;
         List<GuideStep> introGuide;
+        TourGuide tourGuide;
         bool isGameStarted = false;
         StackLayout userprofilStackLayout;
         public UserPage(ServerWorker _serverWorker, SystemSettings _systemSettings)
@@ -198,7 +199,7 @@ namespace RWGame
                 Margin = new Thickness(0, 0, 0, 0)
             };
 
-            
+
             gridPlayerScore.Children.Add(performanceCenterLabel, 0, 2);
             Grid.SetColumnSpan(performanceCenterLabel, 1);
             Grid.SetRowSpan(performanceCenterLabel, 1);
@@ -418,7 +419,7 @@ namespace RWGame
                 WidthRequest = 60,
                 Padding = 0
             };
-            
+
 
             Label infoLabel = new Label
             {
@@ -448,7 +449,7 @@ namespace RWGame
                 HeightRequest = systemSettings.ScreenHeight,
                 WidthRequest = systemSettings.ScreenWidth,
             };
-            TourGuide tourGuide = new TourGuide(canvasView);
+            tourGuide = new TourGuide(canvasView);
 
             if (!Application.Current.Properties.ContainsKey("FirstUse"))
             {
@@ -460,7 +461,16 @@ namespace RWGame
             helpButton.Clicked += delegate
             {
                 //StartGuide(guideImages, guide);
-                tourGuide.StartIntroGuide(introGuide);
+                List<GuideStep> introGuideShorten = new List<GuideStep>
+                {
+                    new GuideStep(null, "Welcome to Random Walk!\nTap to see game guide"),
+                    new GuideStep(stackLayoutPlayWithBot, "Play with a bot!"),
+                    new GuideStep(stackLayoutPlayWithAnotherPlayer, "Play with a friend!"),
+                    new GuideStep(gridPlayerScore, "Check out your rating!"),
+                    new GuideStep(null, "Enjoy the game =)")
+                };
+
+                tourGuide.StartIntroGuide(introGuideShorten);
             };
 
             stackLayoutPlayWithAnotherPlayer.Children.Add(PlayWithAnotherPlayer);
@@ -488,8 +498,8 @@ namespace RWGame
             //absoluteLayout.Children.Add(canvasView, new Rectangle(0, 0, App.ScreenWidth, App.ScreenHeight));
             //absoluteLayout.Children.Add(buttonStack, new Rectangle(0, App.ScreenHeight - 120, App.ScreenWidth, PlayWithBot.Height));
 
-            relativeLayout.Children.Add(userprofilStackLayout, 
-                xConstraint: Constraint.Constant(0), 
+            relativeLayout.Children.Add(userprofilStackLayout,
+                xConstraint: Constraint.Constant(0),
                 yConstraint: Constraint.Constant(0),
                 widthConstraint: Constraint.RelativeToParent((parent) =>
                 {
@@ -629,6 +639,10 @@ namespace RWGame
 
         protected override bool OnBackButtonPressed()
         {
+            if (tourGuide.isGuideActive)
+            {
+                tourGuide.StopGuide();
+            }
             return true;
         }
 
