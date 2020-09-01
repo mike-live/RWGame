@@ -545,10 +545,10 @@ namespace RWGame
             string goalPhrase;
             if (game.GameSettings.Goals[game.IdPlayer] == "center")
             {
-                goalPhrase = "keep the star inside the field for as long as you can.";
+                goalPhrase = "keep the star inside the field for as long as you can";
             } else
             {
-                goalPhrase = "reach the border as fast as you can.";
+                goalPhrase = "reach the border as fast as you can";
             }
 
             if (gameStateInfo.GameState != GameStateEnum.END) 
