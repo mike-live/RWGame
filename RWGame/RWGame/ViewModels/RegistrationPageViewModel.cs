@@ -74,6 +74,13 @@ namespace RWGame.ViewModels
                 OnPropertyChanged("IsEnabledNextButton");
                 OnPropertyChanged("IsEnabledSignUpButton");
             };
+            if (loginPageViewModel != null && loginPageViewModel.IsGoogleSignIn)
+            {
+                User.Name = loginPageViewModel.User.Name;
+                User.Email = loginPageViewModel.User.Email;
+                User.CheckNameCorrectness();
+                User.CheckEmailCorrectness();
+            }
 
             NameUnfocusedCommand = new Command(User.CheckNameCorrectness);
             EmailUnfocusedCommand = new Command(User.CheckEmailCorrectness);

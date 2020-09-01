@@ -248,7 +248,7 @@ namespace RWGame.ViewModels
             if (loginEventArgs.Data != null)
             {
                 GoogleUser googleUser = loginEventArgs.Data;
-                User.Name = googleUser.Name;
+                User.Name = googleUser.GivenName;
                 User.Email = googleUser.Email;
                 User.Picture = googleUser.Picture;
                 var GivenName = googleUser.GivenName;
