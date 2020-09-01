@@ -562,19 +562,34 @@ namespace RWGame
         public async Task UpdatePlayerInfo()
         {
             playerInfo = await serverWorker.TaskGetPlayerInfo();
-            userName.Text = "Hi, " + playerInfo.PersonalInfo.Name;
-            if (playerInfo.PlayerStatistics.PerformanceBorderVsBot.HasValue)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                performanceBorderLabel.Text = Math.Round(playerInfo.PlayerStatistics.PerformanceBorderVsBot.Value).ToString();
-            }
-            if (playerInfo.PlayerStatistics.PerformanceCenterVsBot.HasValue)
-            {
-                performanceCenterLabel.Text = Math.Round(playerInfo.PlayerStatistics.PerformanceCenterVsBot.Value).ToString();
-            }
-            if (playerInfo.PlayerStatistics.RatingVsBot.HasValue)
-            {
-                RatingLabel.Text = Math.Round(playerInfo.PlayerStatistics.RatingVsBot.Value).ToString();
-            }
+                userName.Text = "Hi, " + playerInfo.PersonalInfo.Name;
+                if (playerInfo.PlayerStatistics.PerformanceBorderVsBot.HasValue)
+                {
+                    performanceBorderLabel.Text = Math.Round(playerInfo.PlayerStatistics.PerformanceBorderVsBot.Value).ToString();
+                }
+                else
+                {
+                    performanceBorderLabel.Text = "100";
+                }
+                if (playerInfo.PlayerStatistics.PerformanceCenterVsBot.HasValue)
+                {
+                    performanceCenterLabel.Text = Math.Round(playerInfo.PlayerStatistics.PerformanceCenterVsBot.Value).ToString();
+                }
+                else
+                {
+                    performanceCenterLabel.Text = "100";
+                }
+                if (playerInfo.PlayerStatistics.RatingVsBot.HasValue)
+                {
+                    RatingLabel.Text = Math.Round(playerInfo.PlayerStatistics.RatingVsBot.Value).ToString();
+                }
+                else
+                {
+                    RatingLabel.Text = "1000";
+                }
+            });
         }
 
         public async Task UpdateGameList()
@@ -639,10 +654,13 @@ namespace RWGame
 
         protected override bool OnBackButtonPressed()
         {
-            if (tourGuide.isGuideActive)
+            Device.BeginInvokeOnMainThread(() =>
             {
-                tourGuide.StopGuide();
-            }
+                if (tourGuide.isGuideActive)
+                {
+                    tourGuide.StopGuide();
+                }
+            });
             return true;
         }
 
