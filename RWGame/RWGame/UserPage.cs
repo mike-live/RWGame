@@ -241,7 +241,7 @@ namespace RWGame
             var actionStandings = new TapGestureRecognizer();
             actionStandings.Tapped += async (s, e) =>
             {
-                await Navigation.PushAsync(new StandingsPage(serverWorker, systemSettings));
+                await Navigation.PushAsync(new Views.StandingsPage(serverWorker));
             };
             gridPlayerScore.GestureRecognizers.Add(actionStandings);
 
