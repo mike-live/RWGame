@@ -26,7 +26,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHistoryPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LoginPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationPageModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\StandingsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StandingsPage.cs" />

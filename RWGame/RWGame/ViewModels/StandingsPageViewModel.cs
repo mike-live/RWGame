@@ -16,12 +16,10 @@ namespace RWGame.ViewModels
     class StandingsData : INotifyPropertyChanged
     {
         public StandingsModel standingsModel { get; set; }
-        bool k = true;
         public StandingsData(ServerWorker serverWorker)
         {
             standingsModel = new StandingsModel(serverWorker);
             RefreshList();
-            k = false;
         }
 
         #region RepeatedFields
@@ -51,10 +49,9 @@ namespace RWGame.ViewModels
         #region RefreshMethods
         public async void RefreshList()
         {
-            await UpdateStandings();
+            await UpdateStandings();           
             ListViewIsRefreshing = false;
         }
-
         public async Task UpdateStandings()
         {
             await standingsModel.UpdateModelStandigns();
