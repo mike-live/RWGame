@@ -18,6 +18,7 @@ namespace RWGame.Views
         {
             InitializeComponent();
             BindingContext = new StandingsPageViewModel(serverWorker);
+            NavigationPage.SetHasNavigationBar(this, false);
         }
     }
 }

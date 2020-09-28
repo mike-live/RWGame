@@ -20,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ResponseClases\JsonResponses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ServerWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\SystemSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Enums\Emojis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameField.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

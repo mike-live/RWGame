@@ -10,9 +10,63 @@ using System.Threading.Tasks;
 using RWGame.Classes;
 using System.Collections.ObjectModel;
 using RWGame.Classes.ResponseClases;
+using RWGame.Enums;
 
 namespace RWGame.ViewModels
 {
+    public class StandingViewCellElementExtended
+    {
+        public StandingViewCellElement standingViewCellElement;
+        public StandingViewCellElementExtended(StandingViewCellElement standingViewCellElement)
+        {
+            this.standingViewCellElement = standingViewCellElement;
+        }
+        public bool isMe { get { return standingViewCellElement.isMe; } }
+        public string PlayerRank { get { return standingViewCellElement.PlayerRank; } }
+        public string UserName { get { return standingViewCellElement.UserName; } }
+        public string Rating { get { return standingViewCellElement.Rating; } }
+        public string PerformanceCenter { get { return standingViewCellElement.PerformanceCenter; } }
+        public string PerformanceBorder { get { return standingViewCellElement.PerformanceBorder; } }
+        public Color CellBackgroundColor
+        {
+            get
+            {
+                if (standingViewCellElement.playerRank % 2 == 0)
+                    return Color.FromHex("#1039bafa");
+                else
+                    return Color.Transparent;
+            }
+        }
+        public string Emoji
+        {
+            get 
+            { 
+                return getPlaceEmojiString(standingViewCellElement.playerRank); 
+            }
+        }
+        private string getPlaceEmojiString(int position)
+        {
+            string res;
+            Emojis emoji;
+            switch (position)
+            {
+                case 1:
+                    emoji = Emojis.medalFirstPlace;
+                    break;
+                case 2:
+                    emoji = Emojis.medalSecondPlace;
+                    break;
+                case 3:
+                    emoji = Emojis.medalThirdPlace;
+                    break;
+                default:
+                    emoji = Emojis.none;
+                    break;
+            }
+            res =  emoji.ToDescriptionString();
+            return res;
+        }
+    }
     class StandingsData : INotifyPropertyChanged
     {
         public StandingsModel standingsModel { get; set; }
@@ -22,29 +76,38 @@ namespace RWGame.ViewModels
             RefreshList();
         }
 
-        #region RepeatedFields
+        #region DataFields
         public Standings standings { 
             get { return standingsModel.standings; }
             set { standingsModel.standings = value; } 
         }
-        public ObservableCollection<StandingViewCellElement> standingsListViewRecords { 
-            get { return standingsModel.standingsListViewRecords; } 
-            set { standingsModel.standingsListViewRecords = value; } 
+        public ObservableCollection<StandingViewCellElementExtended> standingsListViewRecordsExt
+        { 
+            get 
+            {
+                var temp = new ObservableCollection<StandingViewCellElementExtended>();
+                if (standingsModel.standingsListViewRecords != null)
+                    for (int i = 0; i < standingsModel.standingsListViewRecords.Count; ++i)
+                    {
+                        temp.Add(new StandingViewCellElementExtended(standingsModel.standingsListViewRecords[i]));
+                    }
+                return temp;
+            } 
+            set 
+            {
+                var temp = new ObservableCollection<StandingViewCellElement>();
+                for (int i = 0; i < value.Count; ++i)
+                {
+                    temp.Add(value[i].standingViewCellElement);
+                }
+                standingsModel.standingsListViewRecords = temp;
+            } 
         }
         public bool ListViewIsRefreshing { get; set; }
         public string manPerformanceCenterLabelText { get; set; }
         public string manPerformanceBorderLabelText { get; set; }
         public string manRatingLabelText { get; set; }
         public StandingViewCellElement ManVsBot { get { return standingsModel.ManVsBot; } }
-        public Color myColor
-        {
-            get { return Color.FromHex("#153949AB"); }
-        }
-        public Color notMyColor
-        {
-            get { return Color.Transparent; }
-        }
-
         #endregion
         #region RefreshMethods
         public async void RefreshList()
@@ -55,6 +118,9 @@ namespace RWGame.ViewModels
         public async Task UpdateStandings()
         {
             await standingsModel.UpdateModelStandigns();
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(standings));
+            OnPropertyChanged(nameof(standingsListViewRecordsExt));
             if (standings != null && standings.StandingsVsBot.Count > 0)
             {
                 manPerformanceCenterLabelText = ManVsBot.PerformanceCenter;
@@ -69,6 +135,7 @@ namespace RWGame.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
+        
     }
     class StandingsPageViewModel : INotifyPropertyChanged
     {
