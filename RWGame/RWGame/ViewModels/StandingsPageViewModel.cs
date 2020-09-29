@@ -27,7 +27,9 @@ namespace RWGame.ViewModels
             get 
             {
                 if (standingViewCellElement.playerRank <= 3)
+                {
                     return getPlaceEmojiString();
+                }              
                 return standingViewCellElement.PlayerRank; 
             } 
         }
@@ -41,16 +43,28 @@ namespace RWGame.ViewModels
             get
             {
                 if (standingViewCellElement.playerRank % 2 == 0)
+                {
                     if (isMe)
-                        return Color.FromHex("#f7f9a0");
+                    {
+                        return Color.FromHex("#95f7f9a0");
+                    }   
                     else
+                    {
                         return Color.FromHex("#1039bafa");
+                    }                                     
+                }
                 else
+                {
                     if (isMe)
-                        return Color.FromHex("#f7f9a0");
+                    {
+                        return Color.FromHex("#95f7f9a0");
+                    }
                     else
+                    {
                         return Color.Transparent;
-            }
+                    }        
+                }
+          }
         }
         #region Emoji
         public string Emoji{ get { return getPlaceEmojiString(); } }
@@ -98,10 +112,12 @@ namespace RWGame.ViewModels
             {
                 var temp = new ObservableCollection<StandingViewCellElementExtended>();
                 if (standingsModel.standingsListViewRecords != null)
+                {
                     for (int i = 0; i < standingsModel.standingsListViewRecords.Count; ++i)
                     {
                         temp.Add(new StandingViewCellElementExtended(standingsModel.standingsListViewRecords[i]));
                     }
+                }                    
                 return temp;
             } 
             set 
