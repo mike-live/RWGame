@@ -21,34 +21,44 @@ namespace RWGame.ViewModels
         {
             this.standingViewCellElement = standingViewCellElement;
         }
+        #region StandingViewCellElementFields
         public bool isMe { get { return standingViewCellElement.isMe; } }
-        public string PlayerRank { get { return standingViewCellElement.PlayerRank; } }
+        public string PlayerRank { 
+            get 
+            {
+                if (standingViewCellElement.playerRank <= 3)
+                    return getPlaceEmojiString();
+                return standingViewCellElement.PlayerRank; 
+            } 
+        }
         public string UserName { get { return standingViewCellElement.UserName; } }
         public string Rating { get { return standingViewCellElement.Rating; } }
         public string PerformanceCenter { get { return standingViewCellElement.PerformanceCenter; } }
         public string PerformanceBorder { get { return standingViewCellElement.PerformanceBorder; } }
+        #endregion
         public Color CellBackgroundColor
         {
             get
             {
                 if (standingViewCellElement.playerRank % 2 == 0)
-                    return Color.FromHex("#1039bafa");
+                    if (isMe)
+                        return Color.FromHex("#f7f9a0");
+                    else
+                        return Color.FromHex("#1039bafa");
                 else
-                    return Color.Transparent;
+                    if (isMe)
+                        return Color.FromHex("#f7f9a0");
+                    else
+                        return Color.Transparent;
             }
         }
-        public string Emoji
-        {
-            get 
-            { 
-                return getPlaceEmojiString(standingViewCellElement.playerRank); 
-            }
-        }
-        private string getPlaceEmojiString(int position)
+        #region Emoji
+        public string Emoji{ get { return getPlaceEmojiString(); } }
+        private string getPlaceEmojiString()
         {
             string res;
             Emojis emoji;
-            switch (position)
+            switch (standingViewCellElement.playerRank)
             {
                 case 1:
                     emoji = Emojis.medalFirstPlace;
@@ -66,6 +76,7 @@ namespace RWGame.ViewModels
             res =  emoji.ToDescriptionString();
             return res;
         }
+        #endregion
     }
     class StandingsData : INotifyPropertyChanged
     {

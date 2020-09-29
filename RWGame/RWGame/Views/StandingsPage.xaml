@@ -120,8 +120,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="0.75*" />
-                                    <ColumnDefinition Width="0.75*" />
-                                    <ColumnDefinition Width="1.95*" />
+                                    <ColumnDefinition Width="2.7*" />
                                     <ColumnDefinition Width="1*" />
                                     <ColumnDefinition Width="1*" />
                                     <ColumnDefinition Width="1.2*" />
@@ -136,12 +135,6 @@
                                         Margin="10,0,0,0"
                                         Grid.Row="0" Grid.RowSpan="1"
                                         Grid.Column="0" Grid.ColumnSpan="1"/>
-                                <Label x:Name="emojiLabel"
-                                        Text="{Binding Emoji}"
-                                        HorizontalOptions="StartAndExpand"
-                                        VerticalOptions="Center"
-                                        Grid.Row="0" Grid.RowSpan="1"
-                                        Grid.Column="1" Grid.ColumnSpan="1"/>
                                 <Label x:Name="playerUserNameLabel"
                                         Text="{Binding UserName}"
                                         HorizontalOptions="StartAndExpand"
@@ -151,7 +144,7 @@
                                         FontAttributes="Bold"
                                         HorizontalTextAlignment="Start"
                                         Grid.Row="0" Grid.RowSpan="1"
-                                        Grid.Column="2" Grid.ColumnSpan="1"/>
+                                        Grid.Column="1" Grid.ColumnSpan="1"/>
                                 <Label x:Name="playerPerformanceCenterLabel"
                                        Text="{Binding PerformanceCenter}"
                                        HorizontalOptions="FillAndExpand"
@@ -161,7 +154,7 @@
                                        FontAttributes="Bold"
                                        HorizontalTextAlignment="Center"
                                        Grid.Row="0" Grid.RowSpan="1"
-                                       Grid.Column="3" Grid.ColumnSpan="1"/>
+                                       Grid.Column="2" Grid.ColumnSpan="1"/>
                                 <Label x:Name="playerPerformanceBorderLabel"
                                        Text="{Binding PerformanceBorder}"
                                        HorizontalOptions="FillAndExpand"
@@ -171,7 +164,7 @@
                                        FontSize="Small"
                                        FontAttributes="Bold"
                                        Grid.Row="0" Grid.RowSpan="1"
-                                       Grid.Column="4" Grid.ColumnSpan="1"/>
+                                       Grid.Column="3" Grid.ColumnSpan="1"/>
                                 <Label x:Name="playerRatingLabel"
                                        Text="{Binding Rating}"
                                        HorizontalOptions="CenterAndExpand"
@@ -181,7 +174,7 @@
                                        FontAttributes="Bold"
                                        HorizontalTextAlignment="Center"
                                        Grid.Row="0" Grid.RowSpan="1"
-                                       Grid.Column="5" Grid.ColumnSpan="1"/>
+                                       Grid.Column="4" Grid.ColumnSpan="1"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>
