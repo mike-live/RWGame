@@ -82,12 +82,51 @@ namespace RWGame.ViewModels
         }
         private string UserLogin { get { return standingsModel.UserLogin; } }
 
-        public ObservableCollection<StandingViewCellElement> standingsListViewRecordsExt { get; } = new ObservableCollection<StandingViewCellElement>();
+        public ObservableCollection<StandingViewCellElement> standingsListViewRecordsExt { get; } = 
+            new ObservableCollection<StandingViewCellElement>();
         public bool ListViewIsRefreshing { get; set; }
         public StandingViewCellElement ManVsBot { get { return new StandingViewCellElement(standings.ManVsBot, -1, false); } }
-        public string manPerformanceCenterLabelText { get { if (standings != null && standings.StandingsVsBot.Count > 0) { return ManVsBot.PerformanceCenter; } else return ""; } }
-        public string manPerformanceBorderLabelText { get { if (standings != null && standings.StandingsVsBot.Count > 0) { return ManVsBot.PerformanceBorder; } else return ""; } }
-        public string manRatingLabelText { get { if (standings != null && standings.StandingsVsBot.Count > 0) { return ManVsBot.Rating; } else return ""; } }
+        public string manPerformanceCenterLabelText {
+            get 
+            { 
+                if (standings != null && standings.StandingsVsBot.Count > 0) 
+                { 
+                    return ManVsBot.PerformanceCenter; 
+                } 
+                else
+                {
+                    return "";
+                }
+            }
+        }
+        public string manPerformanceBorderLabelText 
+        { 
+            get 
+            {
+                if (standings != null && standings.StandingsVsBot.Count > 0)
+                {
+                    return ManVsBot.PerformanceBorder;
+                }
+                else 
+                {
+                    return "";
+                }
+            } 
+        }
+        public string manRatingLabelText 
+        { 
+            get 
+            {
+                if (standings != null && standings.StandingsVsBot.Count > 0)
+                {
+                    return ManVsBot.Rating;
+                }
+                else
+                {
+                    return "";
+                }
+            } 
+        }
         #endregion
         #region RefreshMethods
         public async void RefreshList()
