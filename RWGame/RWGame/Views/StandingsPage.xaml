@@ -71,7 +71,7 @@
                                        Grid.Column="1"
                                        Grid.Row="0"/>
                 <Label x:Name="manPerformanceCenterLabel"
-                                       Text="{Binding standingsData.manPerformanceCenterLabelText}"
+                                       Text="{Binding standingsDisplayData.manPerformanceCenterLabelText}"
                                        VerticalOptions="Center"
                                        HorizontalOptions="CenterAndExpand"
                                        TextColor="#0099e6"
@@ -81,7 +81,7 @@
                                        Grid.Column="2"
                                        Grid.Row="0"/>
                 <Label x:Name="manPerformanceBorderLabel"
-                                       Text="{Binding standingsData.manPerformanceBorderLabelText }"
+                                       Text="{Binding standingsDisplayData.manPerformanceBorderLabelText }"
                                        VerticalOptions="Center"
                                        HorizontalOptions="CenterAndExpand"
                                        TextColor="#0099e6"
@@ -91,7 +91,7 @@
                                        Grid.Column="3"
                                        Grid.Row="0"/>
                 <Label x:Name="manRatingLabel"
-                                       Text="{Binding standingsData.manRatingLabelText}"
+                                       Text="{Binding standingsDisplayData.manRatingLabelText}"
                                        VerticalOptions="Center"
                                        HorizontalOptions="CenterAndExpand"
                                        TextColor="#0099e6"
@@ -104,8 +104,8 @@
             <ListView x:Name="standingsListView"
                       IsPullToRefreshEnabled="True"
                       RefreshCommand="{Binding RefreshListCommand}"
-                      IsRefreshing="{Binding standingsData.ListViewIsRefreshing}"
-                      ItemsSource="{Binding standingsData.standingsListViewRecordsExt}">
+                      IsRefreshing="{Binding standingsDisplayData.ListViewIsRefreshing}"
+                      ItemsSource="{Binding standingsDisplayData.standingsListViewRecords}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

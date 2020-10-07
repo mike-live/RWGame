@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using RWGame.Models;
 using Xamarin.Forms;
-using System.Runtime.CompilerServices;
-using Xamarin.Essentials;
 using System.Threading.Tasks;
 using RWGame.Classes;
 using System.Collections.ObjectModel;
@@ -23,7 +19,7 @@ namespace RWGame.ViewModels
             this.isMe = isMe;
         }
 
-        #region StandingViewCellElementFields
+        #region StandingViewCellElementProperties
         public PlayerStanding PlayerStanding { get; }
         public int playerRank { get; set; }
         public bool isMe { get; set; }
@@ -42,7 +38,6 @@ namespace RWGame.ViewModels
         public string Rating { get { return Math.Round(PlayerStanding.Rating).ToString(); } }
         public string PerformanceCenter { get { return Math.Round(PlayerStanding.PerformanceCenter).ToString(); } }
         public string PerformanceBorder { get { return Math.Round(PlayerStanding.PerformanceBorder).ToString(); } }
-        #endregion
         public Color CellBackgroundColor
         {
             get
@@ -57,6 +52,7 @@ namespace RWGame.ViewModels
                 }
             }
         }
+        #endregion
         #region Emoji
         public string Emoji { get { return getEmojiStringForRank(); } }
         private string getEmojiStringForRank()
@@ -75,57 +71,36 @@ namespace RWGame.ViewModels
             RefreshList();
         }
 
-        #region DataFields
+        #region DataProperties
         public Standings standings
         {
             get { return standingsModel.standings; }
         }
         private string UserLogin { get { return standingsModel.UserLogin; } }
 
-        public ObservableCollection<StandingViewCellElement> standingsListViewRecordsExt { get; } = 
+        public ObservableCollection<StandingViewCellElement> standingsListViewRecords { get; } = 
             new ObservableCollection<StandingViewCellElement>();
         public bool ListViewIsRefreshing { get; set; }
-        public StandingViewCellElement ManVsBot { get { return new StandingViewCellElement(standings.ManVsBot, -1, false); } }
+        public StandingViewCellElement ManVsBot { get; set; }
         public string manPerformanceCenterLabelText {
             get 
-            { 
-                if (standings != null && standings.StandingsVsBot.Count > 0) 
-                { 
-                    return ManVsBot.PerformanceCenter; 
-                } 
-                else
-                {
-                    return "";
-                }
+            {
+                return ManVsBot?.PerformanceCenter ?? "";
             }
         }
         public string manPerformanceBorderLabelText 
         { 
             get 
             {
-                if (standings != null && standings.StandingsVsBot.Count > 0)
-                {
-                    return ManVsBot.PerformanceBorder;
-                }
-                else 
-                {
-                    return "";
-                }
-            } 
+                return ManVsBot?.PerformanceBorder ?? "";
+            }
         }
         public string manRatingLabelText 
         { 
             get 
             {
-                if (standings != null && standings.StandingsVsBot.Count > 0)
-                {
-                    return ManVsBot.Rating;
-                }
-                else
-                {
-                    return "";
-                }
-            } 
+                return ManVsBot?.Rating ?? "";
+            }
         }
         #endregion
         #region RefreshMethods
@@ -137,38 +112,28 @@ namespace RWGame.ViewModels
         public async Task UpdateStandings()
         {
             await standingsModel.UpdateModelStandings();
-            standingsListViewRecordsExt.Clear();
+            standingsListViewRecords.Clear();
             for (int i = 0; i < standings.StandingsVsBot.Count; i++)
             {
                 bool isMe = standings.StandingsVsBot[i].UserName == UserLogin;
-                standingsListViewRecordsExt.Add(new StandingViewCellElement(standings.StandingsVsBot[i], i + 1, isMe));
+                standingsListViewRecords.Add(new StandingViewCellElement(standings.StandingsVsBot[i], i + 1, isMe));
             }
-            OnPropertyChanged(nameof(manPerformanceCenterLabelText));
-            OnPropertyChanged(nameof(manPerformanceBorderLabelText));
-            OnPropertyChanged(nameof(manRatingLabelText));
+            ManVsBot = new StandingViewCellElement(standings.ManVsBot, -1, false);
         }
         #endregion
-
         public event PropertyChangedEventHandler PropertyChanged;
-        void OnPropertyChanged([CallerMemberName] string name = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
     }
     class StandingsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public StandingsDisplayData standingsData { get; set; }
+        public StandingsDisplayData standingsDisplayData { get; set; }
         private readonly ServerWorker serverWorker;
-
         public StandingsPageViewModel(ServerWorker serverWorker)
         {
             this.serverWorker = serverWorker;
-            standingsData = new StandingsDisplayData(serverWorker);
-            RefreshListCommand = new Command(standingsData.RefreshList);
+            standingsDisplayData = new StandingsDisplayData(serverWorker);
+            RefreshListCommand = new Command(standingsDisplayData.RefreshList);
         }
-
         public Command RefreshListCommand { get; set; }
 
     }
