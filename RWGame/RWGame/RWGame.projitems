@@ -26,7 +26,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameHistoryPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameHistoryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationPageModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\UserModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StandingsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -39,8 +41,16 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)TourGuide.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RegistrationPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml.cs">
+      <DependentUpon>GameCellTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameHistoryPage.xaml.cs">
+      <DependentUpon>GameHistoryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -48,6 +58,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\RegistrationPage.xaml.cs">
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml.cs">
+      <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
   </ItemGroup>
@@ -83,5 +96,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\GameHistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 </Project>

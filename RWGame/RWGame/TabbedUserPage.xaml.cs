@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using RWGame.Views;
 
 namespace RWGame
 {
@@ -23,7 +24,7 @@ namespace RWGame
             this.BackgroundColor = Color.FromHex("#39bafa");
             //UploadGamesList();
 
-            Children.Add(new UserPage(_serverWorker, _systemSettings));
+            Children.Add(new Views.UserPage(_serverWorker, _systemSettings));
             Children.Add(new GameHistoryPage(_serverWorker, _systemSettings));
         }
 
