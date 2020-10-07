@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             x:Class="RWGame.Views.UserPage"
+             Title="{Binding UserDisplayData.Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary Source="GameCellTemplate.xaml" />
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        
+        <RelativeLayout x:Name="relativeLayout"
+                        VerticalOptions="Fill"
+                        HorizontalOptions="Fill">
+            <StackLayout x:Name="userprofilStackLayout"
+                     VerticalOptions="Fill"
+                     HorizontalOptions="Fill"
+                     RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                     RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                     RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                     RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
+                <Grid x:Name="gridPlayerInfo"
+              HorizontalOptions="FillAndExpand"
+              VerticalOptions="Start"
+              RowSpacing="0"
+              Margin="0,10,5,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="userName"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   TextColor="White"
+                   FontSize="Large"
+                   FontAttributes="Bold"
+                   Margin="20,10,20,10"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   Text="{Binding UserNameText}"/>
+                    <Grid x:Name="gridPlayerScore"
+                      HorizontalOptions="FillAndExpand"
+                      VerticalOptions="Start"
+                      RowSpacing="0"
+                      Margin="0,0,0,0"
+                      Grid.Row="0"
+                      Grid.Column="1">
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding GridPlayerScoreTapped}"/>
+                        </Grid.GestureRecognizers>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label x:Name="ratingInfoLabel"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Small"
+                   Text="{Binding RatingInfoLabelText}"
+                   Grid.Row="1"
+                   Grid.Column="2"/>
+                        <Label x:Name="performanceCenterLabel"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Small"
+                   Text="{Binding PerformanceCenterLabelText}"
+                   Grid.Row="2"
+                   Grid.Column="0"/>
+                        <Label x:Name="performanceBorderLabel"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Small"
+                   Text="{Binding PerformanceBorderLabelText}"
+                   Grid.Row="2"
+                   Grid.Column="1"/>
+                        <Image x:Name="performanceCenterImage"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   Source="top_score_center.png"
+                   Margin="0,0,0,0"
+                   HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
+                   Grid.Row="1"
+                   Grid.Column="0"/>
+                        <Image x:Name="performanceBorderImage"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   Source="top_score_border.png"
+                   Margin="0,0,0,0"
+                   HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
+                   Grid.Row="1"
+                   Grid.Column="1"/>
+                        <Label x:Name="ratingLabel"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Small"
+                   Text="{Binding SatingLabelText}"
+                   Grid.Row="2"
+                   Grid.Column="2"/>
+                        <Label x:Name="statisticsInfoLabel"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="Center"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   TextDecorations="Underline"
+                   HorizontalTextAlignment="Center"
+                   FontSize="Small"
+                   Text="{Binding StatisticsInfoLabelText}"
+                   Margin="0,3,0,3"
+                   Grid.Row="0"
+                   Grid.Column="0" Grid.ColumnSpan="3"/>
+                    </Grid>
+                </Grid>
+                <StackLayout x:Name="stackLayoutListView">
+                    <Label x:Name="gameListViewEmptyMessage"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="Center"
+                   TextColor="White"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   Margin="20,10,20,10"
+                   Text="{Binding GameListViewEmptyMessageText}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding IsListViewEmptyMessageVisible}"/>
+                    <ListView x:Name="gamesListView"
+                      VerticalOptions="CenterAndExpand"
+                      IsPullToRefreshEnabled="True"
+                      ItemTemplate="{StaticResource gameCellTemplate}"
+                      ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
+                      IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
+                      RefreshCommand="{Binding UserDisplayData.UpdateGameList}"
+                      ItemSelected="{Binding SelectedItem}">
+                    </ListView>
+                </StackLayout>
+                <StackLayout x:Name="buttonStack"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Fill"
+                             Margin="20,10,20,10"
+                             Orientation="Horizontal">
+                    <StackLayout x:Name="stackLayoutPlayWithAnotherPlayer"
+                                 HorizontalOptions="CenterAndExpand"
+                                 Spacing="0">
+                        <ImageButton x:Name="playWithAnotherPlayerButton"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     BackgroundColor="#39bafa"
+                                     IsEnabled="True"
+                                     Source="{Binding PlayWithAnotherPlayerButtonImage}"
+                                     HeightRequest="30"
+                                     WidthRequest="60"
+                                     Padding="0"
+                                     Command="{Binding PlayWithAnotherPlayerCommand}"/>
+                        <Label x:Name="playWithAnotherPlayerLabel"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               TextColor="White"
+                               FontSize="Small"
+                               FontAttributes="Bold"
+                               Text="{Binding PlayWithAnotherPlayerLabelText}"/>
+                    </StackLayout>
+                    <StackLayout x:Name="stackLayoutPlayWithBot"
+                                 HorizontalOptions="CenterAndExpand"
+                                 Spacing="0">
+                        <ImageButton x:Name="playWithBotButton"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     BackgroundColor="#39bafa"
+                                     IsEnabled="True"
+                                     Source="{Binding PlayWithBotButtonImage}"
+                                     HeightRequest="30"
+                                     WidthRequest="60"
+                                     Padding="0"
+                                     Command="{Binding PlayWithBotCommand}"/>
+                        <Label x:Name="playWithBotLabel"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               TextColor="White"
+                               FontSize="Small"
+                               FontAttributes="Bold"
+                               Text="{Binding PlayWithBotLabelText}"/>
+                    </StackLayout>
+                    <StackLayout x:Name="stackLayoutHelp"
+                                 HorizontalOptions="CenterAndExpand"
+                                 Spacing="0">
+                        <ImageButton x:Name="helpButton"
+                                     VerticalOptions="Center"
+                                     HorizontalOptions="Center"
+                                     BackgroundColor="#39bafa"
+                                     Source="{Binding HelpButtonImage}"
+                                     HeightRequest="30"
+                                     WidthRequest="60"
+                                     Padding="0"
+                                     Command="{Binding HelpCommand}"/>
+                        <Label x:Name="helpLabel"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"
+                               TextColor="White"
+                               FontSize="Small"
+                               FontAttributes="Bold"
+                               Text="{Binding HelpLabelText}"/>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+            <skia:SKCanvasView x:Name="canvasView"
+                               VerticalOptions="Fill"
+                               HorizontalOptions="Fill"
+                               Margin="0,0,0,0"
+                               IsEnabled="{Binding IsCanvasViewEnabled}"
+                               IsVisible="{Binding IsCanvasViewVisible}"
+                               HeightRequest="{Binding CanvasViewHeightRequest}"
+                               WidthRequest="{Binding CanvasViewWidthRequest}"
+                               RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                               RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                               RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                               RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
+                
+            </skia:SKCanvasView>
+        </RelativeLayout>
+        
+    </ContentPage.Content>
+</ContentPage>

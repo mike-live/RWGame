@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             x:Class="RWGame.Views.GameHistoryPage">
+    <ContentPage.Resources>
+        <ResourceDictionary Source="GameCellTemplate.xaml" />
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center"
+                     HorizontalOptions="Fill"
+                     Margin="10,10,0,10">
+            <ListView x:Name="gamesListView"
+                      ItemsSource="{Binding gamesList}"
+                      ItemSelected="{Binding gamesListViewItemSelectedCommand}"
+                      RefreshCommand="{Binding RefreshListCommand}"
+                      IsRefreshing="{Binding ListViewIsRefreshing}"
+                      ItemTemplate="{StaticResource gameCellTemplate}">
+            </ListView>
+            <Label x:Name="gameListViewEmptyMessage"
+                   VerticalOptions="CenterAndExpand"
+                   HorizontalOptions="Center"
+                   TextColor="White"
+                   FontSize="Medium"
+                   FontAttributes="Bold"
+                   Margin="20,10,20,10"
+                   Text="{Binding gameLsitViewEmptyMessageText}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="{Binding IsGameListViewEmptyMessageVisible}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,84 @@
+﻿<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <DataTemplate x:Key="gameCellTemplate">
+        <ViewCell>
+            <Grid VerticalOptions="FillAndExpand"
+                          HorizontalOptions="FillAndExpand"
+                          ColumnSpacing="0"
+                          RowSpacing="1"
+                          Margin="1,3,1,3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.8*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="0.4*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="gameidLabel"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="#39bafa"
+                               TextColor="#c5eeff"
+                               Text="{Binding gameIdLabelText}"
+                               Grid.Row="0"
+                               Grid.Column="0"/>
+                <Label x:Name="dateLabel"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="#39bafa"
+                               TextColor="#c5eeff"
+                               Text="{Binding dateLabelText}"
+                               Grid.Row="1"
+                               Grid.Column="0"/>
+                <Label x:Name="player1Label"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               FontAttributes="Bold"
+                               BackgroundColor="#39bafa"
+                               TextColor="#c5eeff"
+                               Text="{Binding player1LabelText}"
+                               Grid.Row="0" Grid.RowSpan="2"
+                               Grid.Column="1"/>
+                <Label x:Name="player2Label"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               FontAttributes="Bold"
+                               BackgroundColor="#39bafa"
+                               TextColor="#c5eeff"
+                               Text="{Binding player2LabelText}"
+                               Grid.Row="0" Grid.RowSpan="2"
+                               Grid.Column="3"/>
+                <Image x:Name="vsImage"
+                               HorizontalOptions="EndAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="#39bafa"
+                               Source="lightning.png"
+                               Scale="1"
+                               Grid.Row="0" Grid.RowSpan="2"
+                               Grid.Column="2"/>
+                <Label x:Name="scoreLabel"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="#39bafa"
+                               TextColor="White"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               Text="{Binding scoreLabelText}"
+                               Grid.Row="1"
+                               Grid.Column="4"/>
+                <Image x:Name="gameStateImage"
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="#39bafa"
+                               Scale="0.9"
+                               Source="{Binding gameStateImageSource}"
+                               Grid.Row="0"
+                               Grid.Column="4"/>
+            </Grid>
+        </ViewCell>
+    </DataTemplate>
+</ResourceDictionary>
