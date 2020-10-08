@@ -54,6 +54,7 @@ namespace RWGame.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
+        public string UserNameText { get { return "Hi" + UserModel.PlayerInfo.PersonalInfo.Name; } }
         List<Game> GamesList { get { return UserModel.GamesList; } }
         public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
         public bool IsGameListViewVisible { get; set; }
@@ -63,6 +64,7 @@ namespace RWGame.ViewModels
         public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings)
         {
             UserModel = new UserModel(ServerWorker, SystemSettings);
+            UpdateGameList();
         }
         public List<ElementsOfViewCell> CustomListViewRecords { get; set; }
         public async void UpdateGameList()
@@ -97,7 +99,7 @@ namespace RWGame.ViewModels
             });
         }
 
-        private ElementsOfViewCell _selectedItem;
+        public ElementsOfViewCell _selectedItem;
         public ElementsOfViewCell SelectedItem 
         { 
             get
@@ -136,6 +138,5 @@ namespace RWGame.ViewModels
             RefreshGamesListCommand = new Command(UserDisplayData.UpdateGameList);
         }
         public Command RefreshGamesListCommand { get; set; }
-        public Command GamesListItemSelectedCommand { get; set; }
     }
 }

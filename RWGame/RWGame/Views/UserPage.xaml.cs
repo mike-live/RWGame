@@ -16,7 +16,7 @@ namespace RWGame.Views
     {
         public UserPage(ServerWorker serverWorker, SystemSettings systemSettings)
         {
-            //InitializeComponent();
+            InitializeComponent();
             BindingContext = new UserViewModel(serverWorker, systemSettings);
             NavigationPage.SetHasNavigationBar(this, false);
         }

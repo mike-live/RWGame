@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              x:Class="RWGame.Views.UserPage"
-             Title="{Binding UserDisplayData.Title}">
+             Title="{Binding UserDisplayData.Title}"
+             BackgroundColor="White"
+             BackgroundImageSource="background_2_art_1.png">
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>
@@ -40,7 +42,7 @@
                    Margin="20,10,20,10"
                    Grid.Row="0"
                    Grid.Column="0"
-                   Text="{Binding UserNameText}"/>
+                   Text="{Binding UserDisplayData.UserNameText}"/>
                     <Grid x:Name="gridPlayerScore"
                       HorizontalOptions="FillAndExpand"
                       VerticalOptions="Start"
@@ -149,7 +151,7 @@
                       ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
                       IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
                       RefreshCommand="{Binding UserDisplayData.UpdateGameList}"
-                      ItemSelected="{Binding SelectedItem}">
+                      ItemSelected="{Binding UserDisplayData.SelectedItem}">
                     </ListView>
                 </StackLayout>
                 <StackLayout x:Name="buttonStack"

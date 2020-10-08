@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             x:Class="RWGame.Views.GameHistoryPage">
+             x:Class="RWGame.Views.GameHistoryPage"
+             Title="{Binding Title}">
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>
@@ -11,11 +11,12 @@
                      HorizontalOptions="Fill"
                      Margin="10,10,0,10">
             <ListView x:Name="gamesListView"
-                      ItemsSource="{Binding gamesList}"
-                      ItemSelected="{Binding gamesListViewItemSelectedCommand}"
+                      ItemsSource="{Binding GameHistoryDisplayData.CustomListViewRecords}"
+                      ItemSelected="{Binding GameHistoryDisplayData.OnGamesListItemSelected}"
                       RefreshCommand="{Binding RefreshListCommand}"
-                      IsRefreshing="{Binding ListViewIsRefreshing}"
-                      ItemTemplate="{StaticResource gameCellTemplate}">
+                      IsRefreshing="{Binding GameHistoryDisplayData.ListViewIsRefreshing}"
+                      ItemTemplate="{StaticResource GameCellTemplate}"
+                      IsVisible="{Binding GameHistoryDisplayData.IsGamesListViewVisible}">
             </ListView>
             <Label x:Name="gameListViewEmptyMessage"
                    VerticalOptions="CenterAndExpand"
@@ -24,9 +25,9 @@
                    FontSize="Medium"
                    FontAttributes="Bold"
                    Margin="20,10,20,10"
-                   Text="{Binding gameLsitViewEmptyMessageText}"
+                   Text="{Binding GameHistoryDisplayData.GameLsitViewEmptyMessageText}"
                    HorizontalTextAlignment="Center"
-                   IsVisible="{Binding IsGameListViewEmptyMessageVisible}"/>
+                   IsVisible="{Binding GameHistoryDisplayData.IsGameListViewEmptyMessageVisible}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
