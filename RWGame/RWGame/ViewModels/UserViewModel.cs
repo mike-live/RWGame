@@ -49,17 +49,28 @@ namespace RWGame.ViewModels
             game = _game;
         }
     }
-    class UserDisplayData : INotifyPropertyChanged
+    public class UserDisplayData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        UserModel UserModel { get; set; }
+        private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
         public string UserNameText { get { return "Hi" + UserModel.PlayerInfo.PersonalInfo.Name; } }
-        List<Game> GamesList { get { return UserModel.GamesList; } }
+        public List<Game> GamesList { get { return UserModel.GamesList; } }
         public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
         public bool IsGameListViewVisible { get; set; }
         public bool IsListViewEmptyMessageVisible { get; set; }
         public bool CustomListViewRecordsIsRefreshing { get; set; }
+
+        public string PlayWithAnotherPlayerButtonImage { get { return "pvp.png"; } }
+        public string PlayWithAnotherPlayerLabelText { get { return "Friend"; } }
+
+        public string PlayWithBotButtonImage { get { return "bot.png"; } }
+        public string PlayWithBotLabelText { get { return "Bot"; } }
+
+
+        public string HelpButtonImage { get { return "help.png"; } }
+        public string HelpLabelText { get { return "Help"; } }
+
         public string Title { get { return "Sarted Games"; } }
         public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings)
         {
@@ -127,13 +138,9 @@ namespace RWGame.ViewModels
     class UserViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly ServerWorker ServerWorker;
-        private readonly SystemSettings SystemSettings; 
         UserDisplayData UserDisplayData { get; set; }
         public UserViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings)
         {
-            this.ServerWorker = ServerWorker;
-            this.SystemSettings = SystemSettings;
             UserDisplayData = new UserDisplayData(ServerWorker, SystemSettings);
             RefreshGamesListCommand = new Command(UserDisplayData.UpdateGameList);
         }

@@ -25,7 +25,7 @@ namespace RWGame
             //UploadGamesList();
 
             Children.Add(new Views.UserPage(_serverWorker, _systemSettings));
-            Children.Add(new Views.GameHistoryPage(_serverWorker, _systemSettings));
+            //Children.Add(new Views.GameHistoryPage(_serverWorker, _systemSettings));
         }
 
         private async void UploadGamesList()

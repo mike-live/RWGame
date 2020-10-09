@@ -150,8 +150,7 @@
                       ItemTemplate="{StaticResource gameCellTemplate}"
                       ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
                       IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
-                      RefreshCommand="{Binding UserDisplayData.UpdateGameList}"
-                      ItemSelected="{Binding UserDisplayData.SelectedItem}">
+                      RefreshCommand="{Binding RefreshGamesListCommand}">
                     </ListView>
                 </StackLayout>
                 <StackLayout x:Name="buttonStack"
@@ -167,7 +166,7 @@
                                      HorizontalOptions="Center"
                                      BackgroundColor="#39bafa"
                                      IsEnabled="True"
-                                     Source="{Binding PlayWithAnotherPlayerButtonImage}"
+                                     Source="{Binding UserDisplayData.PlayWithAnotherPlayerButtonImage}"
                                      HeightRequest="30"
                                      WidthRequest="60"
                                      Padding="0"
@@ -178,7 +177,7 @@
                                TextColor="White"
                                FontSize="Small"
                                FontAttributes="Bold"
-                               Text="{Binding PlayWithAnotherPlayerLabelText}"/>
+                               Text="{Binding UserDisplayData.PlayWithAnotherPlayerLabelText}"/>
                     </StackLayout>
                     <StackLayout x:Name="stackLayoutPlayWithBot"
                                  HorizontalOptions="CenterAndExpand"
@@ -188,7 +187,7 @@
                                      HorizontalOptions="Center"
                                      BackgroundColor="#39bafa"
                                      IsEnabled="True"
-                                     Source="{Binding PlayWithBotButtonImage}"
+                                     Source="{Binding UserDisplayData.PlayWithBotButtonImage}"
                                      HeightRequest="30"
                                      WidthRequest="60"
                                      Padding="0"
@@ -199,7 +198,7 @@
                                TextColor="White"
                                FontSize="Small"
                                FontAttributes="Bold"
-                               Text="{Binding PlayWithBotLabelText}"/>
+                               Text="{Binding UserDisplayData.PlayWithBotLabelText}"/>
                     </StackLayout>
                     <StackLayout x:Name="stackLayoutHelp"
                                  HorizontalOptions="CenterAndExpand"
@@ -208,7 +207,7 @@
                                      VerticalOptions="Center"
                                      HorizontalOptions="Center"
                                      BackgroundColor="#39bafa"
-                                     Source="{Binding HelpButtonImage}"
+                                     Source="{Binding UserDisplayData.HelpButtonImage}"
                                      HeightRequest="30"
                                      WidthRequest="60"
                                      Padding="0"
@@ -219,7 +218,7 @@
                                TextColor="White"
                                FontSize="Small"
                                FontAttributes="Bold"
-                               Text="{Binding HelpLabelText}"/>
+                               Text="{Binding UserDisplayData.HelpLabelText}"/>
                     </StackLayout>
                 </StackLayout>
             </StackLayout>

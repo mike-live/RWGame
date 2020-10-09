@@ -1,5 +1,6 @@
 ﻿using RWGame.Classes;
 using RWGame.ViewModels;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -13,6 +14,10 @@ namespace RWGame.Views
             InitializeComponent();
             BindingContext = new GameHistoryViewModel(ServerWorker, SystemSettings);
             NavigationPage.SetHasNavigationBar(this, false);
+        }
+        public void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            var SelectedItem = e.SelectedItem as ElementsOfViewCell;
         }
     }
 }
