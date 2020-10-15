@@ -15,9 +15,5 @@ namespace RWGame.Views
             BindingContext = new GameHistoryViewModel(ServerWorker, SystemSettings);
             NavigationPage.SetHasNavigationBar(this, false);
         }
-        public void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            var SelectedItem = e.SelectedItem as ElementsOfViewCell;
-        }
     }
 }

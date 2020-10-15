@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="RWGame.Views.GameHistoryPage"
-             Title="{Binding Title}">
+             Title="{Binding GameHistoryDisplayData.Title}"
+             BackgroundColor="White"
+             BackgroundImageSource="background_2_art_1.png">
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>
@@ -12,10 +14,9 @@
                      Margin="10,10,0,10">
             <ListView x:Name="gamesListView"
                       ItemsSource="{Binding GameHistoryDisplayData.CustomListViewRecords}"
-                      
                       RefreshCommand="{Binding RefreshListCommand}"
                       IsRefreshing="{Binding GameHistoryDisplayData.ListViewIsRefreshing}"
-                      ItemTemplate="{StaticResource GameCellTemplate}"
+                      ItemTemplate="{StaticResource gameCellTemplate}"
                       IsVisible="{Binding GameHistoryDisplayData.IsGamesListViewVisible}">
             </ListView>
             <Label x:Name="gameListViewEmptyMessage"

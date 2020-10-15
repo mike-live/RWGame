@@ -6,49 +6,57 @@ using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace RWGame.Models
 {
-    partial class ElementsOfViewCell 
-    {
-        public Game game { get; set; }
-    }
-    class UserModel : INotifyPropertyChanged
+    public class UserModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private ServerWorker ServerWorker;
-        private SystemSettings SystemSettings;
-        public UserModel(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        private void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            this.ServerWorker = ServerWorker;
-            this.SystemSettings = SystemSettings;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        private ServerWorker serverWorker;
+        private SystemSettings systemSettings;
+        public UserModel(ServerWorker serverWorker, SystemSettings systemSettings)
+        {
+            this.serverWorker = serverWorker;
+            this.systemSettings = systemSettings;
+            UpdateModel();
             IsGameStarted = false;
         }
-        public Game Game { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
         public List<Game> GamesList { get; set; }
         public bool IsGameStarted { get; set; }
-        public async Task UpdateGameList()
+        public string UserName { get; set; }
+        public double PerformanceCenter { get; set; }
+        public double PerformanceBorder {get; set; }
+        public double Rating { get; set; }
+        public async void UpdateModel()
         {
-            GamesList = await ServerWorker.TaskGetGamesList();
+            await TaskUpdateModel();
         }
-        public async Task UpdatePlayerInfo()
+        public async Task TaskUpdateModel()
         {
-            PlayerInfo = await ServerWorker.TaskGetPlayerInfo();
+            PlayerInfo = await serverWorker.TaskGetPlayerInfo();
+            GamesList = await serverWorker.TaskGetGamesList();
+            UserName = PlayerInfo?.PersonalInfo.Name ?? "";
+            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot.Value ?? 0);
+            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot.Value ?? 0);
+            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot.Value ?? 0);
         }
         public async Task ExecuteItemSelectedLogic(INavigation Navigation, int GameId)
         {
-            Game game = await GameProcesses.MakeSavedGame(ServerWorker, GameId);
-
-            bool cancelGame = await GameProcesses.StartGame(ServerWorker, game);
-
+            Game game = await GameProcesses.MakeSavedGame(serverWorker, GameId);
+            bool cancelGame = await GameProcesses.StartGame(serverWorker, game);
             if (!cancelGame)
             {
-                GameStateInfo gameStateInfo = await ServerWorker.TaskGetGameState(game.IdGame);
-                await Navigation.PushAsync(new GameField(ServerWorker, SystemSettings, game, gameStateInfo));
+                GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+                await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
                 IsGameStarted = true;
             }
-            
         }
     }
 }

@@ -11,6 +11,7 @@ using Xamarin.Forms;
 using System.Linq;
 using System.ComponentModel;
 using Xamarin.Essentials;
+using System.Collections.ObjectModel;
 
 namespace RWGame.ViewModels
 {
@@ -20,8 +21,9 @@ namespace RWGame.ViewModels
                 //"new.png",           "connect.png",         "start.png",           "active.png",     "end.png",        "pause.svg",      "wait.png"
                 "state_star_gray.png", "state_star_gray.png", "state_star_gray.png", "state_star.png", "state_star.png", "state_star.png", "state_star.png"
             };
+
         public Game game { get; set; }
-        public string IdGame { get { return "#" + game.IdGame.ToString(); } }
+        public string GameId { get { return "#" + game.IdGame.ToString(); } }
         public string Date { get { return game.Start.ToString(); } }
         public string PlayerName1 { get { return game.PlayerUserName1; } }
         public string PlayerName2 { get { return game.PlayerUserName2; } }
@@ -51,12 +53,26 @@ namespace RWGame.ViewModels
     }
     public class UserDisplayData : INotifyPropertyChanged
     {
+        
         public event PropertyChangedEventHandler PropertyChanged;
-        private UserModel UserModel { get; set; }
+        private void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+        public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        {
+            UserModel = new UserModel(ServerWorker, SystemSettings);
+            UpdateUserPage();
+        }
+        private UserModel UserModel {get; set; }
+
         public INavigation Navigation { get; set; }
-        public string UserNameText { get { return "Hi" + UserModel.PlayerInfo.PersonalInfo.Name; } }
-        public List<Game> GamesList { get { return UserModel.GamesList; } }
+        public List<Game> GamesList { get; set; }
+
+        public string Title { get { return "Sarted Games"; } }
+
         public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
+
         public bool IsGameListViewVisible { get; set; }
         public bool IsListViewEmptyMessageVisible { get; set; }
         public bool CustomListViewRecordsIsRefreshing { get; set; }
@@ -71,74 +87,61 @@ namespace RWGame.ViewModels
         public string HelpButtonImage { get { return "help.png"; } }
         public string HelpLabelText { get { return "Help"; } }
 
-        public string Title { get { return "Sarted Games"; } }
-        public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        public string UserNameText { get; set; }
+        public string RatingInfoLabelText { get { return "Rating"; } }
+        public string PerformanceCenterLabelText { get; set; }
+        public string PerformanceBorderLabelText { get; set; }
+        public string RatingLabelText { get; set; }
+        public string StatisticsInfoLabelText { get { return "Statistics"; } }
+
+        
+        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
+        public async void UpdateUserPage()
         {
-            UserModel = new UserModel(ServerWorker, SystemSettings);
-            UpdateGameList();
+            await TaskUpdatePersonalInfo();
+            await TaskUpdateGameList();
         }
-        public List<ElementsOfViewCell> CustomListViewRecords { get; set; }
         public async void UpdateGameList()
-        {
-            await SubUpdateGameList();
+        {         
+            await TaskUpdateGameList();
             CustomListViewRecordsIsRefreshing = false;
         }
-        public async Task SubUpdateGameList()
+        public async Task TaskUpdatePersonalInfo()
         {
-            await UserModel.UpdateGameList();
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                CustomListViewRecords = new List<ElementsOfViewCell>();
-
-                for (int i = 0; i < GamesList.Count; i++)
-                {
-                    if (GamesList[i].GameState != GameStateEnum.END)
-                    {
-                        CustomListViewRecords.Add(new ElementsOfViewCell(GamesList[i]));
-                    }
-                }
-                if (CustomListViewRecords.Count == 0)
-                {
-                    IsGameListViewVisible = false;
-                    IsListViewEmptyMessageVisible = true;
-                }
-                else
-                {
-                    IsGameListViewVisible = true;
-                    IsListViewEmptyMessageVisible = false;
-                }
-            });
+            await UserModel.TaskUpdateModel();
+            UserNameText = "Hi, " + UserModel.UserName;
+            PerformanceCenterLabelText = UserModel.PerformanceCenter.ToString();
+            PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString();
+            RatingLabelText = UserModel.Rating.ToString();
         }
-
-        public ElementsOfViewCell _selectedItem;
-        public ElementsOfViewCell SelectedItem 
-        { 
-            get
+        public async Task TaskUpdateGameList()
+        {
+            await UserModel.TaskUpdateModel();
+            GamesList = UserModel.GamesList;
+            CustomListViewRecords.Clear();
+            for (int i = 0; i < GamesList.Count; i++)
             {
-                return _selectedItem;
+                if (GamesList[i].GameState != GameStateEnum.END)
+                {
+                    CustomListViewRecords.Add(new ElementsOfViewCell(GamesList[i]));
+                }
             }
-            set
+            if (CustomListViewRecords.Count == 0)
             {
-                _selectedItem = value;
-                CallGamesListItemSelected();
+                IsGameListViewVisible = false;
+                IsListViewEmptyMessageVisible = true;
             }
-        }
-        public async void CallGamesListItemSelected()
-        {
-            await GamesListItemSelected();
-        }
-        public async Task GamesListItemSelected()
-        {
-            if (SelectedItem == null) return;
-            if (UserModel.IsGameStarted) return;
-            await UserModel.ExecuteItemSelectedLogic(Navigation, SelectedItem.game.IdGame);
-            SelectedItem = null;
+            else
+            {
+                IsGameListViewVisible = true;
+                IsListViewEmptyMessageVisible = false;
+            }
         }
     }
     class UserViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        UserDisplayData UserDisplayData { get; set; }
+        public UserDisplayData UserDisplayData { get; set; }
         public UserViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings)
         {
             UserDisplayData = new UserDisplayData(ServerWorker, SystemSettings);

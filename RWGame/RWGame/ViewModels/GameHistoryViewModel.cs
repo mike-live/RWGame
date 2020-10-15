@@ -12,9 +12,9 @@ namespace RWGame.ViewModels
 {
     public class GameHistoryDisplayData
     {
-        public GameHistoryDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        public GameHistoryDisplayData(ServerWorker serverWorker, SystemSettings systemSettings)
         {
-            GameHistoryModel = new GameHistoryModel(ServerWorker, SystemSettings);
+            GameHistoryModel = new GameHistoryModel(serverWorker, systemSettings);
         }
         public string Title { get { return "Games History"; } }
         public string GameLsitViewEmptyMessageText { get { return "Here we place your finished games.\nThanks for playing =)"; } }
@@ -24,18 +24,7 @@ namespace RWGame.ViewModels
         List<Game> gamesList { get { return GameHistoryModel.GamesList; } }
         public bool IsGamesListViewVisible { get; set; }
         public bool IsGameListViewEmptyMessageVisible { get; set; }
-        public bool IsGamesListViewRefreshing { get; set; }
-        public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
-        public ElementsOfViewCell _selectedItem;
-        public ElementsOfViewCell SelectedItem
-        {
-            get { return _selectedItem; }
-            set
-            {
-                _selectedItem = value;
-            }
-        }
-        
+        public bool IsGamesListViewRefreshing { get; set; }       
         public async void UpdateGameList()
         {
             await SubUpdateGameList();
@@ -68,30 +57,19 @@ namespace RWGame.ViewModels
                     IsGameListViewEmptyMessageVisible = false;
                 }
             });
-        }
-        public async void CallGamesListItemSelected(ElementsOfViewCell SelectedItem)
-        {
-            await GameHistoryModel.ExecuteItemSelectedLogic(Navigation, SelectedItem.game.IdGame);
-        }
-        public void OnGamesListItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            var SelectedItem = e.SelectedItem as ElementsOfViewCell;
-            if (SelectedItem == null) return;
-            CallGamesListItemSelected(SelectedItem);
-            SelectedItem = null;
-        }
+        }      
     }
+
     public class GameHistoryViewModel
     {
-        GameHistoryDisplayData GameHistoryDisplayData { get; set; }
-        
-        public GameHistoryViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        public GameHistoryDisplayData GameHistoryDisplayData { get; set; }
+
+        public GameHistoryViewModel(ServerWorker serverWorker, SystemSettings systemSettings)
         {
-            GameHistoryDisplayData = new GameHistoryDisplayData(ServerWorker, SystemSettings);
+            GameHistoryDisplayData = new GameHistoryDisplayData(serverWorker, systemSettings);
             RefreshListCommand = new Command(GameHistoryDisplayData.UpdateGameList);
         }
-        
-        
+
         public Command RefreshListCommand { get; set; }
     }
 }
