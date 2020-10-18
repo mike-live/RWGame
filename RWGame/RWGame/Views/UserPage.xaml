@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             xmlns:behaviorsPack="clr-namespace:Xamarin.Forms.BehaviorsPack;assembly=Xamarin.Forms.BehaviorsPack"
              x:Class="RWGame.Views.UserPage"
              Title="{Binding UserDisplayData.Title}"
              BackgroundColor="White"
@@ -9,6 +10,11 @@
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <behaviorsPack:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding OnUserPageAppearingCommand}" />
+    </ContentPage.Behaviors>
     <ContentPage.Content>
         
         <RelativeLayout x:Name="relativeLayout"
@@ -145,13 +151,14 @@
                    HorizontalTextAlignment="Center"
                    IsVisible="{Binding UserDisplayData.IsListViewEmptyMessageVisible}"/>
                     <ListView x:Name="gamesListView"
-                      VerticalOptions="CenterAndExpand"
-                      IsPullToRefreshEnabled="True"
-                      ItemTemplate="{StaticResource gameCellTemplate}"
-                      ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
-                      IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
-                      IsRefreshing="{Binding UserDisplayData.CustomListViewRecordsIsRefreshing}"
-                      RefreshCommand="{Binding RefreshGamesListCommand}">
+                   VerticalOptions="CenterAndExpand"
+                   IsPullToRefreshEnabled="True"
+                   ItemTemplate="{StaticResource gameCellTemplate}"
+                   ItemSelected="OnSelection"
+                   ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
+                   IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
+                   IsRefreshing="{Binding UserDisplayData.CustomListViewRecordsIsRefreshing}"
+                   RefreshCommand="{Binding RefreshGamesListCommand}">
                     </ListView>
                 </StackLayout>
                 <StackLayout x:Name="buttonStack"
@@ -199,7 +206,7 @@
                                TextColor="#39bafa"
                                FontSize="Small"
                                FontAttributes="Bold"
-                               Text="{Binding UserDisplayData.PlayWithBotLabelText}"/>
+                               Text="{Binding UserDisplayData.PlayWithBotLabelText}" />
                     </StackLayout>
                     <StackLayout x:Name="stackLayoutHelp"
                                  HorizontalOptions="CenterAndExpand"

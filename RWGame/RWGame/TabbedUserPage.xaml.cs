@@ -24,7 +24,7 @@ namespace RWGame
             this.BackgroundColor = Color.FromHex("#39bafa");
             //UploadGamesList();
 
-            Children.Add(new Views.UserPage(_serverWorker, _systemSettings));
+            Children.Add(new Views.UserPage(_serverWorker, _systemSettings, Navigation));
             Children.Add(new Views.GameHistoryPage(_serverWorker, _systemSettings));
         }
 

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.Models;
-using System.Runtime.CompilerServices;
 using RWGame.PagesGameChoise;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
 using System.ComponentModel;
-using Xamarin.Essentials;
 using System.Collections.ObjectModel;
 
 namespace RWGame.ViewModels
@@ -53,18 +50,21 @@ namespace RWGame.ViewModels
     }
     public class UserDisplayData : INotifyPropertyChanged
     {
-        
+
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string name = null)
+        public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-        public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings)
-        {
+            this.Navigation = Navigation;
+            if (!Application.Current.Properties.ContainsKey("FirstUse"))
+            {
+                Application.Current.Properties["FirstUse"] = false;
+                Application.Current.SavePropertiesAsync();
+                TourGuide.StartIntroGuide(IntroGuide);
+            }   
             UserModel = new UserModel(ServerWorker, SystemSettings);
             UpdateUserPage();
         }
-        private UserModel UserModel {get; set; }
+        private UserModel UserModel { get; set; }
 
         public INavigation Navigation { get; set; }
         public List<Game> GamesList { get; set; }
@@ -94,7 +94,35 @@ namespace RWGame.ViewModels
         public string RatingLabelText { get; set; }
         public string StatisticsInfoLabelText { get { return "Statistics"; } }
 
-        
+        public bool CancelGame 
+        { 
+            get { return UserModel.CancelGame; }
+            set { UserModel.CancelGame = value; }
+        }
+        public bool IsGameStarted 
+        { 
+            get { return UserModel.IsGameStarted; } 
+            set{ UserModel.IsGameStarted = value; }
+        }
+
+        public TourGuide TourGuide { get; set; }
+        public List<GuideStep> IntroGuide 
+        { 
+            get 
+            {
+                var introGuide = new List<GuideStep>
+                {
+                new GuideStep(null, "Welcome to Random Walk!\nTap to see game guide"),
+                new GuideStep(stackLayoutHelp, "Check out our guide!"),
+                new GuideStep(stackLayoutPlayWithBot, "Play with a bot!"),
+                new GuideStep(stackLayoutPlayWithAnotherPlayer, "Play with a friend!"),
+                new GuideStep(gridPlayerScore, "Check out your rating!"),
+                new GuideStep(null, "Try to play with a bot now =)")
+                };
+                return introGuide;
+            }
+        }
+
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         public async void UpdateUserPage()
         {
@@ -137,16 +165,80 @@ namespace RWGame.ViewModels
                 IsListViewEmptyMessageVisible = false;
             }
         }
+        public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
+        {
+            if (IsGameStarted)
+            {
+                return;
+            }
+            await UserModel.GetSelectedGameData(selectedItem.game.IdGame);
+            if (!CancelGame)
+            {
+                await Navigation.PushAsync(UserModel.GameField);
+                IsGameStarted = true;
+            }
+            UpdateGameList();
+        }
+        public async void PlayWithBot()
+        {
+            await TaskPlayWithBot();
+        }
+        public async void PlayWithAnotherPlayer()
+        {
+            await TaskPlayWithAnotherPlayer();
+        }
+        public async Task TaskPlayWithBot()
+        {
+            if (IsGameStarted) return;
+            IsGameStarted = true;
+            await UserModel.CreateGameWithBot();
+            await Navigation.PushAsync(UserModel.GameField);
+            UpdateGameList();
+        }
+        public async Task TaskPlayWithAnotherPlayer()
+        {
+            if (IsGameStarted) return;
+            IsGameStarted = true;
+            UserModel.LoadRealPlayerChoicePage();
+            await Navigation.PushAsync(UserModel.ChoiceRealPlayerPage);
+        }
+
+        public void StartGuide()
+        {
+            List<GuideStep> introGuideShorten = new List<GuideStep>
+            {
+                new GuideStep(null, "Welcome to Random Walk!\nTap to see game guide"),
+                new GuideStep(stackLayoutPlayWithBot, "Play with a bot!"),
+                new GuideStep(stackLayoutPlayWithAnotherPlayer, "Play with a friend!"),
+                new GuideStep(gridPlayerScore, "Check out your rating!"),
+                new GuideStep(null, "Enjoy the game =)")
+            };
+
+            TourGuide.StartIntroGuide(introGuideShorten);
+        }
+
+        public void OnUserPageAppearing()
+        {
+            IsGameStarted = false;
+        }
     }
-    class UserViewModel : INotifyPropertyChanged
+    public class UserViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public UserDisplayData UserDisplayData { get; set; }
-        public UserViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        public UserViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
         {
-            UserDisplayData = new UserDisplayData(ServerWorker, SystemSettings);
+            UserDisplayData = new UserDisplayData(ServerWorker, SystemSettings, Navigation);
             RefreshGamesListCommand = new Command(UserDisplayData.UpdateGameList);
+            PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
+            PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);
+            HelpCommand = new Command(UserDisplayData.StartGuide);
+            OnUserPageAppearingCommand = new Command(UserDisplayData.OnUserPageAppearing);
         }
         public Command RefreshGamesListCommand { get; set; }
+        public Command PlayWithBotCommand { get; set; }
+        public Command PlayWithAnotherPlayerCommand { get; set; }
+        public Command HelpCommand { get; set; }
+        public Command OnUserPageAppearingCommand { get; set; }
     }
 }
