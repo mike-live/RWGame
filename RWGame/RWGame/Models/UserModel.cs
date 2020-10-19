@@ -5,7 +5,6 @@ using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System.Threading.Tasks;
 using RWGame.PagesGameChoise;
-using Xamarin.Forms;
 
 namespace RWGame.Models
 {

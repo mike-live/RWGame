@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using Xamarin.Forms;
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System.Threading.Tasks;
 
 namespace RWGame.Models
 {
-    class GameHistoryModel
+    class GameHistoryModel : INotifyPropertyChanged
     {
         ServerWorker serverWorker;
         SystemSettings systemSettings;
-        bool isGameStarted = false;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool IsGameStarted { get; set; } = false;
         public List<Game> GamesList { get; set; }
+        public GameField GameField { get; set; }
         public GameHistoryModel(ServerWorker serverWorker, SystemSettings systemSettings)
         {
             this.serverWorker = serverWorker;
@@ -25,15 +26,14 @@ namespace RWGame.Models
         {
             GamesList = await serverWorker.TaskGetGamesList();
         }
-        public async Task ExecuteItemSelectedLogic(INavigation Navigation, int gameId)
+        public async Task GetSelectedGameData(int gameId)
         {
-            if (isGameStarted) return;
-            isGameStarted = true;
+            if (IsGameStarted) return;
+            IsGameStarted = true;
             Game game = await GameProcesses.MakeSavedGame(serverWorker, gameId);
 
             GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
-            await Navigation.PushAsync(new GameField(serverWorker, systemSettings, game, gameStateInfo));
-            await UpdateGameList();
+            GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);
         }
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.Models;
-using RWGame.PagesGameChoise;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
@@ -55,12 +54,13 @@ namespace RWGame.ViewModels
         public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
         {
             this.Navigation = Navigation;
-            if (!Application.Current.Properties.ContainsKey("FirstUse"))
+            /*if (!Application.Current.Properties.ContainsKey("FirstUse"))
             {
                 Application.Current.Properties["FirstUse"] = false;
                 Application.Current.SavePropertiesAsync();
                 TourGuide.StartIntroGuide(IntroGuide);
             }   
+            */
             UserModel = new UserModel(ServerWorker, SystemSettings);
             UpdateUserPage();
         }
@@ -106,6 +106,7 @@ namespace RWGame.ViewModels
         }
 
         public TourGuide TourGuide { get; set; }
+        /*
         public List<GuideStep> IntroGuide 
         { 
             get 
@@ -122,7 +123,7 @@ namespace RWGame.ViewModels
                 return introGuide;
             }
         }
-
+        */
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         public async void UpdateUserPage()
         {
@@ -203,7 +204,7 @@ namespace RWGame.ViewModels
             await Navigation.PushAsync(UserModel.ChoiceRealPlayerPage);
         }
 
-        public void StartGuide()
+        /*public void StartGuide()
         {
             List<GuideStep> introGuideShorten = new List<GuideStep>
             {
@@ -216,7 +217,7 @@ namespace RWGame.ViewModels
 
             TourGuide.StartIntroGuide(introGuideShorten);
         }
-
+        */
         public void OnUserPageAppearing()
         {
             IsGameStarted = false;
@@ -232,7 +233,7 @@ namespace RWGame.ViewModels
             RefreshGamesListCommand = new Command(UserDisplayData.UpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);
-            HelpCommand = new Command(UserDisplayData.StartGuide);
+            //HelpCommand = new Command(UserDisplayData.StartGuide);
             OnUserPageAppearingCommand = new Command(UserDisplayData.OnUserPageAppearing);
         }
         public Command RefreshGamesListCommand { get; set; }

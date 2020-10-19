@@ -9,11 +9,26 @@ namespace RWGame.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GameHistoryPage : ContentPage
     {
-        public GameHistoryPage(ServerWorker ServerWorker, SystemSettings SystemSettings)
+        GameHistoryViewModel ViewModel;
+        public GameHistoryPage(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
         {
+            ViewModel = new GameHistoryViewModel(ServerWorker, SystemSettings, Navigation);
             InitializeComponent();
-            BindingContext = new GameHistoryViewModel(ServerWorker, SystemSettings);
+            BindingContext = ViewModel;
             NavigationPage.SetHasNavigationBar(this, false);
+        }
+        void OnSelection(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem == null)
+            {
+                return;
+            }
+            ElementsOfViewCell item = (ElementsOfViewCell)e.SelectedItem;
+            ViewModel.GameHistoryDisplayData.LoadSelectedGame(item);
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
     }
 }
