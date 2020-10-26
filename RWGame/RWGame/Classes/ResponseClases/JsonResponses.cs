@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace RWGame.Classes.ResponseClases
 {
@@ -231,7 +229,7 @@ namespace RWGame.Classes.ResponseClases
         public List<int> State { get; set; }
     }
 
-    public class PersonalInfo : INotifyPropertyChanged
+    public class PersonalInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -244,11 +242,9 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("age")]
         public int Age { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public class PlayerStatistics : INotifyPropertyChanged
+    public class PlayerStatistics
     {
         [JsonProperty("rating_bot")]
         public float? RatingVsBot { get; set; }
@@ -264,19 +260,15 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("count_games_2")]
         public int CountGamesBorder { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 
-    public class PlayerInfo : INotifyPropertyChanged
+    public class PlayerInfo
     {
         [JsonProperty("personal_info")]
         public PersonalInfo PersonalInfo { get; set; }
 
         [JsonProperty("player_statistics")]
         public PlayerStatistics PlayerStatistics { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class PlayerStanding

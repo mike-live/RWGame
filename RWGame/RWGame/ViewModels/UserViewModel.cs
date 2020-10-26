@@ -109,7 +109,7 @@ namespace RWGame.ViewModels
             if (IsGameStarted) return;
             IsGameStarted = true;
             UserModel.CreateRealPlayerChoicePage();
-            await Navigation.PushAsync(UserModel.ChoiceRealPlayerPage);
+            await Navigation.PushAsync(UserModel.RealPlayerChoicePage);
         }
         #endregion
         

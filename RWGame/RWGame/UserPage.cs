@@ -327,7 +327,7 @@ namespace RWGame
             {
                 if (isGameStarted) return;
                 isGameStarted = true;
-                await Navigation.PushAsync(new ChoiceRealPlayerPage(serverWorker, systemSettings));
+                await Navigation.PushAsync(new RealPlayerChoicePage(serverWorker, systemSettings));
             };
 
 

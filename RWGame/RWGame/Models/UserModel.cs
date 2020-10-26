@@ -22,7 +22,7 @@ namespace RWGame.Models
         }
         public GameField GameField { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
-        public ChoiceRealPlayerPage ChoiceRealPlayerPage { get; set; }
+        public RealPlayerChoicePage RealPlayerChoicePage { get; set; }
         public StandingsPage StandingsPage { get; set; }
         public List<Game> GamesList { get; set; }
         public bool IsGameStarted { get; set; }
@@ -62,7 +62,7 @@ namespace RWGame.Models
         }
         public void CreateRealPlayerChoicePage()
         {
-            ChoiceRealPlayerPage = new ChoiceRealPlayerPage(serverWorker, systemSettings);
+            RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
         }
         public void CreateStandingsPage()
         {

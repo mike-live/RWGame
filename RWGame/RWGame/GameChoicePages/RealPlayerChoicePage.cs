@@ -8,7 +8,7 @@ using Xamarin.Forms;
 
 namespace RWGame.GameChoicePages
 {
-    public class ChoiceRealPlayerPage : ContentPage
+    public class RealPlayerChoicePage : ContentPage
     {
         ListView listPlayer;
         ServerWorker serverWorker;
@@ -28,7 +28,7 @@ namespace RWGame.GameChoicePages
             return true;
         }
 
-        public ChoiceRealPlayerPage(ServerWorker _serverWorker, SystemSettings systemSettings)
+        public RealPlayerChoicePage(ServerWorker _serverWorker, SystemSettings systemSettings)
         {
             serverWorker = _serverWorker;
             this.BackgroundColor = Color.FromHex("#39bafa");
