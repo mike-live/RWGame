@@ -1,5 +1,4 @@
-﻿using Java.Security.Acl;
-using RWGame.Classes;
+﻿using RWGame.Classes;
 using RWGame.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

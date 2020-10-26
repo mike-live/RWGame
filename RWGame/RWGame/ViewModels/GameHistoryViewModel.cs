@@ -16,18 +16,25 @@ namespace RWGame.ViewModels
             this.Navigation = Navigation;
             GameHistoryModel = new GameHistoryModel(serverWorker, systemSettings);
         }
-        public string Title { get { return "Games History"; } }
-        public string GameListViewEmptyMessageText { get { return "Here we place your finished games.\nThanks for playing =)"; } }
+        #region MainProperties
         private GameHistoryModel GameHistoryModel { get; set; }
         public INavigation Navigation { get; set; }
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         public List<Game> GamesList { get; set; }
+        #endregion
+
+        #region ViewProperties
+        public string Title { get { return "Games History"; } }
+        public string GameListViewEmptyMessageText { get { return "Here we place your finished games.\nThanks for playing =)"; } }
+        
         public bool IsCustomListViewVisible { get; set; }
         public bool IsGameListViewEmptyMessageVisible { get; set; }
         public bool IsCustomListViewRefreshing { get; set; }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #region UpdateMethods
         public async void UpdateGameList()
         {
             await TaskUpdateGameList();
@@ -59,6 +66,7 @@ namespace RWGame.ViewModels
                 IsGameListViewEmptyMessageVisible = false;
             }
         }
+        #endregion
         public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
         {
             await GameHistoryModel.GetSelectedGameData(selectedItem.game.IdGame);
@@ -67,10 +75,12 @@ namespace RWGame.ViewModels
             UpdateGameList();
         }
 
+        #region ActionTriggeredMethods
         public void OnGameHistoryPageAppearing()
         {
             _ = TaskUpdateGameList();
         }
+        #endregion
     }
 
     public class GameHistoryViewModel : INotifyPropertyChanged
@@ -84,8 +94,10 @@ namespace RWGame.ViewModels
             OnGameHistoryPageAppearingCommand = new Command(GameHistoryDisplayData.OnGameHistoryPageAppearing);
         }
 
+        #region Commands
         public Command RefreshGamesListCommand { get; set; }
         public Command OnGameHistoryPageAppearingCommand { get; set; }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
     }

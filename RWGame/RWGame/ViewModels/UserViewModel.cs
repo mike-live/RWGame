@@ -18,7 +18,6 @@ namespace RWGame.ViewModels
         public string Date { get { return game.Start.ToString(); } }
         public string PlayerName1 { get { return game.PlayerUserName1; } }
         public string PlayerName2 { get { return game.PlayerUserName2; } }
-        public string GameState { get { return game.GameState.ToString(); } }
         public string GameStateImage
         {
             get
@@ -33,10 +32,7 @@ namespace RWGame.ViewModels
                 }
             }
         }
-        public int Player1 { get { return game.Player1 == null ? -1 : (int)game.Player1; } }
-        public int Player2 { get { return game.Player2 == null ? -1 : (int)game.Player2; } }
         public string Score { get { return Convert.ToString(game.Score); } }
-        public GameSettings Settings { get { return game.GameSettings; } }
         public ElementsOfViewCell(Game _game)
         {
             game = _game;
@@ -50,13 +46,29 @@ namespace RWGame.ViewModels
         {
             this.Navigation = Navigation;
             UserModel = new UserModel(ServerWorker, SystemSettings);
-            UpdateUserPage();
+            UpdatePersonalInfo();
+            UpdateGameList();
         }
-        private UserModel UserModel { get; set; }
 
+        #region MainProperties
+        private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
         public List<Game> GamesList { get; set; }
+        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
+        #endregion
 
+        public bool CancelGame
+        {
+            get { return UserModel.CancelGame; }
+            set { UserModel.CancelGame = value; }
+        }
+        public bool IsGameStarted
+        {
+            get { return UserModel.IsGameStarted; }
+            set { UserModel.IsGameStarted = value; }
+        }
+
+        #region ViewProperties
         public string Title { get { return "Sarted Games"; } }
 
         public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
@@ -81,30 +93,28 @@ namespace RWGame.ViewModels
         public string PerformanceBorderLabelText { get; set; }
         public string RatingLabelText { get; set; }
         public string StatisticsInfoLabelText { get { return "Statistics"; } }
-
-        public bool CancelGame 
-        { 
-            get { return UserModel.CancelGame; }
-            set { UserModel.CancelGame = value; }
-        }
-        public bool IsGameStarted 
-        { 
-            get { return UserModel.IsGameStarted; } 
-            set{ UserModel.IsGameStarted = value; }
-        }
-
-        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
-        public async void UpdateUserPage()
+        #endregion
+        
+        #region ButtonMethods
+        public async void PlayWithBot()
         {
-            await TaskUpdatePersonalInfo();
-            await TaskUpdateGameList();
+            if (IsGameStarted) return;
+            IsGameStarted = true;
+            await UserModel.CreateGameWithBot();
+            await Navigation.PushAsync(UserModel.GameField);
+            UpdateGameList();
         }
-        public async void UpdateGameList()
-        {         
-            await TaskUpdateGameList();
-            CustomListViewRecordsIsRefreshing = false;
+        public async void PlayWithAnotherPlayer()
+        {
+            if (IsGameStarted) return;
+            IsGameStarted = true;
+            UserModel.CreateRealPlayerChoicePage();
+            await Navigation.PushAsync(UserModel.ChoiceRealPlayerPage);
         }
-        public async Task TaskUpdatePersonalInfo()
+        #endregion
+        
+        #region UpdateMethods
+        public async void UpdatePersonalInfo()
         {
             await UserModel.TaskUpdateModel();
             UserNameText = "Hi, " + UserModel.UserName;
@@ -112,7 +122,7 @@ namespace RWGame.ViewModels
             PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString();
             RatingLabelText = UserModel.Rating.ToString();
         }
-        public async Task TaskUpdateGameList()
+        public async void UpdateGameList()
         {
             await UserModel.TaskUpdateModel();
             GamesList = UserModel.GamesList;
@@ -135,6 +145,8 @@ namespace RWGame.ViewModels
                 IsListViewEmptyMessageVisible = false;
             }
         }
+        #endregion
+
         public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
         {
             if (IsGameStarted)
@@ -149,32 +161,16 @@ namespace RWGame.ViewModels
             }
             UpdateGameList();
         }
-        public async void PlayWithBot()
-        {
-            await TaskPlayWithBot();
-        }
-        public async void PlayWithAnotherPlayer()
-        {
-            await TaskPlayWithAnotherPlayer();
-        }
-        public async Task TaskPlayWithBot()
-        {
-            if (IsGameStarted) return;
-            IsGameStarted = true;
-            await UserModel.CreateGameWithBot();
-            await Navigation.PushAsync(UserModel.GameField);
-            UpdateGameList();
-        }
-        public async Task TaskPlayWithAnotherPlayer()
-        {
-            if (IsGameStarted) return;
-            IsGameStarted = true;
-            UserModel.CreateRealPlayerChoicePage();
-            await Navigation.PushAsync(UserModel.ChoiceRealPlayerPage);
-        }
 
+        #region ActionTriggeredMethods
+        public void OnPullUpdateGameList()
+        {
+            UpdateGameList();
+            CustomListViewRecordsIsRefreshing = false;
+        }
         public void OnUserPageAppearing()
         {
+            UpdateGameList();
             IsGameStarted = false;
         }
         public async void GridPlayerScoreTapped()
@@ -182,6 +178,7 @@ namespace RWGame.ViewModels
             UserModel.CreateStandingsPage();
             await Navigation.PushAsync(UserModel.StandingsPage);
         }
+        #endregion
     }
     public class UserViewModel : INotifyPropertyChanged
     {
@@ -190,17 +187,19 @@ namespace RWGame.ViewModels
         public UserViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
         {
             UserDisplayData = new UserDisplayData(ServerWorker, SystemSettings, Navigation);
-            RefreshGamesListCommand = new Command(UserDisplayData.UpdateGameList);
+            RefreshGamesListCommand = new Command(UserDisplayData.OnPullUpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);
             OnUserPageAppearingCommand = new Command(UserDisplayData.OnUserPageAppearing);
             GridPlayerScoreTappedCommand = new Command(UserDisplayData.GridPlayerScoreTapped);
         }
+        #region Commands
         public Command RefreshGamesListCommand { get; set; }
         public Command PlayWithBotCommand { get; set; }
         public Command PlayWithAnotherPlayerCommand { get; set; }
         public Command HelpCommand { get; set; }
         public Command OnUserPageAppearingCommand { get; set; }
         public Command GridPlayerScoreTappedCommand { get; set; }
+        #endregion
     }
 }

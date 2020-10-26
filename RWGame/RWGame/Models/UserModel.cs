@@ -4,7 +4,7 @@ using System.ComponentModel;
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using System.Threading.Tasks;
-using RWGame.PagesGameChoise;
+using RWGame.GameChoicePages;
 
 namespace RWGame.Models
 {
@@ -22,7 +22,7 @@ namespace RWGame.Models
         }
         public GameField GameField { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
-        public ChoiseRealPlayerPage ChoiceRealPlayerPage { get; set; }
+        public ChoiceRealPlayerPage ChoiceRealPlayerPage { get; set; }
         public StandingsPage StandingsPage { get; set; }
         public List<Game> GamesList { get; set; }
         public bool IsGameStarted { get; set; }
@@ -62,7 +62,7 @@ namespace RWGame.Models
         }
         public void CreateRealPlayerChoicePage()
         {
-            ChoiceRealPlayerPage = new ChoiseRealPlayerPage(serverWorker, systemSettings);
+            ChoiceRealPlayerPage = new ChoiceRealPlayerPage(serverWorker, systemSettings);
         }
         public void CreateStandingsPage()
         {

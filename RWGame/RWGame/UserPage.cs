@@ -1,6 +1,6 @@
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
-using RWGame.PagesGameChoise;
+using RWGame.GameChoicePages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -327,7 +327,7 @@ namespace RWGame
             {
                 if (isGameStarted) return;
                 isGameStarted = true;
-                await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
+                await Navigation.PushAsync(new ChoiceRealPlayerPage(serverWorker, systemSettings));
             };
 
 

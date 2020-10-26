@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Threading;
 using Xamarin.Forms;
 
-namespace RWGame.PagesGameChoise
+namespace RWGame.GameChoicePages
 {
-    public class ChoiseRealPlayerPage : ContentPage
+    public class ChoiceRealPlayerPage : ContentPage
     {
         ListView listPlayer;
         ServerWorker serverWorker;
@@ -28,7 +28,7 @@ namespace RWGame.PagesGameChoise
             return true;
         }
 
-        public ChoiseRealPlayerPage(ServerWorker _serverWorker, SystemSettings systemSettings)
+        public ChoiceRealPlayerPage(ServerWorker _serverWorker, SystemSettings systemSettings)
         {
             serverWorker = _serverWorker;
             this.BackgroundColor = Color.FromHex("#39bafa");
