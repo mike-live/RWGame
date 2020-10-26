@@ -69,7 +69,7 @@ namespace RWGame.ViewModels
 
         public void OnGameHistoryPageAppearing()
         {
-            UpdateGameList();
+            _ = TaskUpdateGameList();
         }
     }
 

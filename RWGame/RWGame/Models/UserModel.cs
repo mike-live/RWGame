@@ -23,6 +23,7 @@ namespace RWGame.Models
         public GameField GameField { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
         public ChoiseRealPlayerPage ChoiceRealPlayerPage { get; set; }
+        public StandingsPage StandingsPage { get; set; }
         public List<Game> GamesList { get; set; }
         public bool IsGameStarted { get; set; }
         public bool CancelGame { get; set; }
@@ -59,9 +60,13 @@ namespace RWGame.Models
             GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
             GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);
         }
-        public void LoadRealPlayerChoicePage()
+        public void CreateRealPlayerChoicePage()
         {
             ChoiceRealPlayerPage = new ChoiseRealPlayerPage(serverWorker, systemSettings);
+        }
+        public void CreateStandingsPage()
+        {
+            StandingsPage = new StandingsPage(serverWorker, systemSettings);
         }
     }
 }

@@ -13,11 +13,6 @@ namespace RWGame.ViewModels
 {
     public class ElementsOfViewCell
     {
-        private readonly List<string> GameStateImages = new List<string> {
-                //"new.png",           "connect.png",         "start.png",           "active.png",     "end.png",        "pause.svg",      "wait.png"
-                "state_star_gray.png", "state_star_gray.png", "state_star_gray.png", "state_star.png", "state_star.png", "state_star.png", "state_star.png"
-            };
-
         public Game game { get; set; }
         public string GameId { get { return "#" + game.IdGame.ToString(); } }
         public string Date { get { return game.Start.ToString(); } }
@@ -54,13 +49,6 @@ namespace RWGame.ViewModels
         public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
         {
             this.Navigation = Navigation;
-            /*if (!Application.Current.Properties.ContainsKey("FirstUse"))
-            {
-                Application.Current.Properties["FirstUse"] = false;
-                Application.Current.SavePropertiesAsync();
-                TourGuide.StartIntroGuide(IntroGuide);
-            }   
-            */
             UserModel = new UserModel(ServerWorker, SystemSettings);
             UpdateUserPage();
         }
@@ -105,25 +93,6 @@ namespace RWGame.ViewModels
             set{ UserModel.IsGameStarted = value; }
         }
 
-        public TourGuide TourGuide { get; set; }
-        /*
-        public List<GuideStep> IntroGuide 
-        { 
-            get 
-            {
-                var introGuide = new List<GuideStep>
-                {
-                new GuideStep(null, "Welcome to Random Walk!\nTap to see game guide"),
-                new GuideStep(stackLayoutHelp, "Check out our guide!"),
-                new GuideStep(stackLayoutPlayWithBot, "Play with a bot!"),
-                new GuideStep(stackLayoutPlayWithAnotherPlayer, "Play with a friend!"),
-                new GuideStep(gridPlayerScore, "Check out your rating!"),
-                new GuideStep(null, "Try to play with a bot now =)")
-                };
-                return introGuide;
-            }
-        }
-        */
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         public async void UpdateUserPage()
         {
@@ -200,27 +169,18 @@ namespace RWGame.ViewModels
         {
             if (IsGameStarted) return;
             IsGameStarted = true;
-            UserModel.LoadRealPlayerChoicePage();
+            UserModel.CreateRealPlayerChoicePage();
             await Navigation.PushAsync(UserModel.ChoiceRealPlayerPage);
         }
 
-        /*public void StartGuide()
-        {
-            List<GuideStep> introGuideShorten = new List<GuideStep>
-            {
-                new GuideStep(null, "Welcome to Random Walk!\nTap to see game guide"),
-                new GuideStep(stackLayoutPlayWithBot, "Play with a bot!"),
-                new GuideStep(stackLayoutPlayWithAnotherPlayer, "Play with a friend!"),
-                new GuideStep(gridPlayerScore, "Check out your rating!"),
-                new GuideStep(null, "Enjoy the game =)")
-            };
-
-            TourGuide.StartIntroGuide(introGuideShorten);
-        }
-        */
         public void OnUserPageAppearing()
         {
             IsGameStarted = false;
+        }
+        public async void GridPlayerScoreTapped()
+        {
+            UserModel.CreateStandingsPage();
+            await Navigation.PushAsync(UserModel.StandingsPage);
         }
     }
     public class UserViewModel : INotifyPropertyChanged
@@ -233,13 +193,14 @@ namespace RWGame.ViewModels
             RefreshGamesListCommand = new Command(UserDisplayData.UpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);
-            //HelpCommand = new Command(UserDisplayData.StartGuide);
             OnUserPageAppearingCommand = new Command(UserDisplayData.OnUserPageAppearing);
+            GridPlayerScoreTappedCommand = new Command(UserDisplayData.GridPlayerScoreTapped);
         }
         public Command RefreshGamesListCommand { get; set; }
         public Command PlayWithBotCommand { get; set; }
         public Command PlayWithAnotherPlayerCommand { get; set; }
         public Command HelpCommand { get; set; }
         public Command OnUserPageAppearingCommand { get; set; }
+        public Command GridPlayerScoreTappedCommand { get; set; }
     }
 }
