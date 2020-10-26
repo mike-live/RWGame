@@ -127,10 +127,8 @@ namespace RWGame.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public StandingsDisplayData standingsDisplayData { get; set; }
-        private readonly ServerWorker serverWorker;
         public StandingsPageViewModel(ServerWorker serverWorker)
         {
-            this.serverWorker = serverWorker;
             standingsDisplayData = new StandingsDisplayData(serverWorker);
             RefreshListCommand = new Command(standingsDisplayData.RefreshList);
         }
