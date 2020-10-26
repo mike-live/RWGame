@@ -214,46 +214,8 @@
                                FontAttributes="Bold"
                                Text="{Binding UserDisplayData.PlayWithBotLabelText}" />
                     </StackLayout>
-                    <!--
-                    <StackLayout x:Name="stackLayoutHelp"
-                                 HorizontalOptions="CenterAndExpand"
-                                 Spacing="0">
-                        <ImageButton x:Name="helpButton"
-                                     VerticalOptions="Center"
-                                     HorizontalOptions="Center"
-                                     BackgroundColor="White"
-                                     Source="{Binding UserDisplayData.HelpButtonImage}"
-                                     HeightRequest="30"
-                                     WidthRequest="60"
-                                     Padding="0"
-                                     Command="{Binding HelpCommand}"/>
-                        <Label x:Name="helpLabel"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center"
-                               TextColor="#39bafa"
-                               FontSize="Small"
-                               FontAttributes="Bold"
-                               Text="{Binding UserDisplayData.HelpLabelText}"/>
-                    </StackLayout>
-                    -->
                 </StackLayout>
             </StackLayout>
-            <!--
-            <skia:SKCanvasView x:Name="canvasView"
-                               VerticalOptions="Fill"
-                               HorizontalOptions="Fill"
-                               Margin="0,0,0,0"
-                               IsEnabled="{Binding IsCanvasViewEnabled}"
-                               IsVisible="{Binding IsCanvasViewVisible}"
-                               HeightRequest="{Binding CanvasViewHeightRequest}"
-                               WidthRequest="{Binding CanvasViewWidthRequest}"
-                               RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
-                               RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
-                               RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
-                               RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
-                
-            </skia:SKCanvasView>
-            -->
         </RelativeLayout>
         
     </ContentPage.Content>
