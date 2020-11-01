@@ -12,24 +12,24 @@ namespace RWGame.ViewModels
 {
     public class StandingViewCellElement
     {
-        public StandingViewCellElement(PlayerStanding playerStanding, int playerRank, bool isMe)
+        public StandingViewCellElement(PlayerStanding PlayerStanding, int PlayerRank, bool IsMe)
         {
-            this.PlayerStanding = playerStanding;
-            this.playerRank = playerRank;
-            this.isMe = isMe;
+            this.PlayerStanding = PlayerStanding;
+            this.playerRank = PlayerRank;
+            this.IsMe = IsMe;
         }
 
         #region StandingViewCellElementProperties
         public PlayerStanding PlayerStanding { get; }
-        public int playerRank { get; set; }
-        public bool isMe { get; set; }
+        public int playerRank;
+        public bool IsMe { get; set; }
         public string PlayerRank
         {
             get
             {
                 if (playerRank <= 3)
                 {
-                    return getEmojiStringForRank();
+                    return GetEmojiStringForRank();
                 }
                 return "#" + playerRank;
             }
@@ -44,18 +44,17 @@ namespace RWGame.ViewModels
             {
                 if (playerRank % 2 == 0)
                 {
-                    return (isMe ? Color.FromHex("#95f7f9a0") : Color.FromHex("#1039bafa"));
+                    return (IsMe ? Color.FromHex("#95f7f9a0") : Color.FromHex("#1039bafa"));
                 }
                 else
                 {
-                    return (isMe ? Color.FromHex("#95f7f9a0") : Color.Transparent);
+                    return (IsMe ? Color.FromHex("#95f7f9a0") : Color.Transparent);
                 }
             }
         }
         #endregion
         #region Emoji
-        public string Emoji { get { return getEmojiStringForRank(); } }
-        private string getEmojiStringForRank()
+        private string GetEmojiStringForRank()
         {
             Emojis emoji = (playerRank < 4) ? (Emojis)playerRank : 0;
             return emoji.ToDescriptionString();
@@ -64,40 +63,41 @@ namespace RWGame.ViewModels
     }
     class StandingsDisplayData : INotifyPropertyChanged
     {
-        private StandingsModel standingsModel { get; set; }
+        private StandingsModel StandingsModel { get; set; }
         public StandingsDisplayData(ServerWorker serverWorker)
         {
-            standingsModel = new StandingsModel(serverWorker);
+            StandingsModel = new StandingsModel(serverWorker);
             RefreshList();
         }
 
         #region DataProperties
-        public Standings standings
+        public Standings Standings
         {
-            get { return standingsModel.standings; }
+            get { return StandingsModel.Standings; }
         }
-        private string UserLogin { get { return standingsModel.UserLogin; } }
+        private string UserLogin { get { return StandingsModel.UserLogin; } }
 
-        public ObservableCollection<StandingViewCellElement> standingsListViewRecords { get; } = 
+        public ObservableCollection<StandingViewCellElement> StandingsListViewRecords { get; } =
             new ObservableCollection<StandingViewCellElement>();
         public bool ListViewIsRefreshing { get; set; }
         public StandingViewCellElement ManVsBot { get; set; }
-        public string manPerformanceCenterLabelText {
-            get 
+        public string ManPerformanceCenterLabelText
+        {
+            get
             {
                 return ManVsBot?.PerformanceCenter ?? "";
             }
         }
-        public string manPerformanceBorderLabelText 
-        { 
-            get 
+        public string ManPerformanceBorderLabelText
+        {
+            get
             {
                 return ManVsBot?.PerformanceBorder ?? "";
             }
         }
-        public string manRatingLabelText 
-        { 
-            get 
+        public string ManRatingLabelText
+        {
+            get
             {
                 return ManVsBot?.Rating ?? "";
             }
@@ -111,14 +111,14 @@ namespace RWGame.ViewModels
         }
         public async Task UpdateStandings()
         {
-            await standingsModel.UpdateModelStandings();
-            standingsListViewRecords.Clear();
-            for (int i = 0; i < standings.StandingsVsBot.Count; i++)
+            await StandingsModel.UpdateModelStandings();
+            StandingsListViewRecords.Clear();
+            for (int i = 0; i < Standings.StandingsVsBot.Count; i++)
             {
-                bool isMe = standings.StandingsVsBot[i].UserName == UserLogin;
-                standingsListViewRecords.Add(new StandingViewCellElement(standings.StandingsVsBot[i], i + 1, isMe));
+                bool isMe = Standings.StandingsVsBot[i].UserName == UserLogin;
+                StandingsListViewRecords.Add(new StandingViewCellElement(Standings.StandingsVsBot[i], i + 1, isMe));
             }
-            ManVsBot = new StandingViewCellElement(standings.ManVsBot, -1, false);
+            ManVsBot = new StandingViewCellElement(Standings.ManVsBot, -1, false);
         }
         #endregion
         public event PropertyChangedEventHandler PropertyChanged;
@@ -126,11 +126,11 @@ namespace RWGame.ViewModels
     class StandingsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public StandingsDisplayData standingsDisplayData { get; set; }
+        public StandingsDisplayData StandingsDisplayData { get; set; }
         public StandingsPageViewModel(ServerWorker serverWorker)
         {
-            standingsDisplayData = new StandingsDisplayData(serverWorker);
-            RefreshListCommand = new Command(standingsDisplayData.RefreshList);
+            StandingsDisplayData = new StandingsDisplayData(serverWorker);
+            RefreshListCommand = new Command(StandingsDisplayData.RefreshList);
         }
         public Command RefreshListCommand { get; set; }
 

@@ -8,7 +8,7 @@ namespace RWGame.Models
     class StandingsModel : INotifyPropertyChanged
     {
         private ServerWorker serverWorker;
-        public Standings standings { get; set; }
+        public Standings Standings { get; set; }
         public string UserLogin { get { return serverWorker.UserLogin; } }
         public StandingsModel(ServerWorker serverWorker)
         {
@@ -17,7 +17,7 @@ namespace RWGame.Models
         }
         public async Task UpdateModelStandings()
         {
-            standings = await serverWorker.TaskGetStandings();
+            Standings = await serverWorker.TaskGetStandings();
         }
         public event PropertyChangedEventHandler PropertyChanged;
     }
