@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace RWGame.Models
 {
     public class RealPlayerChoiceModel : INotifyPropertyChanged
     {
-        ServerWorker serverWorker;
-        SystemSettings systemSettings;
+        private readonly ServerWorker serverWorker;
+        private readonly SystemSettings systemSettings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -27,27 +28,27 @@ namespace RWGame.Models
         public bool CancelGame { get; set; } = false;
         public string Login { get; set; }
 
-        public async void UpdatePlayerList()
+        public async Task TaskUpdatePlayerList()
         {
             PlayerList = await serverWorker.TaskGetPlayerList(Login);
         }
-        public async void GetGame(int SelectedPlayerId)
+        public async Task CreateGame(int SelectedPlayerId)
         {
             Game = await GameProcesses.MakeGameWithPlayer(serverWorker, SelectedPlayerId);
         }
-        public async void GetCancelGame()
+        public async Task GetCancelGame()
         {
             CancelGame = await GameProcesses.StartGame(serverWorker, Game);
         }
-        public async void GetGameStateInfo()
+        public async Task GetGameStateInfo()
         {
             GameStateInfo = await serverWorker.TaskGetGameState(Game.IdGame);
         }
-        public void GetGameField()
+        public void CreateGameField()
         {
             GameField = new GameField(serverWorker, systemSettings, Game, GameStateInfo);
         }
-        public async void CallCancelGame()
+        public async Task CallCancelGame()
         {
             await serverWorker.TaskCancelGame(Game.IdGame);
         }

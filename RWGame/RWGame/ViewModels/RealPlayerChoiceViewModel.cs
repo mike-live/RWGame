@@ -4,10 +4,6 @@ using RWGame.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Xamarin.Forms;
-using RWGame.Views;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace RWGame.ViewModels
 {
@@ -24,6 +20,7 @@ namespace RWGame.ViewModels
     }
     public class RealPlayerChoiceDisplayData : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public RealPlayerChoiceDisplayData(ServerWorker serverWorker, SystemSettings systemSettings, INavigation navigation)
         {
             RealPlayerChoiceModel = new RealPlayerChoiceModel(serverWorker, systemSettings);
@@ -35,30 +32,21 @@ namespace RWGame.ViewModels
         public string PromptLabelText { get { return "1. Choose your friend and ask them to open the app\n2. Enter their login and tap play"; } }
         public string EntryLoginPlaceholder { get { return "Enter player login"; } }
         public string PlayButtonText { get { return "Play!"; } }
-        public Game Game { get; set; }
-        public GameStateInfo GameStateInfo { get; set; }
-        public bool CancelGame { get; set; }
+
         private int SelectedPlayerId { get; set; } = -1;
         public List<ElementsOfViewCell> SearchResults { get; set; } = new List<ElementsOfViewCell>();
-        public bool IsPlayerListVisible { get; set; } = false;
+        public bool IsPlayerListVisible { get; set; } = true;
         public string Login { get; set; }
-        public bool HasLoginSelected { get; set; } = false;
-        public bool IsGameStarted
+        private bool IsGameStarted
         {
             get { return RealPlayerChoiceModel.IsGameStarted; }
             set { RealPlayerChoiceModel.IsGameStarted = value; }
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public List<ElementsOfViewCell> GetSearchResults(string queryString)
+        
+        private List<ElementsOfViewCell> GetSearchResults()
         {
-            var normalizedQuery = queryString?.ToLower() ?? "";
-            RealPlayerChoiceModel.UpdatePlayerList();
-            if (RealPlayerChoiceModel.PlayerList == null) return new List<ElementsOfViewCell> { new ElementsOfViewCell("null haha", 0) };
-            List<Player> playerSearchResults = RealPlayerChoiceModel.PlayerList.Where(f => f.Login.ToLowerInvariant().Contains(normalizedQuery)).ToList();
             List<ElementsOfViewCell> searchResults = new List<ElementsOfViewCell>();
-            foreach (var player in playerSearchResults)
+            foreach (var player in RealPlayerChoiceModel.PlayerList)
             {
                 searchResults.Add(new ElementsOfViewCell(player.Login, player.IdPlayer));
             }
@@ -71,12 +59,52 @@ namespace RWGame.ViewModels
                 IsGameStarted = false;
             }
         }
-
-        public void PerformSearch()
+        public async void PerformSearch()
         {
-            SearchResults = GetSearchResults(Login);
+            RealPlayerChoiceModel.Login = Login;
+            await RealPlayerChoiceModel.TaskUpdatePlayerList();
+            SearchResults = GetSearchResults();
         }
+        public void OnItemSelected(ElementsOfViewCell selectedItem)
+        {
+            Login = selectedItem.Login;
+            IsPlayerListVisible = false;
+        }
+        public async void PlayButtonClicked()
+        {
+            if (Login != null)
+            {
+                SelectedPlayerId = -1;
+                foreach (var player in RealPlayerChoiceModel.PlayerList)
+                {
+                    if (player.Login == Login)
+                    {
+                        SelectedPlayerId = player.IdPlayer;
+                    }
+                }
+            }
 
+            if (Login == "" || Login is null || SelectedPlayerId != -1)
+            {
+                await RealPlayerChoiceModel.CreateGame(SelectedPlayerId);
+                await RealPlayerChoiceModel.GetCancelGame();
+                if (!RealPlayerChoiceModel.CancelGame)
+                {
+                    await RealPlayerChoiceModel.GetGameStateInfo();
+                    RealPlayerChoiceModel.CreateGameField();
+                    await Navigation.PushAsync(RealPlayerChoiceModel.GameField);
+                    IsGameStarted = true;
+                }
+                else
+                {
+                    await RealPlayerChoiceModel.CallCancelGame();
+                }
+            }
+            else
+            {
+                await App.Current.MainPage.DisplayAlert("Error", "Enter player doesn't exist", "OK");
+            }
+        }
     }
     public class RealPlayerChoiceViewModel : INotifyPropertyChanged
     {
@@ -84,7 +112,7 @@ namespace RWGame.ViewModels
         public RealPlayerChoiceViewModel(ServerWorker serverWorker, SystemSettings systemSettings, INavigation navigation)
         {
             RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(serverWorker, systemSettings, navigation);
-            //PlayButtonClickedCommand = new Command(RealPlayerChoiceDisplayData.PlayButtonClicked);
+            PlayButtonClickedCommand = new Command(RealPlayerChoiceDisplayData.PlayButtonClicked);
             OnRealPlayerChoicePageAppearingCommand = new Command(RealPlayerChoiceDisplayData.OnRealPlayerChoicePageAppearing);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);
         }

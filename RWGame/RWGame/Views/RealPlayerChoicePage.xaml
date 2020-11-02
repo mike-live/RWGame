@@ -29,15 +29,19 @@
             <StackLayout x:Name="stackLayoutPlay"
                          Orientation="Horizontal">
                 <SearchBar x:Name="searchBar"
-                           Placeholder="Player login"
-                           PlaceholderColor="#9039bafa"
+                           Placeholder="Enter player login"
+                           PlaceholderColor="LightGray"
                            TextColor="#39bafa"
                            HorizontalTextAlignment="Center"
                            FontSize="Medium"
                            FontAttributes="Bold"
                            Text="{Binding RealPlayerChoiceDisplayData.Login}"
                            SearchCommand="{Binding PerformSearchCommand}"
-                           TextChanged="OnTextChanged"/>
+                           TextChanged="OnTextChanged"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           MinimumWidthRequest="60"
+                           Margin="0,5"/>
                 <Button x:Name="playButton"
                         Text="{Binding RealPlayerChoiceDisplayData.PlayButtonText}"
                         TextColor="#39bafa"
@@ -45,10 +49,12 @@
                         BackgroundColor="Transparent"
                         HeightRequest="40"
                         VerticalOptions="Center"
-                        Command="{Binding PlayButtonClickedCommand}"/>
+                        Clicked="OnButtonClicked"/>
             </StackLayout>
             <ListView x:Name="searchResults"
-                      ItemsSource="{Binding RealPlayerChoiceDisplayData.SearchResults}">
+                      ItemsSource="{Binding RealPlayerChoiceDisplayData.SearchResults}"
+                      ItemSelected="OnSelection"
+                      IsVisible="{Binding RealPlayerChoiceDisplayData.IsPlayerListVisible}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -58,7 +64,6 @@
                                     <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Label x:Name="login"

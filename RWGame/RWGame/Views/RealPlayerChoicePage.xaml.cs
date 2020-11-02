@@ -9,7 +9,7 @@ namespace RWGame.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RealPlayerChoicePage : ContentPage
     {
-        RealPlayerChoiceViewModel ViewModel;
+        private RealPlayerChoiceViewModel ViewModel;
         public RealPlayerChoicePage(ServerWorker serverWorker, SystemSettings systemSettings)
         {
             InitializeComponent();
@@ -18,21 +18,23 @@ namespace RWGame.Views
 
             NavigationPage.SetHasNavigationBar(this, false);
         }
-        void OnSelection(object sender, SelectedItemChangedEventArgs e)
+        private void OnSelection(object sender, SelectedItemChangedEventArgs e)
         {
             if (e.SelectedItem == null)
             {
                 return;
             }
-            string item = (string)e.SelectedItem;
+            ElementsOfViewCell item = (ElementsOfViewCell)e.SelectedItem;
+            ViewModel.RealPlayerChoiceDisplayData.OnItemSelected(item);
         }
-        public void RemovePage()
-        {
-            Navigation.RemovePage(this);
-        }
-        public void OnTextChanged(object sender, EventArgs e)
+        private void OnTextChanged(object sender, EventArgs e)
         {
             ViewModel.PerformSearchCommand.Execute(sender);
+        }
+        private void OnButtonClicked(object sender, EventArgs e)
+        {
+            ViewModel.PlayButtonClickedCommand.Execute(sender);
+            Navigation.RemovePage(this);
         }
     }
 }
