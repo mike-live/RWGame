@@ -86,7 +86,7 @@ namespace RWGame.ViewModels
         }
 
         #region ViewProperties
-        public string Title { get { return "Sarted Games"; } }
+        public string Title { get { return "Started Games"; } }
 
         public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
 
