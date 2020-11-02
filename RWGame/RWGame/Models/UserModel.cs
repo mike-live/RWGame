@@ -11,38 +11,37 @@ namespace RWGame.Models
     public class UserModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private ServerWorker serverWorker;
-        private SystemSettings systemSettings;
+        private readonly ServerWorker serverWorker;
+        private readonly SystemSettings systemSettings;
         public UserModel(ServerWorker serverWorker, SystemSettings systemSettings)
         {
             this.serverWorker = serverWorker;
             this.systemSettings = systemSettings;
-            UpdateModel();
             IsGameStarted = false;
         }
         public GameField GameField { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
-        public RealPlayerChoicePage RealPlayerChoicePage { get; set; }
-        public StandingsPage StandingsPage { get; set; }
         public List<Game> GamesList { get; set; }
         public bool IsGameStarted { get; set; }
         public bool CancelGame { get; set; }
-        public string UserName { get; set; }
-        public double PerformanceCenter { get; set; }
-        public double PerformanceBorder {get; set; }
-        public double Rating { get; set; }
-        public async void UpdateModel()
-        {
-            await TaskUpdateModel();
-        }
-        public async Task TaskUpdateModel()
-        {
-            PlayerInfo = await serverWorker.TaskGetPlayerInfo();
-            GamesList = await serverWorker.TaskGetGamesList();
+        public string UserName { get; set; } = "";
+        public double PerformanceCenter { get; set; } = 0;
+        public double PerformanceBorder { get; set; } = 0;
+        public double Rating { get; set; } = 0;
+        public void UpdateStats()
+        { 
             UserName = PlayerInfo?.PersonalInfo.Name ?? "";
             PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot.Value ?? 0);
             Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot.Value ?? 0);
             PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot.Value ?? 0);
+        }
+        public async Task TaskUpdatePersonalInfo()
+        {
+            PlayerInfo = await serverWorker.TaskGetPlayerInfo();
+        }
+        public async Task TaskUpdateGameList()
+        {
+            GamesList = await serverWorker.TaskGetGamesList();
         }
         public async Task GetSelectedGameData(int GameId)
         {
@@ -59,14 +58,6 @@ namespace RWGame.Models
             Game game = await GameProcesses.MakeGameWithBot(serverWorker);
             GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
             GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);
-        }
-        public void CreateRealPlayerChoicePage()
-        {
-            RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
-        }
-        public void CreateStandingsPage()
-        {
-            StandingsPage = new StandingsPage(serverWorker, systemSettings);
         }
     }
 }

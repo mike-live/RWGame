@@ -24,7 +24,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)GameField.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)GameHistoryPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameHistoryModel.cs" />
@@ -34,13 +33,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)RegistrationPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml.cs">
-      <DependentUpon>TabbedUserPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)TourGuide.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RegistrationPageViewModel.cs" />
@@ -59,16 +52,13 @@
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\TabbedUserPage.xaml.cs">
+      <DependentUpon>TabbedUserPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)GameField.xaml">
@@ -107,6 +97,12 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TabbedUserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>

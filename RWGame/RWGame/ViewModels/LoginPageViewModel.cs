@@ -110,7 +110,7 @@ namespace RWGame.ViewModels
             if (loginResponse != null && loginResponse.IsAuthenticationSuccessful)
             {
                 serverWorker.UserLogin = loginResponse.Login;
-                await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+                await Navigation.PushAsync(new Views.TabbedUserPage(serverWorker, systemSettings));
             }
             IsAuthentication = false;
         }
@@ -146,7 +146,7 @@ namespace RWGame.ViewModels
                     if (loginResponse.IsAuthenticationSuccessful)
                     {
                         serverWorker.UserLogin = loginResponse.Login;
-                        await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+                        await Navigation.PushAsync(new Views.TabbedUserPage(serverWorker, systemSettings));
                     }
                     else
                     {
@@ -178,7 +178,7 @@ namespace RWGame.ViewModels
                     if (loginResponse.IsAuthenticationSuccessful)
                     {
                         serverWorker.UserLogin = loginResponse.Login;
-                        await Navigation.PushAsync(new TabbedUserPage(serverWorker, systemSettings));
+                        await Navigation.PushAsync(new Views.TabbedUserPage(serverWorker, systemSettings));
                     }
                     else
                     {

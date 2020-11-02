@@ -6,6 +6,8 @@ using Xamarin.Forms;
 using RWGame.Classes;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System;
+using System.Threading;
 
 namespace RWGame.ViewModels
 {
@@ -20,15 +22,14 @@ namespace RWGame.ViewModels
         private GameHistoryModel GameHistoryModel { get; set; }
         public INavigation Navigation { get; set; }
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
-        public List<Game> GamesList { get; set; }
         #endregion
 
         #region ViewProperties
         public string Title { get { return "Games History"; } }
         public string GameListViewEmptyMessageText { get { return "Here we place your finished games.\nThanks for playing =)"; } }
-        
-        public bool IsCustomListViewVisible { get; set; }
-        public bool IsGameListViewEmptyMessageVisible { get; set; }
+
+        public bool IsCustomListViewVisible { get; set; } = false;
+        public bool IsGameListViewEmptyMessageVisible { get; set; } = true;
         public bool IsCustomListViewRefreshing { get; set; }
         #endregion
 
@@ -43,15 +44,14 @@ namespace RWGame.ViewModels
         public async Task TaskUpdateGameList()
         {
             await GameHistoryModel.UpdateGameList();
-            GamesList = GameHistoryModel.GamesList;
             CustomListViewRecords.Clear();
-            if (GamesList != null && GamesList.Count > 0)
+            if (GameHistoryModel.GamesList != null && GameHistoryModel.GamesList.Count > 0)
             {
-                for (int i = 0; i < GamesList.Count; i++)
+                for (int i = 0; i < GameHistoryModel.GamesList.Count; i++)
                 {
-                    if (GamesList[i].GameState == GameStateEnum.END)
+                    if (GameHistoryModel.GamesList[i].GameState == GameStateEnum.END)
                     {
-                        CustomListViewRecords.Add(new ElementsOfViewCell(GamesList[i]));
+                        CustomListViewRecords.Add(new ElementsOfViewCell(GameHistoryModel.GamesList[i]));
                     }
                 }
             }
@@ -69,7 +69,7 @@ namespace RWGame.ViewModels
         #endregion
         public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
         {
-            await GameHistoryModel.GetSelectedGameData(selectedItem.game.IdGame);
+            await GameHistoryModel.GetSelectedGameData(selectedItem.IdGame);
             await Navigation.PushAsync(GameHistoryModel.GameField);
             GameHistoryModel.IsGameStarted = false;
             UpdateGameList();
@@ -78,7 +78,7 @@ namespace RWGame.ViewModels
         #region ActionTriggeredMethods
         public void OnGameHistoryPageAppearing()
         {
-            _ = TaskUpdateGameList();
+            _ = TaskUpdateGameList();            
         }
         #endregion
     }

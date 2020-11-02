@@ -8,55 +8,72 @@ using Xamarin.Forms;
 using System.Linq;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using RWGame.GameChoicePages;
 
 namespace RWGame.ViewModels
 {
     public class ElementsOfViewCell
     {
-        public Game game { get; set; }
-        public string GameId { get { return "#" + game.IdGame.ToString(); } }
-        public string Date { get { return game.Start.ToString(); } }
-        public string PlayerName1 { get { return game.PlayerUserName1; } }
-        public string PlayerName2 { get { return game.PlayerUserName2; } }
+        private Game Game { get; set; }
+        public int IdGame { get { return Game.IdGame; } }
+        public string GameId { get { return "#" + IdGame.ToString(); } }
+        public string Date { get { return Game.Start.ToString(); } }
+        public string PlayerName1 { get { return Game.PlayerUserName1; } }
+        public string PlayerName2 { get { return Game.PlayerUserName2; } }
         public string GameStateImage
         {
             get
             {
-                if (new[] { GameStateEnum.NEW, GameStateEnum.CONNECT, GameStateEnum.START }.Contains(game.GameState))
+                if (new[] 
+                { 
+                    GameStateEnum.NEW, 
+                    GameStateEnum.CONNECT, 
+                    GameStateEnum.START 
+                }.Contains(Game.GameState))
                 {
                     return "state_star_gray.png";
                 }
                 else
                 {
-                    return "state_star_" + game.GameSettings.Goals[game.IdPlayer] + ".png";
+                    return "state_star_" + Game.GameSettings.Goals[Game.IdPlayer] + ".png";
                 }
             }
         }
-        public string Score { get { return Convert.ToString(game.Score); } }
-        public ElementsOfViewCell(Game _game)
+        public string Score { get { return Convert.ToString(Game.Score); } }
+        public ElementsOfViewCell(Game Game)
         {
-            game = _game;
+            this.Game = Game;
         }
     }
     public class UserDisplayData : INotifyPropertyChanged
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
-        public UserDisplayData(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
+        ServerWorker serverWorker;
+        SystemSettings systemSettings;
+        public UserDisplayData(ServerWorker serverWorker, SystemSettings systemSettings, INavigation Navigation)
         {
+            this.serverWorker = serverWorker;
+            this.systemSettings = systemSettings;
             this.Navigation = Navigation;
-            UserModel = new UserModel(ServerWorker, SystemSettings);
-            UpdatePersonalInfo();
-            UpdateGameList();
+            UserModel = new UserModel(serverWorker, systemSettings);
         }
 
         #region MainProperties
+        public RealPlayerChoicePage RealPlayerChoicePage { get; set; }
+        public StandingsPage StandingsPage { get; set; }
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
-        public List<Game> GamesList { get; set; }
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         #endregion
-
+        public void CreateRealPlayerChoicePage()
+        {
+            RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
+        }
+        public void CreateStandingsPage()
+        {
+            StandingsPage = new StandingsPage(serverWorker, systemSettings);
+        }
         public bool CancelGame
         {
             get { return UserModel.CancelGame; }
@@ -73,8 +90,8 @@ namespace RWGame.ViewModels
 
         public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
 
-        public bool IsGameListViewVisible { get; set; }
-        public bool IsListViewEmptyMessageVisible { get; set; }
+        public bool IsGameListViewVisible { get; set; } = false;
+        public bool IsListViewEmptyMessageVisible { get; set; } = true;
         public bool CustomListViewRecordsIsRefreshing { get; set; }
 
         public string PlayWithAnotherPlayerButtonImage { get { return "pvp.png"; } }
@@ -102,21 +119,21 @@ namespace RWGame.ViewModels
             IsGameStarted = true;
             await UserModel.CreateGameWithBot();
             await Navigation.PushAsync(UserModel.GameField);
-            UpdateGameList();
         }
         public async void PlayWithAnotherPlayer()
         {
             if (IsGameStarted) return;
             IsGameStarted = true;
-            UserModel.CreateRealPlayerChoicePage();
-            await Navigation.PushAsync(UserModel.RealPlayerChoicePage);
+            CreateRealPlayerChoicePage();
+            await Navigation.PushAsync(RealPlayerChoicePage);
         }
         #endregion
         
         #region UpdateMethods
         public async void UpdatePersonalInfo()
         {
-            await UserModel.TaskUpdateModel();
+            await UserModel.TaskUpdatePersonalInfo();
+            UserModel.UpdateStats();
             UserNameText = "Hi, " + UserModel.UserName;
             PerformanceCenterLabelText = UserModel.PerformanceCenter.ToString();
             PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString();
@@ -124,14 +141,14 @@ namespace RWGame.ViewModels
         }
         public async void UpdateGameList()
         {
-            await UserModel.TaskUpdateModel();
-            GamesList = UserModel.GamesList;
+            await UserModel.TaskUpdateGameList();       
             CustomListViewRecords.Clear();
-            for (int i = 0; i < GamesList.Count; i++)
+            if (UserModel.GamesList == null) return;
+            for (int i = 0; i < UserModel.GamesList.Count; i++)
             {
-                if (GamesList[i].GameState != GameStateEnum.END)
+                if (UserModel.GamesList[i].GameState != GameStateEnum.END)
                 {
-                    CustomListViewRecords.Add(new ElementsOfViewCell(GamesList[i]));
+                    CustomListViewRecords.Add(new ElementsOfViewCell(UserModel.GamesList[i]));
                 }
             }
             if (CustomListViewRecords.Count == 0)
@@ -153,7 +170,7 @@ namespace RWGame.ViewModels
             {
                 return;
             }
-            await UserModel.GetSelectedGameData(selectedItem.game.IdGame);
+            await UserModel.GetSelectedGameData(selectedItem.IdGame);
             if (!CancelGame)
             {
                 await Navigation.PushAsync(UserModel.GameField);
@@ -170,13 +187,14 @@ namespace RWGame.ViewModels
         }
         public void OnUserPageAppearing()
         {
+            UpdatePersonalInfo();
             UpdateGameList();
             IsGameStarted = false;
         }
         public async void GridPlayerScoreTapped()
         {
-            UserModel.CreateStandingsPage();
-            await Navigation.PushAsync(UserModel.StandingsPage);
+            CreateStandingsPage();
+            await Navigation.PushAsync(StandingsPage);
         }
         #endregion
     }
