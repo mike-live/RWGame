@@ -7,7 +7,7 @@ namespace RWGame.Models
 {
     class StandingsModel : INotifyPropertyChanged
     {
-        private ServerWorker serverWorker;
+        private readonly ServerWorker serverWorker;
         public Standings Standings { get; set; }
         public string UserLogin { get { return serverWorker.UserLogin; } }
         public StandingsModel(ServerWorker serverWorker)
