@@ -9,11 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RWGame.iOS", "RWGame\RWGame
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "RWGame", "RWGame\RWGame\RWGame.shproj", "{368977C0-0D7D-40B4-891E-657FFD14FB08}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3CDBD2E1-7A08-459D-8CCE-C03AF075E52B}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		RWGame\RWGame\RWGame.projitems*{368977c0-0d7d-40b4-891e-657ffd14fb08}*SharedItemsImports = 13
