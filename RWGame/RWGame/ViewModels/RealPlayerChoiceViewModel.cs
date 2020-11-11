@@ -1,4 +1,5 @@
-﻿using RWGame.Classes;
+﻿using Java.Lang;
+using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.Models;
 using System.Collections.Generic;
@@ -35,6 +36,7 @@ namespace RWGame.ViewModels
 
         private int SelectedPlayerId { get; set; } = -1;
         public List<ElementsOfViewCell> SearchResults { get; set; } = new List<ElementsOfViewCell>();
+        List<ElementsOfViewCell> emptyList = new List<ElementsOfViewCell> { new ElementsOfViewCell("", 0) };
         public bool IsPlayerListVisible { get; set; } = true;
         public string Login { get; set; }
         private bool IsGameStarted
@@ -46,6 +48,7 @@ namespace RWGame.ViewModels
         private List<ElementsOfViewCell> GetSearchResults()
         {
             List<ElementsOfViewCell> searchResults = new List<ElementsOfViewCell>();
+            if (RealPlayerChoiceModel.PlayerList == null) return emptyList;
             foreach (var player in RealPlayerChoiceModel.PlayerList)
             {
                 searchResults.Add(new ElementsOfViewCell(player.Login, player.IdPlayer));
@@ -63,7 +66,15 @@ namespace RWGame.ViewModels
         {
             RealPlayerChoiceModel.Login = Login;
             await RealPlayerChoiceModel.TaskUpdatePlayerList();
-            SearchResults = GetSearchResults();
+            List<ElementsOfViewCell> results = GetSearchResults();           
+            if (results != null)
+            {
+                SearchResults = results;
+            }
+            else
+            {
+                SearchResults = emptyList;
+            }
         }
         public void OnItemSelected(ElementsOfViewCell selectedItem)
         {
@@ -75,6 +86,11 @@ namespace RWGame.ViewModels
             if (Login != null)
             {
                 SelectedPlayerId = -1;
+                if (RealPlayerChoiceModel.PlayerList == null)
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "Enter player doesn't exist", "OK");
+                    return;
+                }
                 foreach (var player in RealPlayerChoiceModel.PlayerList)
                 {
                     if (player.Login == Login)

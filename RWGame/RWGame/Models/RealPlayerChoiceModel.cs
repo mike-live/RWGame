@@ -30,7 +30,10 @@ namespace RWGame.Models
 
         public async Task TaskUpdatePlayerList()
         {
-            PlayerList = await serverWorker.TaskGetPlayerList(Login);
+            if (Login != "" && Login != null)
+            {
+                PlayerList = await serverWorker.TaskGetPlayerList(Login);
+            }       
         }
         public async Task CreateGame(int SelectedPlayerId)
         {
