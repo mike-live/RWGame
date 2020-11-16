@@ -47,11 +47,8 @@ namespace RWGame.Models
         {
             Game game = await GameProcesses.MakeSavedGame(serverWorker, GameId);
             CancelGame = await GameProcesses.StartGame(serverWorker, game);
-            if (!CancelGame)
-            {
-                GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
-                GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);             
-            }
+            GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
+            GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);             
         }
         public async Task CreateGameWithBot()
         {           

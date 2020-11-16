@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
 using RWGame.Models;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 using System.Linq;
 using System.ComponentModel;
@@ -110,6 +108,8 @@ namespace RWGame.ViewModels
         public string PerformanceBorderLabelText { get; set; }
         public string RatingLabelText { get; set; }
         public string StatisticsInfoLabelText { get { return "Statistics"; } }
+
+        public bool CanSelectItem { get; set; } = true;
         #endregion
         
         #region ButtonMethods
@@ -166,16 +166,14 @@ namespace RWGame.ViewModels
 
         public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
         {
+            CanSelectItem = false;
             if (IsGameStarted)
             {
                 return;
             }
             await UserModel.GetSelectedGameData(selectedItem.IdGame);
-            if (!CancelGame)
-            {
-                await Navigation.PushAsync(UserModel.GameField);
-                IsGameStarted = true;
-            }
+            await Navigation.PushAsync(UserModel.GameField);
+            IsGameStarted = true;
             UpdateGameList();
         }
 
@@ -190,6 +188,7 @@ namespace RWGame.ViewModels
             UpdatePersonalInfo();
             UpdateGameList();
             IsGameStarted = false;
+            CanSelectItem = true;
         }
         public async void GridPlayerScoreTapped()
         {
