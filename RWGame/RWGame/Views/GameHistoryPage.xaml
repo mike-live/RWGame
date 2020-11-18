@@ -25,7 +25,8 @@
                       RefreshCommand="{Binding RefreshGamesListCommand}"
                       IsRefreshing="{Binding GameHistoryDisplayData.IsCustomListViewRefreshing}"
                       ItemTemplate="{StaticResource gameCellTemplate}"
-                      IsVisible="{Binding GameHistoryDisplayData.IsCustomListViewVisible}">
+                      IsVisible="{Binding GameHistoryDisplayData.IsCustomListViewVisible}"
+                      SelectionMode="{Binding UserDisplayData.SelectionMode}">
             </ListView>
             <Label x:Name="gameListViewEmptyMessage"
                    VerticalOptions="CenterAndExpand"

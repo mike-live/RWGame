@@ -161,7 +161,7 @@
                    IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
                    IsRefreshing="{Binding UserDisplayData.CustomListViewRecordsIsRefreshing}"
                    RefreshCommand="{Binding RefreshGamesListCommand}"
-                   SelectionMode="{Binding UserDisplayData.CanSelectItem}">
+                   SelectionMode="{Binding UserDisplayData.SelectionMode}">
                     </ListView>
                 </StackLayout>
                 <StackLayout x:Name="buttonStack"

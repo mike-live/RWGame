@@ -31,6 +31,7 @@ namespace RWGame.ViewModels
         public bool IsCustomListViewVisible { get; set; } = false;
         public bool IsGameListViewEmptyMessageVisible { get; set; } = true;
         public bool IsCustomListViewRefreshing { get; set; }
+        public int SelectionMode { get; set; }
         #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -69,15 +70,21 @@ namespace RWGame.ViewModels
         #endregion
         public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
         {
-            await GameHistoryModel.GetSelectedGameData(selectedItem.IdGame);
-            await Navigation.PushAsync(GameHistoryModel.GameField);
-            GameHistoryModel.IsGameStarted = false;
-            UpdateGameList();
+            if (SelectionMode == 1)
+            {
+                SelectionMode = 0;
+                await GameHistoryModel.GetSelectedGameData(selectedItem.IdGame);
+                await Navigation.PushAsync(GameHistoryModel.GameField);
+                GameHistoryModel.IsGameStarted = false;
+                UpdateGameList();
+            }
+            
         }
 
         #region ActionTriggeredMethods
         public void OnGameHistoryPageAppearing()
         {
+            SelectionMode = 1;
             _ = TaskUpdateGameList();            
         }
         #endregion

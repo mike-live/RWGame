@@ -109,7 +109,7 @@ namespace RWGame.ViewModels
         public string RatingLabelText { get; set; }
         public string StatisticsInfoLabelText { get { return "Statistics"; } }
 
-        public bool CanSelectItem { get; set; } = true;
+        public int SelectionMode { get; set; } = 1;
         #endregion
         
         #region ButtonMethods
@@ -166,15 +166,18 @@ namespace RWGame.ViewModels
 
         public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
         {
-            CanSelectItem = false;
-            if (IsGameStarted)
+            if (SelectionMode == 1)
             {
-                return;
+                SelectionMode = 0;
+                if (IsGameStarted)
+                {
+                    return;
+                }
+                await UserModel.GetSelectedGameData(selectedItem.IdGame);
+                await Navigation.PushAsync(UserModel.GameField);
+                IsGameStarted = true;
+                UpdateGameList();
             }
-            await UserModel.GetSelectedGameData(selectedItem.IdGame);
-            await Navigation.PushAsync(UserModel.GameField);
-            IsGameStarted = true;
-            UpdateGameList();
         }
 
         #region ActionTriggeredMethods
@@ -188,7 +191,7 @@ namespace RWGame.ViewModels
             UpdatePersonalInfo();
             UpdateGameList();
             IsGameStarted = false;
-            CanSelectItem = true;
+            SelectionMode = 1;
         }
         public async void GridPlayerScoreTapped()
         {
