@@ -1,6 +1,5 @@
 ﻿using RWGame.Classes;
 using RWGame.ViewModels;
-using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

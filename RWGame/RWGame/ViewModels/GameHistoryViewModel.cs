@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using RWGame.Classes.ResponseClases;
+﻿using RWGame.Classes.ResponseClases;
 using RWGame.Models;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using RWGame.Classes;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System;
-using System.Threading;
 
 namespace RWGame.ViewModels
 {
@@ -25,8 +22,8 @@ namespace RWGame.ViewModels
         #endregion
 
         #region ViewProperties
-        public string Title { get { return "Games History"; } }
-        public string GameListViewEmptyMessageText { get { return "Here we place your finished games.\nThanks for playing =)"; } }
+        public string Title { get; } = "Games History";
+        public string GameListViewEmptyMessageText { get; } = "Here we place your finished games.\nThanks for playing =)";
 
         public bool IsCustomListViewVisible { get; set; } = false;
         public bool IsGameListViewEmptyMessageVisible { get; set; } = true;

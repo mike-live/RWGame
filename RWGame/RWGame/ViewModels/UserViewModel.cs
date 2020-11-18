@@ -14,10 +14,10 @@ namespace RWGame.ViewModels
     {
         private Game Game { get; set; }
         public int IdGame { get { return Game.IdGame; } }
-        public string GameId { get { return "#" + IdGame.ToString(); } set { } }
-        public string Date { get { return Game.Start.ToString(); } set { } }
-        public string PlayerName1 { get { return Game.PlayerUserName1; } set { } }
-        public string PlayerName2 { get { return Game.PlayerUserName2; } set { } }
+        public string GameId { get { return "#" + IdGame.ToString(); } }
+        public string Date { get { return Game.Start.ToString(); } }
+        public string PlayerName1 { get { return Game.PlayerUserName1; } }
+        public string PlayerName2 { get { return Game.PlayerUserName2; } }
         public string GameStateImage
         {
             get
@@ -37,7 +37,7 @@ namespace RWGame.ViewModels
                 }
             }
         }
-        public string Score { get { return Convert.ToString(Game.Score); } set { } }
+        public string Score { get { return Convert.ToString(Game.Score); } }
         public ElementsOfViewCell(Game Game)
         {
             this.Game = Game;
@@ -62,7 +62,7 @@ namespace RWGame.ViewModels
         public StandingsPage StandingsPage { get; set; }
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
-        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; set; } = new ObservableCollection<ElementsOfViewCell>();
+        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         #endregion
         public void CreateRealPlayerChoicePage()
         {
@@ -84,30 +84,30 @@ namespace RWGame.ViewModels
         }
 
         #region ViewProperties
-        public string Title { get { return "Started Games"; } }
+        public string Title { get; } = "Started Games";
 
-        public string GameListViewEmptyMessageText { get { return "Here we place your current games.\nTo play tap bot or friend."; } }
+        public string GameListViewEmptyMessageText { get; } = "Here we place your current games.\nTo play tap bot or friend.";
 
         public bool IsGameListViewVisible { get; set; } = false;
         public bool IsListViewEmptyMessageVisible { get; set; } = true;
         public bool CustomListViewRecordsIsRefreshing { get; set; }
 
-        public string PlayWithAnotherPlayerButtonImage { get { return "pvp.png"; } }
-        public string PlayWithAnotherPlayerLabelText { get { return "Friend"; } }
+        public string PlayWithAnotherPlayerButtonImage { get; } = "pvp.png";
+        public string PlayWithAnotherPlayerLabelText { get; } = "Friend";
 
-        public string PlayWithBotButtonImage { get { return "bot.png"; } }
-        public string PlayWithBotLabelText { get { return "Bot"; } }
+        public string PlayWithBotButtonImage { get; } = "bot.png";
+        public string PlayWithBotLabelText { get; } = "Bot";
 
 
-        public string HelpButtonImage { get { return "help.png"; } }
-        public string HelpLabelText { get { return "Help"; } }
+        public string HelpButtonImage { get; } = "help.png";
+        public string HelpLabelText { get; } = "Help";
 
         public string UserNameText { get; set; }
-        public string RatingInfoLabelText { get { return "Rating"; } }
+        public string RatingInfoLabelText { get; } = "Rating";
         public string PerformanceCenterLabelText { get; set; }
         public string PerformanceBorderLabelText { get; set; }
         public string RatingLabelText { get; set; }
-        public string StatisticsInfoLabelText { get { return "Statistics"; } }
+        public string StatisticsInfoLabelText { get; } = "Statistics";
 
         public int SelectionMode { get; set; } = 1;
         #endregion
@@ -134,10 +134,10 @@ namespace RWGame.ViewModels
         {
             await UserModel.TaskUpdatePersonalInfo();
             UserModel.UpdateStats();
-            UserNameText = "Hi, " + UserModel.UserName ?? "";
-            PerformanceCenterLabelText = UserModel.PerformanceCenter.ToString() ?? "0";
-            PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString() ?? "0";
-            RatingLabelText = UserModel.Rating.ToString() ?? "0";
+            UserNameText = "Hi, " + UserModel.UserName;
+            PerformanceCenterLabelText = UserModel.PerformanceCenter.ToString();
+            PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString();
+            RatingLabelText = UserModel.Rating.ToString();
         }
         public async void UpdateGameList()
         {
@@ -145,28 +145,24 @@ namespace RWGame.ViewModels
             CustomListViewRecords.Clear();
             if (UserModel.GamesList == null)
             {
+                return;
+            }
+            for (int i = 0; i < UserModel.GamesList.Count; i++)
+            {
+                if (UserModel.GamesList[i].GameState != GameStateEnum.END)
+                {
+                    CustomListViewRecords.Add(new ElementsOfViewCell(UserModel.GamesList[i]));
+                }
+            }
+            if (CustomListViewRecords.Count == 0)
+            {
                 IsGameListViewVisible = false;
                 IsListViewEmptyMessageVisible = true;
             }
-            else 
+            else
             {
-                for (int i = 0; i < UserModel.GamesList.Count; i++)
-                {
-                    if (UserModel.GamesList[i].GameState != GameStateEnum.END)
-                    {
-                        CustomListViewRecords.Add(new ElementsOfViewCell(UserModel.GamesList[i]));
-                    }
-                }
-                if (CustomListViewRecords.Count == 0)
-                {
-                    IsGameListViewVisible = false;
-                    IsListViewEmptyMessageVisible = true;
-                }
-                else
-                {
-                    IsGameListViewVisible = true;
-                    IsListViewEmptyMessageVisible = false;
-                }
+                IsGameListViewVisible = true;
+                IsListViewEmptyMessageVisible = false;
             }
             
         }
