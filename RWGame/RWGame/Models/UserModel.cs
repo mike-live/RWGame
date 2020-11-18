@@ -21,7 +21,7 @@ namespace RWGame.Models
         }
         public GameField GameField { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
-        public List<Game> GamesList { get; set; }
+        public List<Game> GamesList { get; set; } 
         public bool IsGameStarted { get; set; }
         public bool CancelGame { get; set; }
         public string UserName { get; set; } = "";
@@ -31,9 +31,9 @@ namespace RWGame.Models
         public void UpdateStats()
         { 
             UserName = PlayerInfo?.PersonalInfo.Name ?? "";
-            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot.Value ?? 0);
-            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot.Value ?? 0);
-            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot.Value ?? 0);
+            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot ?? 0);
+            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot ?? 0);
+            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot ?? 0);
         }
         public async Task TaskUpdatePersonalInfo()
         {

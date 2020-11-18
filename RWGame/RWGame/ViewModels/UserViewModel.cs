@@ -14,10 +14,10 @@ namespace RWGame.ViewModels
     {
         private Game Game { get; set; }
         public int IdGame { get { return Game.IdGame; } }
-        public string GameId { get { return "#" + IdGame.ToString(); } }
-        public string Date { get { return Game.Start.ToString(); } }
-        public string PlayerName1 { get { return Game.PlayerUserName1; } }
-        public string PlayerName2 { get { return Game.PlayerUserName2; } }
+        public string GameId { get { return "#" + IdGame.ToString(); } set { } }
+        public string Date { get { return Game.Start.ToString(); } set { } }
+        public string PlayerName1 { get { return Game.PlayerUserName1; } set { } }
+        public string PlayerName2 { get { return Game.PlayerUserName2; } set { } }
         public string GameStateImage
         {
             get
@@ -37,7 +37,7 @@ namespace RWGame.ViewModels
                 }
             }
         }
-        public string Score { get { return Convert.ToString(Game.Score); } }
+        public string Score { get { return Convert.ToString(Game.Score); } set { } }
         public ElementsOfViewCell(Game Game)
         {
             this.Game = Game;
@@ -62,7 +62,7 @@ namespace RWGame.ViewModels
         public StandingsPage StandingsPage { get; set; }
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
-        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
+        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; set; } = new ObservableCollection<ElementsOfViewCell>();
         #endregion
         public void CreateRealPlayerChoicePage()
         {
@@ -134,33 +134,41 @@ namespace RWGame.ViewModels
         {
             await UserModel.TaskUpdatePersonalInfo();
             UserModel.UpdateStats();
-            UserNameText = "Hi, " + UserModel.UserName;
-            PerformanceCenterLabelText = UserModel.PerformanceCenter.ToString();
-            PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString();
-            RatingLabelText = UserModel.Rating.ToString();
+            UserNameText = "Hi, " + UserModel.UserName ?? "";
+            PerformanceCenterLabelText = UserModel.PerformanceCenter.ToString() ?? "0";
+            PerformanceBorderLabelText = UserModel.PerformanceBorder.ToString() ?? "0";
+            RatingLabelText = UserModel.Rating.ToString() ?? "0";
         }
         public async void UpdateGameList()
         {
             await UserModel.TaskUpdateGameList();       
             CustomListViewRecords.Clear();
-            if (UserModel.GamesList == null) return;
-            for (int i = 0; i < UserModel.GamesList.Count; i++)
-            {
-                if (UserModel.GamesList[i].GameState != GameStateEnum.END)
-                {
-                    CustomListViewRecords.Add(new ElementsOfViewCell(UserModel.GamesList[i]));
-                }
-            }
-            if (CustomListViewRecords.Count == 0)
+            if (UserModel.GamesList == null)
             {
                 IsGameListViewVisible = false;
                 IsListViewEmptyMessageVisible = true;
             }
-            else
+            else 
             {
-                IsGameListViewVisible = true;
-                IsListViewEmptyMessageVisible = false;
+                for (int i = 0; i < UserModel.GamesList.Count; i++)
+                {
+                    if (UserModel.GamesList[i].GameState != GameStateEnum.END)
+                    {
+                        CustomListViewRecords.Add(new ElementsOfViewCell(UserModel.GamesList[i]));
+                    }
+                }
+                if (CustomListViewRecords.Count == 0)
+                {
+                    IsGameListViewVisible = false;
+                    IsListViewEmptyMessageVisible = true;
+                }
+                else
+                {
+                    IsGameListViewVisible = true;
+                    IsListViewEmptyMessageVisible = false;
+                }
             }
+            
         }
         #endregion
 
