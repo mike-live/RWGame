@@ -1,6 +1,4 @@
-﻿using Java.Lang;
-using RWGame.Classes;
-using RWGame.Classes.ResponseClases;
+﻿using RWGame.Classes;
 using RWGame.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,10 +27,10 @@ namespace RWGame.ViewModels
         }
         private INavigation Navigation { get; set; }
         private RealPlayerChoiceModel RealPlayerChoiceModel { get; set; }
-        public string HeadLabelText { get { return "Play with a friend"; } }
-        public string PromptLabelText { get { return "1. Choose your friend and ask them to open the app\n2. Enter their login and tap play"; } }
-        public string EntryLoginPlaceholder { get { return "Enter player login"; } }
-        public string PlayButtonText { get { return "Play!"; } }
+        public string HeadLabelText { get; } = "Play with a friend";
+        public string PromptLabelText { get; } = "1. Choose your friend and ask them to open the app\n2. Enter their login and tap play";
+        public string EntryLoginPlaceholder { get; } = "Enter player login";
+        public string PlayButtonText { get; } = "Play!";
 
         private int SelectedPlayerId { get; set; } = -1;
         public List<ElementsOfViewCell> SearchResults { get; set; } = new List<ElementsOfViewCell>();
