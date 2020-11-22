@@ -177,10 +177,21 @@ namespace RWGame.ViewModels
                 {
                     return;
                 }
-                await UserModel.GetSelectedGameData(selectedItem.IdGame);
-                await Navigation.PushAsync(UserModel.GameField);
-                IsGameStarted = true;
-                UpdateGameList();
+
+                try
+                {
+                    await UserModel.GetSelectedGameData(selectedItem.IdGame);
+                    await Navigation.PushAsync(UserModel.GameField);
+                }
+                catch (Exception e)
+                {
+                    await App.Current.MainPage.DisplayAlert("Error", "The game was cancelled", "OK");
+                }
+                finally 
+                {
+                    IsGameStarted = true;
+                    UpdateGameList();
+                }
             }
         }
 
