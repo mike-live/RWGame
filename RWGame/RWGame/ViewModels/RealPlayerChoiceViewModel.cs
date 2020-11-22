@@ -37,11 +37,6 @@ namespace RWGame.ViewModels
         List<ElementsOfViewCell> emptyList = new List<ElementsOfViewCell> { new ElementsOfViewCell("", 0) };
         public bool IsPlayerListVisible { get; set; } = true;
         public string Login { get; set; }
-        private bool IsGameStarted
-        {
-            get { return RealPlayerChoiceModel.IsGameStarted; }
-            set { RealPlayerChoiceModel.IsGameStarted = value; }
-        }
         
         private List<ElementsOfViewCell> GetSearchResults()
         {
@@ -55,10 +50,7 @@ namespace RWGame.ViewModels
         }
         public void OnRealPlayerChoicePageAppearing()
         {
-            if (IsGameStarted)
-            {
-                IsGameStarted = false;
-            }
+
         }
         public async void PerformSearch()
         {
@@ -79,7 +71,7 @@ namespace RWGame.ViewModels
             Login = selectedItem.Login;
             IsPlayerListVisible = false;
         }
-        public async void PlayButtonClicked()
+        public async void CheckLogin()
         {
             if (Login != null)
             {
@@ -96,18 +88,25 @@ namespace RWGame.ViewModels
                         SelectedPlayerId = player.IdPlayer;
                     }
                 }
-            }
+                if (SelectedPlayerId == -1)
+                {
+                    if (SearchResults != null && SearchResults.Count == 1)
+                    {
+                        SelectedPlayerId = SearchResults[0].IdPlayer;
+                        Login = SearchResults[0].Login;
+                    }
+                }
+            }           
+        }
 
+        public async void StartGame()
+        {
             if (Login == "" || Login is null || SelectedPlayerId != -1)
             {
-                await RealPlayerChoiceModel.CreateGame(SelectedPlayerId);
-                await RealPlayerChoiceModel.GetCancelGame();
+                await RealPlayerChoiceModel.StartGame(SelectedPlayerId);
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
-                    await RealPlayerChoiceModel.GetGameStateInfo();
-                    RealPlayerChoiceModel.CreateGameField();
                     await Navigation.PushAsync(RealPlayerChoiceModel.GameField);
-                    IsGameStarted = true;
                 }
                 else
                 {
@@ -126,15 +125,16 @@ namespace RWGame.ViewModels
         public RealPlayerChoiceViewModel(ServerWorker serverWorker, SystemSettings systemSettings, INavigation navigation)
         {
             RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(serverWorker, systemSettings, navigation);
-            PlayButtonClickedCommand = new Command(RealPlayerChoiceDisplayData.PlayButtonClicked);
+            CheckLoginCommand = new Command(RealPlayerChoiceDisplayData.CheckLogin);
             OnRealPlayerChoicePageAppearingCommand = new Command(RealPlayerChoiceDisplayData.OnRealPlayerChoicePageAppearing);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);
+            StartGameCommand = new Command(RealPlayerChoiceDisplayData.StartGame);
         }
 
-        public Command PlayButtonClickedCommand { get; set; }
+        public Command CheckLoginCommand { get; set; }
         public Command OnRealPlayerChoicePageAppearingCommand { get; set; }
         public Command PerformSearchCommand { get; set; }
-
+        public Command StartGameCommand { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }
