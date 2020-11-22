@@ -15,22 +15,22 @@
             Command="{Binding OnUserPageAppearingCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        
+
         <RelativeLayout x:Name="relativeLayout"
                         VerticalOptions="Fill"
                         HorizontalOptions="Fill">
             <StackLayout x:Name="userprofilStackLayout"
-                     VerticalOptions="Fill"
-                     HorizontalOptions="Fill"
-                     RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
-                     RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
-                     RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
-                     RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
+                         VerticalOptions="Fill"
+                         HorizontalOptions="Fill"
+                         RelativeLayout.XConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                         RelativeLayout.YConstraint="{ConstraintExpression Type=Constant, Constant=0}"
+                         RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}"
+                         RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}">
                 <Grid x:Name="gridPlayerInfo"
-              HorizontalOptions="FillAndExpand"
-              VerticalOptions="Start"
-              RowSpacing="0"
-              Margin="0,10,5,0">
+                      HorizontalOptions="FillAndExpand"
+                      VerticalOptions="Start"
+                      RowSpacing="0"
+                      Margin="0,10,5,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -39,22 +39,22 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Label x:Name="userName"
-                   VerticalOptions="Center"
-                   HorizontalOptions="Start"
-                   TextColor="#39bafa"
-                   FontSize="Large"
-                   FontAttributes="Bold"
-                   Margin="20,10,20,10"
-                   Grid.Row="0"
-                   Grid.Column="0"
-                   Text="{Binding UserDisplayData.UserNameText}"/>
+                           VerticalOptions="Center"
+                           HorizontalOptions="Start"
+                           TextColor="#39bafa"
+                           FontSize="Large"
+                           FontAttributes="Bold"
+                           Margin="20,10,20,10"
+                           Grid.Row="0"
+                           Grid.Column="0"
+                           Text="{Binding UserDisplayData.UserNameText}"/>
                     <Grid x:Name="gridPlayerScore"
-                      HorizontalOptions="FillAndExpand"
-                      VerticalOptions="Start"
-                      RowSpacing="0"
-                      Margin="0,0,0,0"
-                      Grid.Row="0"
-                      Grid.Column="1">
+                          HorizontalOptions="FillAndExpand"
+                          VerticalOptions="Start"
+                          RowSpacing="0"
+                          Margin="0,0,0,0"
+                          Grid.Row="0"
+                          Grid.Column="1">
                         <Grid.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding GridPlayerScoreTappedCommand}"/>
                         </Grid.GestureRecognizers>
@@ -69,73 +69,73 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label x:Name="ratingInfoLabel"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Small"
-                   Text="{Binding UserDisplayData.RatingInfoLabelText}"
-                   Grid.Row="1"
-                   Grid.Column="2"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               TextColor="#39bafa"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               FontSize="Small"
+                               Text="{Binding UserDisplayData.RatingInfoLabelText}"
+                               Grid.Row="1"
+                               Grid.Column="2"/>
                         <Label x:Name="performanceCenterLabel"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Small"
-                   Text="{Binding UserDisplayData.PerformanceCenterLabelText}"
-                   Grid.Row="2"
-                   Grid.Column="0"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               TextColor="#39bafa"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               FontSize="Small"
+                               Text="{Binding UserDisplayData.PerformanceCenterLabelText}"
+                               Grid.Row="2"
+                               Grid.Column="0"/>
                         <Label x:Name="performanceBorderLabel"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Small"
-                   Text="{Binding UserDisplayData.PerformanceBorderLabelText}"
-                   Grid.Row="2"
-                   Grid.Column="1"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               TextColor="#39bafa"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               FontSize="Small"
+                               Text="{Binding UserDisplayData.PerformanceBorderLabelText}"
+                               Grid.Row="2"
+                               Grid.Column="1"/>
                         <Image x:Name="performanceCenterImage"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   Source="top_score_center.png"
-                   Margin="0,0,0,0"
-                   HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
-                   Grid.Row="1"
-                   Grid.Column="0"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               Source="top_score_center.png"
+                               Margin="0,0,0,0"
+                               HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
+                               Grid.Row="1"
+                               Grid.Column="0"/>
                         <Image x:Name="performanceBorderImage"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   Source="top_score_border.png"
-                   Margin="0,0,0,0"
-                   HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
-                   Grid.Row="1"
-                   Grid.Column="1"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               Source="top_score_border.png"
+                               Margin="0,0,0,0"
+                               HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
+                               Grid.Row="1"
+                               Grid.Column="1"/>
                         <Label x:Name="ratingLabel"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Small"
-                   Text="{Binding UserDisplayData.RatingLabelText}"
-                   Grid.Row="2"
-                   Grid.Column="2"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               TextColor="#39bafa"
+                               FontAttributes="Bold"
+                               HorizontalTextAlignment="Center"
+                               FontSize="Small"
+                               Text="{Binding UserDisplayData.RatingLabelText}"
+                               Grid.Row="2"
+                               Grid.Column="2"/>
                         <Label x:Name="statisticsInfoLabel"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   TextDecorations="Underline"
-                   HorizontalTextAlignment="Center"
-                   FontSize="Small"
-                   Text="{Binding UserDisplayData.StatisticsInfoLabelText}"
-                   Margin="0,3,0,3"
-                   Grid.Row="0"
-                   Grid.Column="0" Grid.ColumnSpan="3"/>
+                               HorizontalOptions="CenterAndExpand"
+                               VerticalOptions="Center"
+                               TextColor="#39bafa"
+                               FontAttributes="Bold"
+                               TextDecorations="Underline"
+                               HorizontalTextAlignment="Center"
+                               FontSize="Small"
+                               Text="{Binding UserDisplayData.StatisticsInfoLabelText}"
+                               Margin="0,3,0,3"
+                               Grid.Row="0"
+                               Grid.Column="0" Grid.ColumnSpan="3"/>
                     </Grid>
                 </Grid>
                 <StackLayout x:Name="stackLayoutListView"
@@ -143,25 +143,25 @@
                              HorizontalOptions="Fill"
                              Margin="10,0,0,0">
                     <Label x:Name="gameListViewEmptyMessage"
-                   VerticalOptions="CenterAndExpand"
-                   HorizontalOptions="Center"
-                   TextColor="#39bafa"
-                   FontSize="Medium"
-                   FontAttributes="Bold"
-                   Margin="20,10,20,10"
-                   Text="{Binding UserDisplayData.GameListViewEmptyMessageText}"
-                   HorizontalTextAlignment="Center"
-                   IsVisible="{Binding UserDisplayData.IsListViewEmptyMessageVisible}"/>
+                           VerticalOptions="CenterAndExpand"
+                           HorizontalOptions="Center"
+                           TextColor="#39bafa"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           Margin="20,10,20,10"
+                           Text="{Binding UserDisplayData.GameListViewEmptyMessageText}"
+                           HorizontalTextAlignment="Center"
+                           IsVisible="{Binding UserDisplayData.IsListViewEmptyMessageVisible}"/>
                     <ListView x:Name="gamesListView"
-                   VerticalOptions="CenterAndExpand"
-                   IsPullToRefreshEnabled="True"
-                   ItemTemplate="{StaticResource gameCellTemplate}"
-                   ItemSelected="OnSelection"
-                   ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
-                   IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
-                   IsRefreshing="{Binding UserDisplayData.CustomListViewRecordsIsRefreshing}"
-                   RefreshCommand="{Binding RefreshGamesListCommand}"
-                   SelectionMode="{Binding UserDisplayData.SelectionMode}">
+                              VerticalOptions="CenterAndExpand"
+                              IsPullToRefreshEnabled="True"
+                              ItemTemplate="{StaticResource gameCellTemplate}"
+                              ItemSelected="OnSelection"
+                              ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"
+                              IsVisible="{Binding UserDisplayData.IsGameListViewVisible}"
+                              IsRefreshing="{Binding UserDisplayData.CustomListViewRecordsIsRefreshing}"
+                              RefreshCommand="{Binding RefreshGamesListCommand}"
+                              SelectionMode="{Binding UserDisplayData.SelectionMode}">
                     </ListView>
                 </StackLayout>
                 <StackLayout x:Name="buttonStack"
@@ -220,6 +220,5 @@
                 </StackLayout>
             </StackLayout>
         </RelativeLayout>
-        
     </ContentPage.Content>
 </ContentPage>

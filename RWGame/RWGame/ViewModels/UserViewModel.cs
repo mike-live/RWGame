@@ -47,31 +47,25 @@ namespace RWGame.ViewModels
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
-        ServerWorker serverWorker;
-        SystemSettings systemSettings;
+        private readonly ServerWorker serverWorker;
+        private readonly SystemSettings systemSettings;
         public UserDisplayData(ServerWorker serverWorker, SystemSettings systemSettings, INavigation Navigation)
         {
             this.serverWorker = serverWorker;
             this.systemSettings = systemSettings;
             this.Navigation = Navigation;
             UserModel = new UserModel(serverWorker, systemSettings);
+            RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
+            StandingsPage = new StandingsPage(serverWorker, systemSettings);
         }
 
         #region MainProperties
         public RealPlayerChoicePage RealPlayerChoicePage { get; set; }
-        public StandingsPage StandingsPage { get; set; }
+        public StandingsPage StandingsPage { get; set; } 
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
         #endregion
-        public void CreateRealPlayerChoicePage()
-        {
-            RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
-        }
-        public void CreateStandingsPage()
-        {
-            StandingsPage = new StandingsPage(serverWorker, systemSettings);
-        }
         public bool CancelGame
         {
             get { return UserModel.CancelGame; }
@@ -124,7 +118,6 @@ namespace RWGame.ViewModels
         {
             if (IsGameStarted) return;
             IsGameStarted = true;
-            CreateRealPlayerChoicePage();
             await Navigation.PushAsync(RealPlayerChoicePage);
         }
         #endregion
@@ -210,7 +203,6 @@ namespace RWGame.ViewModels
         }
         public async void GridPlayerScoreTapped()
         {
-            CreateStandingsPage();
             await Navigation.PushAsync(StandingsPage);
         }
         #endregion
