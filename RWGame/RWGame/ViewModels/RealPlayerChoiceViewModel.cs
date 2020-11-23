@@ -31,7 +31,6 @@ namespace RWGame.ViewModels
         public string PromptLabelText { get; } = "1. Choose your friend and ask them to open the app\n2. Enter their login and tap play";
         public string EntryLoginPlaceholder { get; } = "Enter player login";
         public string PlayButtonText { get; } = "Play!";
-
         private int SelectedPlayerId { get; set; } = -1;
         public List<ElementsOfViewCell> SearchResults { get; set; } = new List<ElementsOfViewCell>();
         List<ElementsOfViewCell> emptyList = new List<ElementsOfViewCell> { new ElementsOfViewCell("", 0) };
@@ -102,6 +101,7 @@ namespace RWGame.ViewModels
                 await RealPlayerChoiceModel.StartGame(SelectedPlayerId);
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
+                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
                     await Navigation.PushAsync(RealPlayerChoiceModel.GameField);   
                 }
                 else
