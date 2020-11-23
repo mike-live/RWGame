@@ -37,7 +37,6 @@ namespace RWGame.ViewModels
         List<ElementsOfViewCell> emptyList = new List<ElementsOfViewCell> { new ElementsOfViewCell("", 0) };
         public bool IsPlayerListVisible { get; set; } = true;
         public string Login { get; set; }
-        
         private List<ElementsOfViewCell> GetSearchResults()
         {
             List<ElementsOfViewCell> searchResults = new List<ElementsOfViewCell>();
@@ -48,12 +47,9 @@ namespace RWGame.ViewModels
             }
             return searchResults;
         }
-        public void OnRealPlayerChoicePageAppearing()
-        {
-
-        }
         public async void PerformSearch()
         {
+            IsPlayerListVisible = true;
             RealPlayerChoiceModel.Login = Login;
             await RealPlayerChoiceModel.TaskUpdatePlayerList();
             List<ElementsOfViewCell> results = GetSearchResults();           
@@ -106,7 +102,7 @@ namespace RWGame.ViewModels
                 await RealPlayerChoiceModel.StartGame(SelectedPlayerId);
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
-                    await Navigation.PushAsync(RealPlayerChoiceModel.GameField);
+                    await Navigation.PushAsync(RealPlayerChoiceModel.GameField);   
                 }
                 else
                 {
@@ -126,7 +122,7 @@ namespace RWGame.ViewModels
         {
             RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(serverWorker, systemSettings, navigation);
             CheckLoginCommand = new Command(RealPlayerChoiceDisplayData.CheckLogin);
-            OnRealPlayerChoicePageAppearingCommand = new Command(RealPlayerChoiceDisplayData.OnRealPlayerChoicePageAppearing);
+            //OnRealPlayerChoicePageAppearingCommand = new Command(RealPlayerChoiceDisplayData.OnRealPlayerChoicePageAppearing);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);
             StartGameCommand = new Command(RealPlayerChoiceDisplayData.StartGame);
         }

@@ -34,7 +34,6 @@ namespace RWGame.Views
         private void OnButtonClicked(object sender, EventArgs e)
         {
             ViewModel.CheckLoginCommand.Execute(sender);
-            Navigation.RemovePage(this);
             ViewModel.StartGameCommand.Execute(sender);
         }
     }
