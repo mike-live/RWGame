@@ -22,7 +22,7 @@ namespace RWGame.Views
             {
                 return;
             }
-            ElementsOfViewCell item = (ElementsOfViewCell)e.SelectedItem;
+            GameListElement item = (GameListElement)e.SelectedItem;
             ViewModel.UserDisplayData.LoadSelectedGame(item);
         }
         protected override bool OnBackButtonPressed()

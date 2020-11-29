@@ -18,7 +18,7 @@ namespace RWGame.ViewModels
         #region MainProperties
         private GameHistoryModel GameHistoryModel { get; set; }
         public INavigation Navigation { get; set; }
-        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
+        public ObservableCollection<GameListElement> CustomListViewRecords { get; } = new ObservableCollection<GameListElement>();
         #endregion
 
         #region ViewProperties
@@ -49,7 +49,7 @@ namespace RWGame.ViewModels
                 {
                     if (GameHistoryModel.GamesList[i].GameState == GameStateEnum.END)
                     {
-                        CustomListViewRecords.Add(new ElementsOfViewCell(GameHistoryModel.GamesList[i]));
+                        CustomListViewRecords.Add(new GameListElement(GameHistoryModel.GamesList[i]));
                     }
                 }
             }
@@ -65,7 +65,7 @@ namespace RWGame.ViewModels
             }
         }
         #endregion
-        public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
+        public async void LoadSelectedGame(GameListElement selectedItem)
         {
             if (SelectionMode == 1)
             {

@@ -6,12 +6,12 @@ using Xamarin.Forms;
 
 namespace RWGame.ViewModels
 {
-    public class ElementsOfViewCell
+    public class PlayerListElement
     {
         public string Login { get; set; }
         public int IdPlayer { get; set; }
 
-        public ElementsOfViewCell(string Login, int IdPlayer)
+        public PlayerListElement(string Login, int IdPlayer)
         {
             this.Login = Login;
             this.IdPlayer = IdPlayer;
@@ -32,17 +32,17 @@ namespace RWGame.ViewModels
         public string EntryLoginPlaceholder { get; } = "Enter player login";
         public string PlayButtonText { get; } = "Play!";
         private int SelectedPlayerId { get; set; } = -1;
-        public List<ElementsOfViewCell> SearchResults { get; set; } = new List<ElementsOfViewCell>();
-        List<ElementsOfViewCell> emptyList = new List<ElementsOfViewCell> { new ElementsOfViewCell("", 0) };
+        public List<PlayerListElement> SearchResults { get; set; } = new List<PlayerListElement>();
+        List<PlayerListElement> emptyList = new List<PlayerListElement> { new PlayerListElement("", 0) };
         public bool IsPlayerListVisible { get; set; } = true;
         public string Login { get; set; }
-        private List<ElementsOfViewCell> GetSearchResults()
+        private List<PlayerListElement> GetSearchResults()
         {
-            List<ElementsOfViewCell> searchResults = new List<ElementsOfViewCell>();
+            List<PlayerListElement> searchResults = new List<PlayerListElement>();
             if (RealPlayerChoiceModel.PlayerList == null) return emptyList;
             foreach (var player in RealPlayerChoiceModel.PlayerList)
             {
-                searchResults.Add(new ElementsOfViewCell(player.Login, player.IdPlayer));
+                searchResults.Add(new PlayerListElement(player.Login, player.IdPlayer));
             }
             return searchResults;
         }
@@ -51,7 +51,7 @@ namespace RWGame.ViewModels
             IsPlayerListVisible = true;
             RealPlayerChoiceModel.Login = Login;
             await RealPlayerChoiceModel.TaskUpdatePlayerList();
-            List<ElementsOfViewCell> results = GetSearchResults();           
+            List<PlayerListElement> results = GetSearchResults();           
             if (results != null)
             {
                 SearchResults = results;
@@ -61,7 +61,7 @@ namespace RWGame.ViewModels
                 SearchResults = emptyList;
             }
         }
-        public void OnItemSelected(ElementsOfViewCell selectedItem)
+        public void OnItemSelected(PlayerListElement selectedItem)
         {
             Login = selectedItem.Login;
             IsPlayerListVisible = false;

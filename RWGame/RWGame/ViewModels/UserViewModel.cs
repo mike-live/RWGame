@@ -6,11 +6,11 @@ using Xamarin.Forms;
 using System.Linq;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
-using RWGame.GameChoicePages;
+using RWGame.Views;
 
 namespace RWGame.ViewModels
 {
-    public class ElementsOfViewCell
+    public class GameListElement
     {
         private Game Game { get; set; }
         public int IdGame { get { return Game.IdGame; } }
@@ -38,7 +38,7 @@ namespace RWGame.ViewModels
             }
         }
         public string Score { get { return Convert.ToString(Game.Score); } }
-        public ElementsOfViewCell(Game Game)
+        public GameListElement(Game Game)
         {
             this.Game = Game;
         }
@@ -64,7 +64,7 @@ namespace RWGame.ViewModels
         public Views.StandingsPage StandingsPage { get; set; } 
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
-        public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
+        public ObservableCollection<GameListElement> CustomListViewRecords { get; } = new ObservableCollection<GameListElement>();
         #endregion
         public bool CancelGame
         {
@@ -144,7 +144,7 @@ namespace RWGame.ViewModels
             {
                 if (UserModel.GamesList[i].GameState != GameStateEnum.END)
                 {
-                    CustomListViewRecords.Add(new ElementsOfViewCell(UserModel.GamesList[i]));
+                    CustomListViewRecords.Add(new GameListElement(UserModel.GamesList[i]));
                 }
             }
             if (CustomListViewRecords.Count == 0)
@@ -161,7 +161,7 @@ namespace RWGame.ViewModels
         }
         #endregion
 
-        public async void LoadSelectedGame(ElementsOfViewCell selectedItem)
+        public async void LoadSelectedGame(GameListElement selectedItem)
         {
             if (SelectionMode == 1)
             {

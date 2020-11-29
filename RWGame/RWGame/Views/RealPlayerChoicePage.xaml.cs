@@ -24,7 +24,7 @@ namespace RWGame.Views
             {
                 return;
             }
-            ElementsOfViewCell item = (ElementsOfViewCell)e.SelectedItem;
+            PlayerListElement item = (PlayerListElement)e.SelectedItem;
             ViewModel.RealPlayerChoiceDisplayData.OnItemSelected(item);
         }
         private void OnTextChanged(object sender, EventArgs e)

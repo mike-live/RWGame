@@ -20,7 +20,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ResponseClases\JsonResponses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ServerWorker.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\SystemSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameChoicePages\RealPlayerChoicePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameField.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -28,9 +27,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\StandingsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameHistoryModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealPlayerChoiceModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationPageModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\UserModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StandingsPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -39,8 +38,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RegistrationPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RealPlayerChoiceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StandingsPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml.cs">
+      <DependentUpon>RealPlayerChoicePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml.cs">
       <DependentUpon>GameCellTemplate.xaml</DependentUpon>
     </Compile>
@@ -79,6 +82,12 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\left.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\right.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml">
