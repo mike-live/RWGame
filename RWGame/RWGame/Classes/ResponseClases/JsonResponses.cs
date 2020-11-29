@@ -235,7 +235,7 @@ namespace RWGame.Classes.ResponseClases
         public string Name { get; set; }
 
         [JsonProperty("family")]
-        public string Family{ get; set; }
+        public string Surname { get; set; }
 
         [JsonProperty("birthday")]
         public DateTime Birthday { get; set; }
@@ -259,7 +259,7 @@ namespace RWGame.Classes.ResponseClases
         public int CountGamesCenter { get; set; }
 
         [JsonProperty("count_games_2")]
-        public int CountGamesBorder { get; set; }    
+        public int CountGamesBorder { get; set; }
     }
 
     public class PlayerInfo

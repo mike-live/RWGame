@@ -1,6 +1,6 @@
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
-using RWGame.PagesGameChoise;
+using RWGame.GameChoicePages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -38,7 +38,6 @@ namespace RWGame
         Label performanceCenterLabel;
         Label performanceBorderLabel;
         Label RatingLabel;
-        AbsoluteLayout absoluteLayout;
         RelativeLayout relativeLayout;
         List<GuideStep> introGuide;
         TourGuide tourGuide;
@@ -56,20 +55,9 @@ namespace RWGame
                 VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
             };
-            StackLayout globalStackLayout = new StackLayout()
-            {
-                VerticalOptions = LayoutOptions.Fill,
-                HorizontalOptions = LayoutOptions.Fill
-            };
             relativeLayout = new RelativeLayout()
             {
                 VerticalOptions = LayoutOptions.FillAndExpand,
-                HorizontalOptions = LayoutOptions.Fill
-            };
-
-            absoluteLayout = new AbsoluteLayout()
-            {
-                VerticalOptions = LayoutOptions.Fill,
                 HorizontalOptions = LayoutOptions.Fill
             };
             userName = new Label()
@@ -339,7 +327,7 @@ namespace RWGame
             {
                 if (isGameStarted) return;
                 isGameStarted = true;
-                await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
+                await Navigation.PushAsync(new RealPlayerChoicePage(serverWorker, systemSettings));
             };
 
 
@@ -613,19 +601,6 @@ namespace RWGame
                 }
             });
         }
-
-        public Game GetGame(int idGame)
-        {
-            for (int i = 0; i < gamesList.Count; i++)
-            {
-                if (gamesList[i].IdGame == idGame)
-                {
-                    return gamesList[i];
-                }
-            }
-            return null;
-        }
-
         public async void CallUpdateGameList()
         {
             await UpdateGameList();
