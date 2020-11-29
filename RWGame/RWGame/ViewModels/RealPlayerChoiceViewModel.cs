@@ -102,7 +102,7 @@ namespace RWGame.ViewModels
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
                     Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
-                    await Navigation.PushAsync(RealPlayerChoiceModel.GameField);   
+                    await Navigation.PushAsync(RealPlayerChoiceModel.GameField);
                 }
                 else
                 {
@@ -114,6 +114,13 @@ namespace RWGame.ViewModels
                 await App.Current.MainPage.DisplayAlert("Error", "Enter player doesn't exist", "OK");
             }
         }
+        
+        public void OnAppearance()
+        {
+            Login = "";
+            SearchResults = emptyList;
+            IsPlayerListVisible = false;
+        }
     }
     public class RealPlayerChoiceViewModel : INotifyPropertyChanged
     {
@@ -122,13 +129,13 @@ namespace RWGame.ViewModels
         {
             RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(serverWorker, systemSettings, navigation);
             CheckLoginCommand = new Command(RealPlayerChoiceDisplayData.CheckLogin);
-            //OnRealPlayerChoicePageAppearingCommand = new Command(RealPlayerChoiceDisplayData.OnRealPlayerChoicePageAppearing);
+            OnAppearanceCommand = new Command(RealPlayerChoiceDisplayData.OnAppearance);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);
             StartGameCommand = new Command(RealPlayerChoiceDisplayData.StartGame);
         }
 
         public Command CheckLoginCommand { get; set; }
-        public Command OnRealPlayerChoicePageAppearingCommand { get; set; }
+        public Command OnAppearanceCommand { get; set; }
         public Command PerformSearchCommand { get; set; }
         public Command StartGameCommand { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;

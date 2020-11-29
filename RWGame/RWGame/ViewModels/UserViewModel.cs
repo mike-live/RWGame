@@ -194,7 +194,7 @@ namespace RWGame.ViewModels
             UpdateGameList();
             CustomListViewRecordsIsRefreshing = false;
         }
-        public void OnUserPageAppearing()
+        public void OnAppearance()
         {
             UpdatePersonalInfo();
             UpdateGameList();
@@ -217,7 +217,7 @@ namespace RWGame.ViewModels
             RefreshGamesListCommand = new Command(UserDisplayData.OnPullUpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);
-            OnUserPageAppearingCommand = new Command(UserDisplayData.OnUserPageAppearing);
+            OnAppearanceCommand = new Command(UserDisplayData.OnAppearance);
             GridPlayerScoreTappedCommand = new Command(UserDisplayData.GridPlayerScoreTapped);
         }
         #region Commands
@@ -225,7 +225,7 @@ namespace RWGame.ViewModels
         public Command PlayWithBotCommand { get; set; }
         public Command PlayWithAnotherPlayerCommand { get; set; }
         public Command HelpCommand { get; set; }
-        public Command OnUserPageAppearingCommand { get; set; }
+        public Command OnAppearanceCommand { get; set; }
         public Command GridPlayerScoreTappedCommand { get; set; }
         #endregion
     }

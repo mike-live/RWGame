@@ -12,7 +12,7 @@
     <ContentPage.Behaviors>
         <behaviorsPack:EventToCommandBehavior
             EventName="Appearing"
-            Command="{Binding OnUserPageAppearingCommand}" />
+            Command="{Binding OnAppearanceCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
 
