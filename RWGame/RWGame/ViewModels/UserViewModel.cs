@@ -56,12 +56,12 @@ namespace RWGame.ViewModels
             this.Navigation = Navigation;
             UserModel = new UserModel(serverWorker, systemSettings);
             RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
-            StandingsPage = new StandingsPage(serverWorker, systemSettings);
+            StandingsPage = new Views.StandingsPage(serverWorker);
         }
 
         #region MainProperties
         public RealPlayerChoicePage RealPlayerChoicePage { get; set; }
-        public StandingsPage StandingsPage { get; set; } 
+        public Views.StandingsPage StandingsPage { get; set; } 
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
         public ObservableCollection<ElementsOfViewCell> CustomListViewRecords { get; } = new ObservableCollection<ElementsOfViewCell>();
