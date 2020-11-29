@@ -33,7 +33,7 @@ namespace RWGame.ViewModels
         public string PlayButtonText { get; } = "Play!";
         private int SelectedPlayerId { get; set; } = -1;
         public List<PlayerListElement> SearchResults { get; set; } = new List<PlayerListElement>();
-        List<PlayerListElement> emptyList = new List<PlayerListElement> { new PlayerListElement("", 0) };
+        private readonly List<PlayerListElement> emptyList = new List<PlayerListElement> { new PlayerListElement("", 0) };
         public bool IsPlayerListVisible { get; set; } = true;
         public string Login { get; set; }
         private List<PlayerListElement> GetSearchResults()

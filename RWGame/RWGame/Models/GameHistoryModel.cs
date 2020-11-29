@@ -8,8 +8,8 @@ namespace RWGame.Models
 {
     class GameHistoryModel : INotifyPropertyChanged
     {
-        ServerWorker serverWorker;
-        SystemSettings systemSettings;
+        private readonly ServerWorker serverWorker;
+        private readonly SystemSettings systemSettings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
