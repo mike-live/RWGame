@@ -25,6 +25,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameFieldModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\StandingsModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\GameHistoryModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RealPlayerChoiceModel.cs" />
@@ -34,6 +35,7 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)TourGuide.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameFieldViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Helpers\Emojis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginPageViewModel.cs" />
@@ -41,6 +43,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RealPlayerChoiceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StandingsPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameField.xaml.cs">
+      <DependentUpon>GameField.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml.cs">
       <DependentUpon>RealPlayerChoicePage.xaml</DependentUpon>
     </Compile>
@@ -126,6 +131,13 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TabbedUserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
