@@ -36,7 +36,8 @@ namespace RWGame
         {
             this.canvasView = canvasView;
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
-
+            localCanvasTappedRecognizer = new TapGestureRecognizer();
+            canvasView.GestureRecognizers.Add(localCanvasTappedRecognizer);
         }
         public void StartIntroGuide(List<GuideStep> guide)
         {
@@ -53,11 +54,11 @@ namespace RWGame
 
         public void StopGuide()
         {
+            isGuideActive = false;
             canvasView.IsVisible = false;
             canvasView.IsEnabled = false;
             countTapped = 1;
             localCanvasTappedRecognizer.Tapped -= TapGuide;
-            isGuideActive = false;
         }
 
         private void TapGuide(Object obj, Object args)
