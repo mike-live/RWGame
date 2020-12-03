@@ -30,9 +30,9 @@ namespace RWGame.Models
         public void UpdateStats()
         { 
             UserName = PlayerInfo?.PersonalInfo.Name ?? "";
-            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot ?? 0);
-            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot ?? 0);
-            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot ?? 0);
+            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot ?? 100);
+            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot ?? 1000);
+            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot ?? 100);
         }
         public async Task TaskUpdatePersonalInfo()
         {
