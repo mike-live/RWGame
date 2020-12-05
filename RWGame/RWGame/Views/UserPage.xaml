@@ -153,6 +153,7 @@
                            HorizontalTextAlignment="Center"
                            IsVisible="{Binding UserDisplayData.IsListViewEmptyMessageVisible}"/>
                     <ListView x:Name="gamesListView"
+                              CachingStrategy="RecycleElement"
                               VerticalOptions="CenterAndExpand"
                               IsPullToRefreshEnabled="True"
                               ItemTemplate="{StaticResource gameCellTemplate}"

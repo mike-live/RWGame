@@ -173,16 +173,18 @@ namespace RWGame.ViewModels
 
                 try
                 {
+                    IsGameStarted = true;
                     await UserModel.GetSelectedGameData(selectedItem.IdGame);
                     await Navigation.PushAsync(UserModel.GameField);
                 }
-                catch (Exception e)
-                {
+                catch (Exception)
+                {              
                     await App.Current.MainPage.DisplayAlert("Error", "The game was cancelled", "OK");
+                    SelectionMode = 1;
                 }
                 finally 
-                {
-                    IsGameStarted = true;
+                {   
+                    IsGameStarted = false;                   
                     UpdateGameList();
                 }
             }
