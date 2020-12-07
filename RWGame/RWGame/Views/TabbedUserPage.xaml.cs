@@ -7,12 +7,12 @@ namespace RWGame.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TabbedUserPage : TabbedPage
     {
-        public TabbedUserPage(SystemSettings systemSettings)
+        public TabbedUserPage()
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-            Children.Add(new UserPage(systemSettings, Navigation));
-            Children.Add(new GameHistoryPage(systemSettings, Navigation));           
+            Children.Add(new UserPage(Navigation));
+            Children.Add(new GameHistoryPage(Navigation));           
         }
     }
 }

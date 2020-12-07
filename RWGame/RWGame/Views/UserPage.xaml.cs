@@ -9,9 +9,9 @@ namespace RWGame.Views
     public partial class UserPage : ContentPage
     {
         public UserViewModel ViewModel { get; set; }
-        public UserPage(SystemSettings systemSettings, INavigation navigation)
+        public UserPage(INavigation navigation)
         {
-            ViewModel = new UserViewModel(systemSettings, navigation);
+            ViewModel = new UserViewModel(navigation);
             InitializeComponent();
             BindingContext = ViewModel;
             NavigationPage.SetHasNavigationBar(this, false);

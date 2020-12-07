@@ -11,18 +11,17 @@ namespace RWGame.Models
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly ServerWorker serverWorker;
-        private readonly SystemSettings systemSettings;
-        public UserModel(SystemSettings systemSettings)
+        public UserModel()
         {
             serverWorker = ServerWorker.GetServerWorker();
-            this.systemSettings = systemSettings;
             IsGameStarted = false;
         }
-        public GameField GameField { get; set; }
         public PlayerInfo PlayerInfo { get; set; }
         public List<Game> GamesList { get; set; } 
         public bool IsGameStarted { get; set; }
         public bool CancelGame { get; set; }
+        public Game Game { get; set; }
+        public GameStateInfo GameStateInfo { get; set; }
         public string UserName { get; set; } = "";
         public double PerformanceCenter { get; set; } = 0;
         public double PerformanceBorder { get; set; } = 0;
@@ -44,16 +43,14 @@ namespace RWGame.Models
         }
         public async Task GetSelectedGameData(int GameId)
         {
-            Game game = await GameProcesses.MakeSavedGame(serverWorker, GameId);
-            CancelGame = await GameProcesses.StartGame(serverWorker, game);
-            GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
-            GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);             
+            Game = await GameProcesses.MakeSavedGame(serverWorker, GameId);
+            CancelGame = await GameProcesses.StartGame(serverWorker, Game);
+            GameStateInfo = await serverWorker.TaskGetGameState(Game.IdGame);                       
         }
         public async Task CreateGameWithBot()
         {           
-            Game game = await GameProcesses.MakeGameWithBot(serverWorker);
-            GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
-            GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);
+            Game = await GameProcesses.MakeGameWithBot(serverWorker);
+            GameStateInfo = await serverWorker.TaskGetGameState(Game.IdGame);
         }
     }
 }

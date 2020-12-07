@@ -1,4 +1,5 @@
 ﻿using RWGame.Classes;
+using RWGame.Classes.ResponseClases;
 using RWGame.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,9 +21,9 @@ namespace RWGame.ViewModels
     public class RealPlayerChoiceDisplayData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public RealPlayerChoiceDisplayData(SystemSettings systemSettings, INavigation navigation)
+        public RealPlayerChoiceDisplayData(INavigation navigation)
         {
-            RealPlayerChoiceModel = new RealPlayerChoiceModel(systemSettings);
+            RealPlayerChoiceModel = new RealPlayerChoiceModel();
             Navigation = navigation;
         }
         private INavigation Navigation { get; set; }
@@ -32,6 +33,15 @@ namespace RWGame.ViewModels
         public string EntryLoginPlaceholder { get; } = "Enter player login";
         public string PlayButtonText { get; } = "Play!";
         private int SelectedPlayerId { get; set; } = -1;
+        private Views.GameField GameField { get; set; }
+        private GameStateInfo GameStateInfo
+        {
+            get { return RealPlayerChoiceModel.GameStateInfo; }
+        }
+        private Game Game
+        {
+            get { return RealPlayerChoiceModel.Game; }
+        }
         public List<PlayerListElement> SearchResults { get; set; } = new List<PlayerListElement>();
         private readonly List<PlayerListElement> emptyList = new List<PlayerListElement> { new PlayerListElement("", 0) };
         public bool IsPlayerListVisible { get; set; } = true;
@@ -101,8 +111,9 @@ namespace RWGame.ViewModels
                 await RealPlayerChoiceModel.StartGame(SelectedPlayerId);
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
+                    GameField = new Views.GameField(Game, GameStateInfo, Navigation);
                     Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
-                    await Navigation.PushAsync(RealPlayerChoiceModel.GameField);
+                    await Navigation.PushAsync(GameField);
                 }
                 else
                 {
@@ -125,9 +136,9 @@ namespace RWGame.ViewModels
     public class RealPlayerChoiceViewModel : INotifyPropertyChanged
     {
         public RealPlayerChoiceDisplayData RealPlayerChoiceDisplayData { get; set; }
-        public RealPlayerChoiceViewModel(SystemSettings systemSettings, INavigation navigation)
+        public RealPlayerChoiceViewModel(INavigation navigation)
         {
-            RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(systemSettings, navigation);
+            RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(navigation);
             CheckLoginCommand = new Command(RealPlayerChoiceDisplayData.CheckLogin);
             OnAppearanceCommand = new Command(RealPlayerChoiceDisplayData.OnAppearance);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);

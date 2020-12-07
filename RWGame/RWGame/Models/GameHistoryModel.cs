@@ -9,17 +9,16 @@ namespace RWGame.Models
     class GameHistoryModel : INotifyPropertyChanged
     {
         private readonly ServerWorker serverWorker;
-        private readonly SystemSettings systemSettings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool IsGameStarted { get; set; } = false;
+        public Game Game { get; set; }
+        public GameStateInfo GameStateInfo { get; set; }
         public List<Game> GamesList { get; set; }
-        public GameField GameField { get; set; }
-        public GameHistoryModel(SystemSettings systemSettings)
+        public GameHistoryModel()
         {
             serverWorker = ServerWorker.GetServerWorker();
-            this.systemSettings = systemSettings;
         }
 
         public async Task UpdateGameList()
@@ -30,10 +29,8 @@ namespace RWGame.Models
         {
             if (IsGameStarted) return;
             IsGameStarted = true;
-            Game game = await GameProcesses.MakeSavedGame(serverWorker, gameId);
-
-            GameStateInfo gameStateInfo = await serverWorker.TaskGetGameState(game.IdGame);
-            GameField = new GameField(serverWorker, systemSettings, game, gameStateInfo);
+            Game = await GameProcesses.MakeSavedGame(serverWorker, gameId);
+            GameStateInfo = await serverWorker.TaskGetGameState(Game.IdGame);            
         }
     }
 }
