@@ -12,9 +12,9 @@ namespace RWGame.Models
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly ServerWorker serverWorker;
         private readonly SystemSettings systemSettings;
-        public UserModel(ServerWorker serverWorker, SystemSettings systemSettings)
+        public UserModel(SystemSettings systemSettings)
         {
-            this.serverWorker = serverWorker;
+            serverWorker = ServerWorker.GetServerWorker();
             this.systemSettings = systemSettings;
             IsGameStarted = false;
         }
@@ -30,9 +30,9 @@ namespace RWGame.Models
         public void UpdateStats()
         { 
             UserName = PlayerInfo?.PersonalInfo.Name ?? "";
-            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot ?? 0);
-            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot ?? 0);
-            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot ?? 0);
+            PerformanceCenter = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceCenterVsBot ?? 100);
+            Rating = Math.Round(PlayerInfo?.PlayerStatistics.RatingVsBot ?? 1000);
+            PerformanceBorder = Math.Round(PlayerInfo?.PlayerStatistics.PerformanceBorderVsBot ?? 100);
         }
         public async Task TaskUpdatePersonalInfo()
         {

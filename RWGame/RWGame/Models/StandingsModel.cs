@@ -10,9 +10,9 @@ namespace RWGame.Models
         private readonly ServerWorker serverWorker;
         public Standings Standings { get; set; }
         public string UserLogin { get { return serverWorker.UserLogin; } }
-        public StandingsModel(ServerWorker serverWorker)
+        public StandingsModel()
         {
-            this.serverWorker = serverWorker;
+            serverWorker = ServerWorker.GetServerWorker();
             _ = UpdateModelStandings();
         }
         public async Task UpdateModelStandings()

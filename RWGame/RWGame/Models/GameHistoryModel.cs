@@ -16,9 +16,9 @@ namespace RWGame.Models
         public bool IsGameStarted { get; set; } = false;
         public List<Game> GamesList { get; set; }
         public GameField GameField { get; set; }
-        public GameHistoryModel(ServerWorker serverWorker, SystemSettings systemSettings)
+        public GameHistoryModel(SystemSettings systemSettings)
         {
-            this.serverWorker = serverWorker;
+            serverWorker = ServerWorker.GetServerWorker();
             this.systemSettings = systemSettings;
         }
 

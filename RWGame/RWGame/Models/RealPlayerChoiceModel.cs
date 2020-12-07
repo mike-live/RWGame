@@ -13,9 +13,9 @@ namespace RWGame.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public RealPlayerChoiceModel(ServerWorker serverWorker, SystemSettings systemSettings)
+        public RealPlayerChoiceModel(SystemSettings systemSettings)
         {
-            this.serverWorker = serverWorker;
+            serverWorker = ServerWorker.GetServerWorker();
             this.systemSettings = systemSettings;
         }
         public List<Player> PlayerList { get; set; }
