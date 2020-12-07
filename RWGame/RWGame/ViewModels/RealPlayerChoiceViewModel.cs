@@ -20,9 +20,9 @@ namespace RWGame.ViewModels
     public class RealPlayerChoiceDisplayData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        public RealPlayerChoiceDisplayData(ServerWorker serverWorker, SystemSettings systemSettings, INavigation navigation)
+        public RealPlayerChoiceDisplayData(SystemSettings systemSettings, INavigation navigation)
         {
-            RealPlayerChoiceModel = new RealPlayerChoiceModel(serverWorker, systemSettings);
+            RealPlayerChoiceModel = new RealPlayerChoiceModel(systemSettings);
             Navigation = navigation;
         }
         private INavigation Navigation { get; set; }
@@ -125,9 +125,9 @@ namespace RWGame.ViewModels
     public class RealPlayerChoiceViewModel : INotifyPropertyChanged
     {
         public RealPlayerChoiceDisplayData RealPlayerChoiceDisplayData { get; set; }
-        public RealPlayerChoiceViewModel(ServerWorker serverWorker, SystemSettings systemSettings, INavigation navigation)
+        public RealPlayerChoiceViewModel(SystemSettings systemSettings, INavigation navigation)
         {
-            RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(serverWorker, systemSettings, navigation);
+            RealPlayerChoiceDisplayData = new RealPlayerChoiceDisplayData(systemSettings, navigation);
             CheckLoginCommand = new Command(RealPlayerChoiceDisplayData.CheckLogin);
             OnAppearanceCommand = new Command(RealPlayerChoiceDisplayData.OnAppearance);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);

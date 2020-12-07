@@ -64,9 +64,9 @@ namespace RWGame.ViewModels
     class StandingsDisplayData : INotifyPropertyChanged
     {
         private StandingsModel StandingsModel { get; set; }
-        public StandingsDisplayData(ServerWorker serverWorker)
+        public StandingsDisplayData()
         {
-            StandingsModel = new StandingsModel(serverWorker);
+            StandingsModel = new StandingsModel();
             RefreshList();
         }
 
@@ -127,9 +127,9 @@ namespace RWGame.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public StandingsDisplayData StandingsDisplayData { get; set; }
-        public StandingsPageViewModel(ServerWorker serverWorker)
+        public StandingsPageViewModel()
         {
-            StandingsDisplayData = new StandingsDisplayData(serverWorker);
+            StandingsDisplayData = new StandingsDisplayData();
             RefreshListCommand = new Command(StandingsDisplayData.RefreshList);
         }
         public Command RefreshListCommand { get; set; }

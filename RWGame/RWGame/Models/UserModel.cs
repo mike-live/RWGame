@@ -12,9 +12,9 @@ namespace RWGame.Models
         public event PropertyChangedEventHandler PropertyChanged;
         private readonly ServerWorker serverWorker;
         private readonly SystemSettings systemSettings;
-        public UserModel(ServerWorker serverWorker, SystemSettings systemSettings)
+        public UserModel(SystemSettings systemSettings)
         {
-            this.serverWorker = serverWorker;
+            serverWorker = ServerWorker.GetServerWorker();
             this.systemSettings = systemSettings;
             IsGameStarted = false;
         }

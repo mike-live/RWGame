@@ -9,9 +9,9 @@ namespace RWGame.Views
     public partial class GameHistoryPage : ContentPage
     {
         GameHistoryViewModel ViewModel;
-        public GameHistoryPage(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
+        public GameHistoryPage(SystemSettings SystemSettings, INavigation Navigation)
         {
-            ViewModel = new GameHistoryViewModel(ServerWorker, SystemSettings, Navigation);
+            ViewModel = new GameHistoryViewModel(SystemSettings, Navigation);
             InitializeComponent();
             BindingContext = ViewModel;
             NavigationPage.SetHasNavigationBar(this, false);

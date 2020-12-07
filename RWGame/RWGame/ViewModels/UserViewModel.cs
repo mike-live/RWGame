@@ -47,16 +47,14 @@ namespace RWGame.ViewModels
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly ServerWorker serverWorker;
         private readonly SystemSettings systemSettings;
-        public UserDisplayData(ServerWorker serverWorker, SystemSettings systemSettings, INavigation Navigation)
+        public UserDisplayData(SystemSettings systemSettings, INavigation Navigation)
         {
-            this.serverWorker = serverWorker;
             this.systemSettings = systemSettings;
             this.Navigation = Navigation;
-            UserModel = new UserModel(serverWorker, systemSettings);
-            RealPlayerChoicePage = new RealPlayerChoicePage(serverWorker, systemSettings);
-            StandingsPage = new Views.StandingsPage(serverWorker);
+            UserModel = new UserModel(systemSettings);
+            RealPlayerChoicePage = new RealPlayerChoicePage(systemSettings);
+            StandingsPage = new Views.StandingsPage();
         }
 
         #region MainProperties
@@ -213,9 +211,9 @@ namespace RWGame.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public UserDisplayData UserDisplayData { get; set; }
-        public UserViewModel(ServerWorker ServerWorker, SystemSettings SystemSettings, INavigation Navigation)
+        public UserViewModel(SystemSettings SystemSettings, INavigation Navigation)
         {
-            UserDisplayData = new UserDisplayData(ServerWorker, SystemSettings, Navigation);
+            UserDisplayData = new UserDisplayData(SystemSettings, Navigation);
             RefreshGamesListCommand = new Command(UserDisplayData.OnPullUpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);

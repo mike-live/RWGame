@@ -14,10 +14,10 @@ namespace RWGame.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StandingsPage : ContentPage
     {
-        public StandingsPage(ServerWorker serverWorker)
+        public StandingsPage()
         {
             InitializeComponent();
-            BindingContext = new StandingsPageViewModel(serverWorker);
+            BindingContext = new StandingsPageViewModel();
             NavigationPage.SetHasNavigationBar(this, false);
         }
     }

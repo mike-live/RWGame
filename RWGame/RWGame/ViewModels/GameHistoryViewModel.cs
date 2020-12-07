@@ -10,10 +10,10 @@ namespace RWGame.ViewModels
 {
     public class GameHistoryDisplayData : INotifyPropertyChanged
     {
-        public GameHistoryDisplayData(ServerWorker serverWorker, SystemSettings systemSettings, INavigation Navigation)
+        public GameHistoryDisplayData(SystemSettings systemSettings, INavigation Navigation)
         {
             this.Navigation = Navigation;
-            GameHistoryModel = new GameHistoryModel(serverWorker, systemSettings);
+            GameHistoryModel = new GameHistoryModel(systemSettings);
         }
         #region MainProperties
         private GameHistoryModel GameHistoryModel { get; set; }
@@ -91,9 +91,9 @@ namespace RWGame.ViewModels
     {
         public GameHistoryDisplayData GameHistoryDisplayData { get; set; }
 
-        public GameHistoryViewModel(ServerWorker serverWorker, SystemSettings systemSettings, INavigation Navigation)
+        public GameHistoryViewModel(SystemSettings systemSettings, INavigation Navigation)
         {
-            GameHistoryDisplayData = new GameHistoryDisplayData(serverWorker, systemSettings, Navigation);
+            GameHistoryDisplayData = new GameHistoryDisplayData(systemSettings, Navigation);
             RefreshGamesListCommand = new Command(GameHistoryDisplayData.UpdateGameList);
             OnGameHistoryPageAppearingCommand = new Command(GameHistoryDisplayData.OnGameHistoryPageAppearing);
         }
