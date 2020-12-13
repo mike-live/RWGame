@@ -9,7 +9,6 @@ namespace RWGame.Models
     public class RealPlayerChoiceModel : INotifyPropertyChanged
     {
         private readonly ServerWorker serverWorker;
-        private readonly SystemSettings systemSettings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
