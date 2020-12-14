@@ -16,7 +16,7 @@ namespace RWGame.Models
         {
             GameStateInfo = await serverWorker.TaskMakeTurn(Game.IdGame, chosenTurn); 
         }
-        public async void GetGameState()
+        public async void UpdateGameState()
         {
             GameStateInfo = await serverWorker.TaskGetGameState(Game.IdGame);
         }

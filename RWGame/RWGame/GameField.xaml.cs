@@ -31,7 +31,7 @@ namespace RWGame
         //Grid ControlsGrid;
         //Image[,] ControlsImages = new Image[2, 2];
         SKCanvasView canvasView;
-        GameControls gameControls;
+        GameControls1 gameControls;
 
         readonly Game game;
         readonly SystemSettings systemSettings;
@@ -529,7 +529,7 @@ namespace RWGame
                 {
                     InfoTurnLabel.Text = "Make first turn!";
                 }
-                gameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor, canvasView);
+                gameControls = new GameControls1(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor, canvasView);
                 stackLayout.Children.Add(gameControls.ControlsGrid);
             } else
             {
@@ -614,7 +614,7 @@ namespace RWGame
 
     }
 
-    class GameControls
+    class GameControls1
     {
         private readonly Color backgroundColor = Color.Transparent;
         readonly SystemSettings systemSettings;
@@ -637,7 +637,7 @@ namespace RWGame
             { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
         };
 
-        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, SystemSettings systemSettings,
+        public GameControls1(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, SystemSettings systemSettings,
             Color backgroundColor, SKCanvasView canvasViewField)
         {
             this.MakeTurnAndWait = MakeTurnAndWait;

@@ -43,9 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RealPlayerChoiceViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StandingsPageViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Views\GameField.xaml.cs">
-      <DependentUpon>GameField.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameField.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml.cs">
       <DependentUpon>RealPlayerChoicePage.xaml</DependentUpon>
     </Compile>
@@ -131,13 +129,6 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TabbedUserPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
