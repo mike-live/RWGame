@@ -14,33 +14,24 @@ namespace RWGame.Views
 {
     public class GameControls
     {
-        public GameControlsViewModel ViewModel { get; set; }
+        #region Properties
+        private Color BackgroundColor { get; set; } = Color.Transparent;
+        public Grid ControlsGrid { get; set; }
+        SKBitmap[,] ControlsImages { get; set; } = new SKBitmap[2, 2];
+        public SKCanvasView[] CanvasView { get; set; } = new SKCanvasView[2];
+        Label InfoTurnLabel { get; set; }
+        Action MakeTurnAndWait { get; set; }
+        SKCanvasView CanvasViewField { get; set; }
 
-        private int ChosenTurn
-        {
-            get { return ViewModel.ChosenTurn; }
-            set { ViewModel.ChosenTurn = value; }
-        }
-        private bool ChooseRow
-        {
-            get { return ViewModel.ChooseRow; }
-            set { ViewModel.ChooseRow = value; }
-        }
-        private bool CanMakeTurn
-        {
-            get { return ViewModel.CanMakeTurn; }
-            set { ViewModel.CanMakeTurn = value; }
-        }
-        private bool CanAnimate
-        {
-            get { return ViewModel.CanAnimate; }
-            set { ViewModel.CanAnimate = value; }
-        }
-        public string Direction
-        {
-            get { return ViewModel.Direction; }
-        }
-        #region ScreenSettings
+        public bool ChooseRow { get; set; }
+        public Game Game { get; set; }
+        public GameStateInfo GameStateInfo { get; set; }
+        private bool CanAnimate { get; set; } = true;
+        public bool CanMakeTurn { get; set; } = true;
+        public int ChosenTurn { get; set; } = -1;
+        private Dictionary<string, string> ControlsImagesNames { get; set; } = new Dictionary<string, string> {
+            { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
+        };
         public double ScreenWidth
         {
             get { return Application.Current.MainPage.Width; }
@@ -50,34 +41,22 @@ namespace RWGame.Views
             get { return Application.Current.MainPage.Height; }
         }
         #endregion
-        private Color backgroundColor { get; set; } = Color.Transparent;
-        public Grid ControlsGrid { get; set; }
-        SKBitmap[,] ControlsImages { get; set; } = new SKBitmap[2, 2];
-        public SKCanvasView[] canvasView { get; set; } = new SKCanvasView[2];
-        Label InfoTurnLabel { get; set; }
-        Action MakeTurnAndWait { get; set; }
-        SKCanvasView CanvasViewField { get; set; }
-        private readonly Dictionary<string, string> ControlsImagesNames = new Dictionary<string, string> {
-            { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
-        };
-        public GameControls(Action makeTurnAndWait, Label infoTurnLabel, Game game, GameStateInfo gameStateInfo,
-            Color backgroundColor, SKCanvasView canvasViewField)
-        {
-            MakeTurnAndWait = makeTurnAndWait;
-            this.backgroundColor = backgroundColor;
-            InfoTurnLabel = infoTurnLabel;
-            //ViewModel.Game = game;
-            CanvasViewField = canvasViewField;
-            ViewModel = new GameControlsViewModel(game, gameStateInfo);
 
-            ViewModel.EvaluateChooseRow();
+        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, Color backgroundColor, SKCanvasView canvasViewField)
+        {
+            this.MakeTurnAndWait = MakeTurnAndWait;
+            this.InfoTurnLabel = InfoTurnLabel;
+            Game = game;
+            GameStateInfo = gameStateInfo;
+            BackgroundColor = backgroundColor;
+            CanvasViewField = canvasViewField;
 
             MakeGameControl();
-            canvasView[0].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 0);
-            canvasView[1].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 1);
+            CanvasView[0].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 0);
+            CanvasView[1].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 1);
 
-            canvasView[0].InvalidateSurface();
-            canvasView[1].InvalidateSurface();
+            CanvasView[0].InvalidateSurface();
+            CanvasView[1].InvalidateSurface();
 
             if (gameStateInfo.GameState == GameStateEnum.WAIT)
             {
@@ -88,6 +67,93 @@ namespace RWGame.Views
                 }
             }
         }
+
+        void MakeGameControl()
+        {
+            ControlsGrid = new Grid
+            {
+                Margin = new Thickness(10, 10, 10, 10),
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.StartAndExpand,
+                BackgroundColor = BackgroundColor,
+                HeightRequest = ScreenWidth / 2.5,
+                WidthRequest = ScreenWidth / 2.5,
+                RowSpacing = 6,
+                ColumnSpacing = 6,
+            };
+
+            ControlsGrid.RowDefinitions = new RowDefinitionCollection {
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
+                };
+            ControlsGrid.ColumnDefinitions = new ColumnDefinitionCollection {
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                };
+            for (int i = 0; i < 4; i++)
+            {
+                string dir = Game.GameSettings.Controls[i / 2][i % 2];
+                ControlsImages[i / 2, i % 2] = SKBitmap.Decode(Helper.getResourceStream("Images." + ControlsImagesNames[dir] + ".png"));
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                SKCanvasView curCanvas = new SKCanvasView();
+                CanvasView[i] = curCanvas;
+                int id = i;
+
+                var actionTap = new TapGestureRecognizer();
+                actionTap.Tapped += (s, e) =>
+                {
+                    MakeTurn(id);
+                };
+                curCanvas.GestureRecognizers.Add(actionTap);
+                if (ChooseRow)
+                {
+                    ControlsGrid.Children.Add(curCanvas, 0, i);
+                    Grid.SetColumnSpan(curCanvas, 2);
+                    Grid.SetRowSpan(curCanvas, 1);
+                }
+                else
+                {
+                    ControlsGrid.Children.Add(curCanvas, i, 0);
+                    Grid.SetColumnSpan(curCanvas, 1);
+                    Grid.SetRowSpan(curCanvas, 2);
+                }
+
+                curCanvas.Opacity = 0.75;
+            }
+        }
+        async void MakeTurn(int id)
+        {
+            SKCanvasView curCanvas = CanvasView[id];
+            if (!CanMakeTurn)
+            {
+                return;
+            }
+            CanMakeTurn = false;
+            if (CanAnimate)
+            {
+                CanAnimate = false;
+
+                await curCanvas.FadeTo(1, 100);
+                CanAnimate = true;
+            }
+            string turnName;
+            ChosenTurn = id;
+            if (ChooseRow)
+            {
+                turnName = ChosenTurn == 0 ? "upper row" : "bottom row";
+            }
+            else
+            {
+                turnName = ChosenTurn == 0 ? "left column" : "right column";
+            }
+            InfoTurnLabel.Text = "Wait...";
+            CanvasViewField.InvalidateSurface();
+            await Task.Delay(1000);
+            MakeTurnAndWait();
+        }
+
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args, int id)
         {
             SKImageInfo info = args.Info;
@@ -112,99 +178,32 @@ namespace RWGame.Views
             {
                 SKBitmap control1 = ControlsImages[id, 0];
                 SKBitmap control2 = ControlsImages[id, 1];
-                ViewModel.MergeBitmaps(canvas, control1, control2, info.Width, info.Height, false);
+                MergeBitmaps(canvas, control1, control2, info.Width, info.Height, false);
             }
             else
             {
                 SKBitmap control1 = ControlsImages[0, id];
                 SKBitmap control2 = ControlsImages[1, id];
-                ViewModel.MergeBitmaps(canvas, control1, control2, info.Width, info.Height, true);
+                MergeBitmaps(canvas, control1, control2, info.Width, info.Height, true);
             }
         }
-        async void MakeTurn(int id)
+        public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, int width, int height,
+            bool vertical = true)
         {
-            SKCanvasView curCanvas = canvasView[id];
-            if (!CanMakeTurn)
+            SKRect rect1, rect2;
+            if (vertical)
             {
-                return;
-            }
-            CanMakeTurn = false;
-            if (CanAnimate)
-            {
-                CanAnimate = false;
-                await curCanvas.FadeTo(1, 100);
-                CanAnimate = true;
-            }
-            string turnName;
-            ChosenTurn = id;
-            if (ChooseRow)
-            {
-                turnName = ChosenTurn == 0 ? "upper row" : "bottom row";
+                rect1 = SKRect.Create(0, 0, width, width);
+                rect2 = SKRect.Create(0, height - width, width, width);
             }
             else
             {
-                turnName = ChosenTurn == 0 ? "left column" : "right column";
+                rect1 = SKRect.Create(0, 0, height, height);
+                rect2 = SKRect.Create(width - height, 0, height, height);
             }
-            InfoTurnLabel.Text = "Wait...";
-            CanvasViewField.InvalidateSurface();
-            await Task.Delay(1000);
-            MakeTurnAndWait();
-        }
-        void MakeGameControl()
-        {
-            ControlsGrid = new Grid
-            {
-                Margin = new Thickness(10, 10, 10, 10),
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.StartAndExpand,
-                BackgroundColor = backgroundColor,
-                HeightRequest = ScreenWidth / 2.5,
-                WidthRequest = ScreenWidth / 2.5,
-                RowSpacing = 6,
-                ColumnSpacing = 6,
-            };
 
-            ControlsGrid.RowDefinitions = new RowDefinitionCollection {
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) }
-                };
-            ControlsGrid.ColumnDefinitions = new ColumnDefinitionCollection {
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                    new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-                };
-
-            for (int i = 0; i < 4; i++)
-            {
-                ViewModel.GetDirection(i);
-                ControlsImages[i / 2, i % 2] = SKBitmap.Decode(Helper.getResourceStream("Images." + ControlsImagesNames[Direction] + ".png"));
-            }
-            for (int i = 0; i < 2; i++)
-            {
-                SKCanvasView curCanvas = new SKCanvasView();
-                canvasView[i] = curCanvas;
-                int id = i;
-
-                var actionTap = new TapGestureRecognizer();
-                actionTap.Tapped += (s, e) =>
-                {
-                    MakeTurn(id);
-                };
-                curCanvas.GestureRecognizers.Add(actionTap);
-                if (ChooseRow)
-                {
-                    ControlsGrid.Children.Add(curCanvas, 0, i);
-                    Grid.SetColumnSpan(curCanvas, 2);
-                    Grid.SetRowSpan(curCanvas, 1);
-                }
-                else
-                {
-                    ControlsGrid.Children.Add(curCanvas, i, 0);
-                    Grid.SetColumnSpan(curCanvas, 1);
-                    Grid.SetRowSpan(curCanvas, 2);
-                }
-
-                curCanvas.Opacity = 0.75;
-            }
+            canvas.DrawBitmap(bitmap1, rect1);
+            canvas.DrawBitmap(bitmap2, rect2);
         }
     }
     public partial class GameField : ContentPage
@@ -237,6 +236,16 @@ namespace RWGame.Views
             get { return ViewModel.GameTrajectory.Count; }
         }
         #endregion
+        #region ScreenSettings
+        public double ScreenWidth
+        {
+            get { return Application.Current.MainPage.Width; }
+        }
+        public double ScreenHeight
+        {
+            get { return Application.Current.MainPage.Height; }
+        }
+        #endregion
         #region ViewProperties
         private Color backgroundColor { get; set; } = Color.Transparent;
         private SKColor backgroundSKColor { get; set; } = SKColors.Transparent;
@@ -267,15 +276,16 @@ namespace RWGame.Views
                 Aspect = Aspect.AspectFill,
                 Source = ImageSource.FromFile("seashore2.png"),
             };
-            absoluteLayout.Children.Add(back, new Rectangle(0, 0, GameControls.ScreenWidth, GameControls.ScreenWidth * 2));
+
+            absoluteLayout.Children.Add(back, new Rectangle(0, 0, ScreenWidth, ScreenWidth * 2));
 
             canvasView = new SKCanvasView
             {
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 VerticalOptions = LayoutOptions.Fill,
                 Margin = new Thickness(0, 0, 0, 0),
-                HeightRequest = GameControls.ScreenWidth - 10,
-                WidthRequest = GameControls.ScreenWidth,
+                HeightRequest = ScreenWidth - 10,
+                WidthRequest = ScreenWidth,
             };
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
 
@@ -392,8 +402,8 @@ namespace RWGame.Views
                 {
                     InfoTurnLabel.Text = "Make first turn!";
                 }
-                //GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, systemSettings, backgroundColor, canvasView);
-                //stackLayout.Children.Add(gameControls.ControlsGrid);
+                GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, backgroundColor, canvasView);
+                stackLayout.Children.Add(GameControls.ControlsGrid);
             }
             else
             {
@@ -406,6 +416,28 @@ namespace RWGame.Views
             Content = absoluteLayout;
         }
         #endregion
+        async void MakeTurnAndWait()
+        {
+            ViewModel.MakeTurnAndWait(GameControls.ChosenTurn);
+            ViewModel.AddToTrajectory();
+            //await GameControls.CanvasView[GameControls.ChosenTurn].FadeTo(0.75, 25);        
+            GameControls.ChosenTurn = -1;
+            GameScoreLabel.Text = ViewModel.GameScoreLabelText;
+            canvasView.InvalidateSurface();
+            FinishTurn();
+
+        }
+        public async void FinishTurn()
+        {
+            if (GameControls.GameStateInfo.GameState == GameStateEnum.END)
+            {
+                await App.Current.MainPage.DisplayAlert("Game finished", "You made " + ViewModel.NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
+                await Navigation.PopAsync();
+                return;
+            }
+            ViewModel.InfoTurnLabelText = "Make turn!";
+            GameControls.CanMakeTurn = true;
+        }
         #region BackButtonBehaviour
         public async void CallPopAsync()
         {
@@ -447,25 +479,38 @@ namespace RWGame.Views
         }
         void DrawChoice(SKCanvas canvas)
         {
-            if (GameControls is null) return;
-            if (GameControls.ViewModel.ChosenTurn != -1)
+            if (GameControls is null)
+            {
+                return;
+            }
+            if (GameControls.ChosenTurn != -1)
             {
                 int numDash = 5;
                 float dashLength = 2 * (numDash - 1) + numDash;
                 float[] dashArray = { CellSize / dashLength, 2 * CellSize / dashLength };
                 SKPaint paint = new SKPaint
                 {
-                    Color = SKColors.White,//SKColor.Parse("#3949AB"),
+                    Color = SKColors.White,
                     Style = SKPaintStyle.StrokeAndFill,
                     PathEffect = SKPathEffect.CreateDash(dashArray, 20),
                     StrokeWidth = 8,
                     MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 1)
                 };
-                SKPoint cur = ViewModel.GetTrajectoryPoint(TrajectoryLength - 1);
+                SKPoint cur = ViewModel.GameTrajectory.Last();
 
-                string[] Directions = ViewModel.GetDirections();
-                canvas.DrawLine(GetGridPoint(cur), GetGridPoint(MovePoint(cur, Directions[0])), paint);
-                canvas.DrawLine(GetGridPoint(cur), GetGridPoint(MovePoint(cur, Directions[1])), paint);
+                string dir1, dir2;
+                if (GameControls.ChooseRow)
+                {
+                    dir1 = GameControls.Game.GameSettings.Controls[GameControls.ChosenTurn][0];
+                    dir2 = GameControls.Game.GameSettings.Controls[GameControls.ChosenTurn][1];
+                }
+                else
+                {
+                    dir1 = GameControls.Game.GameSettings.Controls[0][GameControls.ChosenTurn];
+                    dir2 = GameControls.Game.GameSettings.Controls[1][GameControls.ChosenTurn];
+                }
+                canvas.DrawLine(GetGridPoint(cur), GetGridPoint(MovePoint(cur, dir1)), paint);
+                canvas.DrawLine(GetGridPoint(cur), GetGridPoint(MovePoint(cur, dir2)), paint);
             }
         }
         void DrawField(SKCanvas canvas)
@@ -522,9 +567,11 @@ namespace RWGame.Views
             };
             for (int i = 1; i < TrajectoryLength; i++)
             {
-                SKPoint prvGridPoint = ViewModel.GetTrajectoryPoint(i - 1);
+                //SKPoint prvGridPoint = ViewModel.GetTrajectoryPoint(i - 1);
+                SKPoint prvGridPoint = ViewModel.GameTrajectory[i - 1];
                 SKPoint start = GetGridPoint(prvGridPoint);
-                SKPoint curGridPoint = ViewModel.GetTrajectoryPoint(i);
+                //SKPoint curGridPoint = ViewModel.GetTrajectoryPoint(i);
+                SKPoint curGridPoint = ViewModel.GameTrajectory[i];
                 SKPoint end = GetGridPoint(curGridPoint);
                 canvas.DrawLine(start, end, paint);
             }
@@ -539,7 +586,7 @@ namespace RWGame.Views
             SKImage image = SKImage.FromBitmap(bitmap);
             SKRect rect = new SKRect
             {
-                Location = GetGridPoint(ViewModel.GetTrajectoryPoint(TrajectoryLength - 1)) - new SKPoint(starSize, starSize),
+                Location = GetGridPoint(ViewModel.GameTrajectory.Last()) - new SKPoint(starSize, starSize),
                 Size = new SKSize(starSize * 2, starSize * 2)
             };
             canvas.DrawImage(image, rect);
