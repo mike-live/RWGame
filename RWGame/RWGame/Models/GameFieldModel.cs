@@ -1,5 +1,6 @@
 ﻿using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
+using System.Threading.Tasks;
 
 namespace RWGame.Models
 {
@@ -12,9 +13,9 @@ namespace RWGame.Models
         {
             serverWorker = ServerWorker.GetServerWorker();
         }
-        public async void MakeTurn(int chosenTurn)
+        public async Task MakeTurn(int chosenTurn)
         {
-            GameStateInfo = await serverWorker.TaskMakeTurn(Game.IdGame, chosenTurn); 
+            GameStateInfo = await serverWorker.TaskMakeTurn(Game.IdGame, chosenTurn);
         }
         public async void UpdateGameState()
         {

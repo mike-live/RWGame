@@ -16,8 +16,12 @@ namespace RWGame.ViewModels
     public class GameFieldViewModel
     {
         GameFieldModel GameFieldModel { get; set; }
-        Game Game { get; set; }
-        GameStateInfo GameStateInfo 
+        Game Game 
+        {
+            get { return GameFieldModel.Game; }
+            set { GameFieldModel.Game = value; }
+        }
+        public GameStateInfo GameStateInfo 
         { 
             get { return GameFieldModel.GameStateInfo; } 
             set { GameFieldModel.GameStateInfo = value; }
@@ -85,9 +89,9 @@ namespace RWGame.ViewModels
             GameTrajectory.Add(new SKPoint(GameStateInfo.PointState[0], GameStateInfo.PointState[1]));
         }
 
-        public async void MakeTurnAndWait(int ChosenTurn)
+        public async Task MakeTurnAndWait(int ChosenTurn)
         {
-            GameFieldModel.MakeTurn(ChosenTurn);
+            await GameFieldModel.MakeTurn(ChosenTurn);
             while (GameStateInfo.GameState == GameStateEnum.WAIT)
             {
                 if (!NeedsCheckState)
@@ -96,9 +100,7 @@ namespace RWGame.ViewModels
                 }
                 await Task.Delay(1000);
                 GameFieldModel.UpdateGameState();
-            }           
-            NumTurns = GameStateInfo.LastIdTurn;
-            GameScoreLabelText = NumTurns.ToString();
+            }            
         }    
     }
 }

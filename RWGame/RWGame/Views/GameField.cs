@@ -50,6 +50,7 @@ namespace RWGame.Views
             GameStateInfo = gameStateInfo;
             BackgroundColor = backgroundColor;
             CanvasViewField = canvasViewField;
+            ChooseRow = Game.GameSettings.TurnControls[Game.IdPlayer] == "row";
 
             MakeGameControl();
             CanvasView[0].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 0);
@@ -58,9 +59,9 @@ namespace RWGame.Views
             CanvasView[0].InvalidateSurface();
             CanvasView[1].InvalidateSurface();
 
-            if (gameStateInfo.GameState == GameStateEnum.WAIT)
+            if (GameStateInfo.GameState == GameStateEnum.WAIT)
             {
-                int idTurn = gameStateInfo.Turn[game.IdPlayer];
+                int idTurn = GameStateInfo.Turn[Game.IdPlayer];
                 if (idTurn != -1)
                 {
                     MakeTurn(idTurn);
@@ -418,17 +419,20 @@ namespace RWGame.Views
         #endregion
         async void MakeTurnAndWait()
         {
-            ViewModel.MakeTurnAndWait(GameControls.ChosenTurn);
+            await ViewModel.MakeTurnAndWait(GameControls.ChosenTurn); // doesn't finish before adding to trajectory
             ViewModel.AddToTrajectory();
-            //await GameControls.CanvasView[GameControls.ChosenTurn].FadeTo(0.75, 25);        
-            GameControls.ChosenTurn = -1;
-            GameScoreLabel.Text = ViewModel.GameScoreLabelText;
-            canvasView.InvalidateSurface();
             FinishTurn();
-
         }
         public async void FinishTurn()
         {
+            await GameControls.CanvasView[GameControls.ChosenTurn].FadeTo(0.75, 25);
+
+            GameControls.ChosenTurn = -1;
+            ViewModel.NumTurns = ViewModel.GameStateInfo.LastIdTurn;
+            ViewModel.GameScoreLabelText = ViewModel.NumTurns.ToString();
+            GameScoreLabel.Text = ViewModel.GameScoreLabelText;
+
+            canvasView.InvalidateSurface();
             if (GameControls.GameStateInfo.GameState == GameStateEnum.END)
             {
                 await App.Current.MainPage.DisplayAlert("Game finished", "You made " + ViewModel.NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
@@ -567,10 +571,8 @@ namespace RWGame.Views
             };
             for (int i = 1; i < TrajectoryLength; i++)
             {
-                //SKPoint prvGridPoint = ViewModel.GetTrajectoryPoint(i - 1);
                 SKPoint prvGridPoint = ViewModel.GameTrajectory[i - 1];
                 SKPoint start = GetGridPoint(prvGridPoint);
-                //SKPoint curGridPoint = ViewModel.GetTrajectoryPoint(i);
                 SKPoint curGridPoint = ViewModel.GameTrajectory[i];
                 SKPoint end = GetGridPoint(curGridPoint);
                 canvas.DrawLine(start, end, paint);
@@ -578,7 +580,6 @@ namespace RWGame.Views
             paint.Color = SKColors.Red;
             paint.Shader = null;
             paint.MaskFilter = SKMaskFilter.CreateBlur(SKBlurStyle.Normal, 2);
-
 
             DrawChoice(canvas);
             float starSize = CellSize * 0.75f;
