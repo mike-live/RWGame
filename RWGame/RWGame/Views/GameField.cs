@@ -25,7 +25,7 @@ namespace RWGame.Views
 
         public bool ChooseRow { get; set; }
         public Game Game { get; set; }
-        public GameStateInfo GameStateInfo { get; set; }
+        public GameStateInfo GameStateInfo { get; set; } // LINK TO ViewModel.GameStateInfo, cuz this one doesn't update.
         private bool CanAnimate { get; set; } = true;
         public bool CanMakeTurn { get; set; } = true;
         public int ChosenTurn { get; set; } = -1;
@@ -397,13 +397,13 @@ namespace RWGame.Views
             stackLayout.Children.Add(canvasView);
             stackLayout.Children.Add(InfoTurnLabel);
 
-            if (gameStateInfo.GameState != GameStateEnum.END)
+            if (ViewModel.GameStateInfo.GameState != GameStateEnum.END)
             {
                 if (game.Turns.Count == 1)
                 {
                     InfoTurnLabel.Text = "Make first turn!";
                 }
-                GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, game, gameStateInfo, backgroundColor, canvasView);
+                GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, ViewModel.Game, ViewModel.GameStateInfo, backgroundColor, canvasView);
                 stackLayout.Children.Add(GameControls.ControlsGrid);
             }
             else
@@ -431,9 +431,9 @@ namespace RWGame.Views
             ViewModel.NumTurns = ViewModel.GameStateInfo.LastIdTurn;
             ViewModel.GameScoreLabelText = ViewModel.NumTurns.ToString();
             GameScoreLabel.Text = ViewModel.GameScoreLabelText;
-
+            GameControls.GameStateInfo = ViewModel.GameStateInfo;
             canvasView.InvalidateSurface();
-            if (GameControls.GameStateInfo.GameState == GameStateEnum.END)
+            if (GameControls.GameStateInfo.GameState == GameStateEnum.END) // GameStateInfo is outdated
             {
                 await App.Current.MainPage.DisplayAlert("Game finished", "You made " + ViewModel.NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
                 await Navigation.PopAsync();

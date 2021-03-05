@@ -16,15 +16,21 @@ namespace RWGame.ViewModels
     public class GameFieldViewModel
     {
         GameFieldModel GameFieldModel { get; set; }
-        Game Game 
+        public Game Game 
         {
             get { return GameFieldModel.Game; }
-            set { GameFieldModel.Game = value; }
+            set 
+            { 
+                GameFieldModel.Game = value;
+            }
         }
         public GameStateInfo GameStateInfo 
         { 
             get { return GameFieldModel.GameStateInfo; } 
-            set { GameFieldModel.GameStateInfo = value; }
+            set 
+            { 
+                GameFieldModel.GameStateInfo = value;
+            }
         }
         INavigation Navigation { get; set; }
         public bool NeedsCheckState { get; set; } = true;
@@ -99,7 +105,7 @@ namespace RWGame.ViewModels
                     return;
                 }
                 await Task.Delay(1000);
-                GameFieldModel.UpdateGameState();
+                await GameFieldModel.UpdateGameState();
             }            
         }    
     }
