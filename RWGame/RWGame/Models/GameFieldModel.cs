@@ -6,6 +6,24 @@ using System.Collections.Generic;
 
 namespace RWGame.Models
 {
+    public class GameControlsModel
+    {
+        public bool ChooseRow
+        {
+            get { return Game.GameSettings.TurnControls[Game.IdPlayer] == "row";  }
+            set { }
+        }
+        public bool CanAnimate { get; set; } = true;
+        public bool CanMakeTurn { get; set; } = true;
+        public int ChosenTurn { get; set; } = -1;
+        public Game Game { get; set; }
+        public GameStateInfo GameStateInfo { get; set; }
+
+        public GameControlsModel()
+        {
+
+        }
+    }
     class GameFieldModel
     {
         private readonly ServerWorker serverWorker;

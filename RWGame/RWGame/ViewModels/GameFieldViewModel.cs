@@ -8,6 +8,58 @@ using System.Threading.Tasks;
 
 namespace RWGame.ViewModels
 {
+    public class GameControlsViewModel
+    {
+        public GameControlsModel GameControlsModel;
+        public bool ChooseRow
+        {
+            get { return GameControlsModel.ChooseRow; }
+            set { GameControlsModel.ChooseRow = value; }
+        }
+        public bool CanAnimate
+        {
+            get { return GameControlsModel.CanAnimate; }
+            set { GameControlsModel.CanAnimate = value; }
+        }
+        public bool CanMakeTurn
+        {
+            get { return GameControlsModel.CanMakeTurn; }
+            set { GameControlsModel.CanMakeTurn = value; }
+        }
+        public int ChosenTurn
+        {
+            get { return GameControlsModel.ChosenTurn; }
+            set { GameControlsModel.ChosenTurn = value; }
+        }
+        public Game Game
+        {
+            get { return GameControlsModel.Game; }
+            set { GameControlsModel.Game = value; }
+        }
+        public GameStateInfo GameStateInfo
+        {
+            get { return GameControlsModel.GameStateInfo; }
+            set { GameControlsModel.GameStateInfo = value; }
+        }
+        public Dictionary<string, string> ControlsImagesNames { get; set; } = new Dictionary<string, string> {
+            { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
+        };
+        public double ScreenWidth
+        {
+            get { return Application.Current.MainPage.Width; }
+        }
+        public double ScreenHeight
+        {
+            get { return Application.Current.MainPage.Height; }
+        }
+
+        public GameControlsViewModel(Game game, GameStateInfo gameStateInfo)
+        {
+            GameControlsModel = new GameControlsModel();
+            Game = game;
+            GameStateInfo = gameStateInfo;
+        }
+    }
     public class GameFieldViewModel
     {
         GameFieldModel GameFieldModel { get; set; }
