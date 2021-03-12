@@ -14,12 +14,7 @@ namespace RWGame
         public App()
         {
             InitializeComponent();
-            var systemSettings = new SystemSettings()
-            {
-                ScreenHeight = ScreenHeight,
-                ScreenWidth = ScreenWidth
-            };
-            MainPage = new NavigationPage(new Views.LoginPage(systemSettings));
+            MainPage = new NavigationPage(new Views.LoginPage());
         }
 
         protected override void OnStart()

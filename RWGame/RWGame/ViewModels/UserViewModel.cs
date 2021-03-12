@@ -119,7 +119,7 @@ namespace RWGame.ViewModels
             if (IsGameStarted) return;
             IsGameStarted = true;
             await UserModel.CreateGameWithBot();
-            GameField = new Views.GameField(Game, GameStateInfo, Navigation);
+            GameField = new GameField(Game, GameStateInfo, Navigation);
             await Navigation.PushAsync(GameField);
         }
         public async void PlayWithAnotherPlayer()
@@ -183,7 +183,7 @@ namespace RWGame.ViewModels
                 {
                     IsGameStarted = true;
                     await UserModel.GetSelectedGameData(selectedItem.IdGame);
-                    GameField = new Views.GameField(Game, GameStateInfo, Navigation);
+                    GameField = new GameField(Game, GameStateInfo, Navigation);
                     await Navigation.PushAsync(GameField);
                 }
                 catch (Exception)
