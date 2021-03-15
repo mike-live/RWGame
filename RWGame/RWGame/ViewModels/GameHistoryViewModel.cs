@@ -10,14 +10,23 @@ namespace RWGame.ViewModels
 {
     public class GameHistoryDisplayData : INotifyPropertyChanged
     {
-        public GameHistoryDisplayData(SystemSettings systemSettings, INavigation Navigation)
+        public GameHistoryDisplayData(INavigation Navigation)
         {
             this.Navigation = Navigation;
-            GameHistoryModel = new GameHistoryModel(systemSettings);
+            GameHistoryModel = new GameHistoryModel();
         }
         #region MainProperties
         private GameHistoryModel GameHistoryModel { get; set; }
         public INavigation Navigation { get; set; }
+        private Game Game
+        {
+            get { return GameHistoryModel.Game; }
+        }
+        private GameStateInfo GameStateInfo
+        {
+            get { return GameHistoryModel.GameStateInfo; }
+        }
+        private Views.GameField GameField { get; set; }
         public ObservableCollection<GameListElement> CustomListViewRecords { get; } = new ObservableCollection<GameListElement>();
         #endregion
 
@@ -71,7 +80,8 @@ namespace RWGame.ViewModels
             {
                 SelectionMode = 0;
                 await GameHistoryModel.GetSelectedGameData(selectedItem.IdGame);
-                await Navigation.PushAsync(GameHistoryModel.GameField);
+                GameField = new Views.GameField(Game, GameStateInfo, Navigation);
+                await Navigation.PushAsync(GameField);
                 GameHistoryModel.IsGameStarted = false;
                 UpdateGameList();
             }
@@ -91,9 +101,9 @@ namespace RWGame.ViewModels
     {
         public GameHistoryDisplayData GameHistoryDisplayData { get; set; }
 
-        public GameHistoryViewModel(SystemSettings systemSettings, INavigation Navigation)
+        public GameHistoryViewModel(INavigation Navigation)
         {
-            GameHistoryDisplayData = new GameHistoryDisplayData(systemSettings, Navigation);
+            GameHistoryDisplayData = new GameHistoryDisplayData(Navigation);
             RefreshGamesListCommand = new Command(GameHistoryDisplayData.UpdateGameList);
             OnGameHistoryPageAppearingCommand = new Command(GameHistoryDisplayData.OnGameHistoryPageAppearing);
         }

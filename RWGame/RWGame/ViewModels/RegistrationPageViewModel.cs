@@ -90,7 +90,8 @@ namespace RWGame.ViewModels
                 User.CheckNameCorrectness();
                 User.CheckEmailCorrectness();
             }
-            
+
+
             NameUnfocusedCommand = new Command(User.CheckNameCorrectness);
             EmailUnfocusedCommand = new Command(User.CheckEmailCorrectness);
             LoginUnfocusedCommand = new Command(User.CheckLoginCorrectness);

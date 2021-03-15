@@ -47,13 +47,11 @@ namespace RWGame.ViewModels
     {
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly SystemSettings systemSettings;
-        public UserDisplayData(SystemSettings systemSettings, INavigation Navigation)
+        public UserDisplayData(INavigation Navigation)
         {
-            this.systemSettings = systemSettings;
             this.Navigation = Navigation;
-            UserModel = new UserModel(systemSettings);
-            RealPlayerChoicePage = new RealPlayerChoicePage(systemSettings);
+            UserModel = new UserModel();
+            RealPlayerChoicePage = new RealPlayerChoicePage();
             StandingsPage = new Views.StandingsPage();
         }
 
@@ -62,6 +60,17 @@ namespace RWGame.ViewModels
         public Views.StandingsPage StandingsPage { get; set; } 
         private UserModel UserModel { get; set; }
         public INavigation Navigation { get; set; }
+        public Views.GameField GameField { get; set; }
+        public Game Game
+        {
+            get { return UserModel.Game; }
+            set { UserModel.Game = value; }
+        }
+        public GameStateInfo GameStateInfo
+        {
+            get { return UserModel.GameStateInfo; }
+            set { UserModel.GameStateInfo = value; }
+        }
         public ObservableCollection<GameListElement> CustomListViewRecords { get; } = new ObservableCollection<GameListElement>();
         #endregion
         public bool CancelGame
@@ -110,7 +119,8 @@ namespace RWGame.ViewModels
             if (IsGameStarted) return;
             IsGameStarted = true;
             await UserModel.CreateGameWithBot();
-            await Navigation.PushAsync(UserModel.GameField);
+            GameField = new GameField(Game, GameStateInfo, Navigation);
+            await Navigation.PushAsync(GameField);
         }
         public async void PlayWithAnotherPlayer()
         {
@@ -173,7 +183,8 @@ namespace RWGame.ViewModels
                 {
                     IsGameStarted = true;
                     await UserModel.GetSelectedGameData(selectedItem.IdGame);
-                    await Navigation.PushAsync(UserModel.GameField);
+                    GameField = new GameField(Game, GameStateInfo, Navigation);
+                    await Navigation.PushAsync(GameField);
                 }
                 catch (Exception)
                 {              
@@ -211,9 +222,9 @@ namespace RWGame.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public UserDisplayData UserDisplayData { get; set; }
-        public UserViewModel(SystemSettings SystemSettings, INavigation Navigation)
+        public UserViewModel(INavigation Navigation)
         {
-            UserDisplayData = new UserDisplayData(SystemSettings, Navigation);
+            UserDisplayData = new UserDisplayData(Navigation);
             RefreshGamesListCommand = new Command(UserDisplayData.OnPullUpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);

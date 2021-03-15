@@ -8,10 +8,10 @@ namespace RWGame.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        public LoginPage(SystemSettings systemSettings)
+        public LoginPage()
         {
             InitializeComponent();
-            BindingContext = new LoginPageViewModel(systemSettings, Navigation);
+            BindingContext = new LoginPageViewModel(Navigation);
 
             NavigationPage.SetHasNavigationBar(this, false);
         }

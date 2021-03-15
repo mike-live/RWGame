@@ -21,7 +21,13 @@ namespace RWGame.Classes.ResponseClases
 
     public enum GameStateEnum
     {
-        NEW = 0, CONNECT = 1, START = 2, ACTIVE = 3, END = 4, PAUSE = 5, WAIT = 6
+        NEW = 0, 
+        CONNECT = 1, 
+        START = 2, 
+        ACTIVE = 3, 
+        END = 4, 
+        PAUSE = 5, 
+        WAIT = 6
     };
 
     /*public enum ControlsEnum

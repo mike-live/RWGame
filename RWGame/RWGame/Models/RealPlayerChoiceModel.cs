@@ -9,19 +9,16 @@ namespace RWGame.Models
     public class RealPlayerChoiceModel : INotifyPropertyChanged
     {
         private readonly ServerWorker serverWorker;
-        private readonly SystemSettings systemSettings;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public RealPlayerChoiceModel(SystemSettings systemSettings)
+        public RealPlayerChoiceModel()
         {
             serverWorker = ServerWorker.GetServerWorker();
-            this.systemSettings = systemSettings;
         }
         public List<Player> PlayerList { get; set; }
         public Game Game { get; set; }
         public GameStateInfo GameStateInfo { get; set; }
-        public GameField GameField { get; set; }
         public bool CancelGame { get; set; } = false;
         public string Login { get; set; }
 
@@ -38,8 +35,7 @@ namespace RWGame.Models
             await GetCancelGame();
             if (!CancelGame)
             {
-                await GetGameStateInfo();
-                CreateGameField();
+                await GetGameStateInfo();               
             }
         }
         public async Task CreateGame(int SelectedPlayerId)
@@ -53,10 +49,6 @@ namespace RWGame.Models
         public async Task GetGameStateInfo()
         {
             GameStateInfo = await serverWorker.TaskGetGameState(Game.IdGame);
-        }
-        public void CreateGameField()
-        {
-            GameField = new GameField(serverWorker, systemSettings, Game, GameStateInfo);
         }
         public async Task CallCancelGame()
         {

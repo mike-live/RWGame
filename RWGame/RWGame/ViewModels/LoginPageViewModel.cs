@@ -16,7 +16,6 @@ namespace RWGame.ViewModels
     public class LoginPageViewModel : INotifyPropertyChanged
     {
         ServerWorker serverWorker;
-        SystemSettings systemSettings;
 
         public bool NeedAuth { get; set; } = false;
         public string login { get; set; }
@@ -82,9 +81,8 @@ namespace RWGame.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         public INavigation Navigation { get; set; }
 
-        public LoginPageViewModel(SystemSettings systemSettings, INavigation navigation)
+        public LoginPageViewModel(INavigation navigation)
         {
-            this.systemSettings = systemSettings;
             this.Navigation = navigation;
             serverWorker = ServerWorker.GetServerWorker();
 
@@ -110,7 +108,7 @@ namespace RWGame.ViewModels
             if (loginResponse != null && loginResponse.IsAuthenticationSuccessful)
             {
                 serverWorker.UserLogin = loginResponse.Login;
-                await Navigation.PushAsync(new Views.TabbedUserPage(systemSettings));
+                await Navigation.PushAsync(new Views.TabbedUserPage());
             }
             IsAuthentication = false;
         }
@@ -146,7 +144,7 @@ namespace RWGame.ViewModels
                     if (loginResponse.IsAuthenticationSuccessful)
                     {
                         serverWorker.UserLogin = loginResponse.Login;
-                        await Navigation.PushAsync(new Views.TabbedUserPage(systemSettings));
+                        await Navigation.PushAsync(new Views.TabbedUserPage());
                     }
                     else
                     {
@@ -178,7 +176,7 @@ namespace RWGame.ViewModels
                     if (loginResponse.IsAuthenticationSuccessful)
                     {
                         serverWorker.UserLogin = loginResponse.Login;
-                        await Navigation.PushAsync(new Views.TabbedUserPage(systemSettings));
+                        await Navigation.PushAsync(new Views.TabbedUserPage());
                     }
                     else
                     {
