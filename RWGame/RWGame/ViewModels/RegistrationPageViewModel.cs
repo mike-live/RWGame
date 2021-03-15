@@ -40,6 +40,11 @@ namespace RWGame.ViewModels
         public bool IsSecondStep { get { return RegistrationStep == 2; } }
         public bool IsThirdStep { get { return RegistrationStep == 3; } }
 
+        public async void OnSwipedRight()
+        {
+            await Navigation.PopAsync();
+        }
+
         public ICommand ContinueCommand { get; set; }
         public ICommand SignUpCommand { get; set; }
         public ICommand SignInCommand { get; set; }
@@ -51,6 +56,8 @@ namespace RWGame.ViewModels
 
         public ICommand TermsHyperlinkCommand { get; set; }
         public ICommand PolicyHyperlinkCommand { get; set; }
+
+        public ICommand GoBackCommand { get; set; }
 
         /*public ICommand TermsUnfocusedCommand { get; set; }
         public ICommand PrivacyUnfocusedCommand { get; set; }*/
@@ -67,6 +74,8 @@ namespace RWGame.ViewModels
             ContinueCommand = new Command(NextPage);
             SignUpCommand = new Command(SignUp);
             SignInCommand = new Command(SignIn);
+
+            GoBackCommand = new Command(OnSwipedRight);
 
             User = new NewUserProfile(serverWorker);
             User.PropertyChanged += (obj, args) => {

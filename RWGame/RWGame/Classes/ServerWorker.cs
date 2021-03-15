@@ -166,8 +166,13 @@ namespace RWGame.Classes
             string cookiesHeader = cookies?.FirstOrDefault();
             if (cookiesHeader != null)
             {
-                await SecureStorage.SetAsync("cookies", cookiesHeader);
-                Console.WriteLine($"Cookies: {cookiesHeader}");
+                try
+                {
+                    await SecureStorage.SetAsync("cookies", cookiesHeader);
+                    Console.WriteLine($"Cookies: {cookiesHeader}");
+                }
+                catch { }
+                
             }
 
             string responseJsonString = await response.Content.ReadAsStringAsync();

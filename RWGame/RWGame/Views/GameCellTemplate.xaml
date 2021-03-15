@@ -6,8 +6,12 @@
             <Grid VerticalOptions="FillAndExpand"
                           HorizontalOptions="FillAndExpand"
                           ColumnSpacing="0"
-                          RowSpacing="1"
-                          Margin="1,3,1,3">
+                          RowSpacing="1">
+                <Grid.Margin>
+                    <OnPlatform x:TypeArguments="Thickness" >
+                        <On Platform="iOS" Value="16,3,-5,3"/>
+                    </OnPlatform>
+                </Grid.Margin>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
@@ -25,6 +29,7 @@
                                BackgroundColor="Transparent"
                                TextColor="#39bafa"
                                Text="{Binding GameId}"
+                               FontSize="Small"
                                Grid.Row="0"
                                Grid.Column="0"/>
                 <Label x:Name="dateLabel"
@@ -33,6 +38,7 @@
                                BackgroundColor="Transparent"
                                TextColor="#39bafa"
                                Text="{Binding Date}"
+                               FontSize="Small"
                                Grid.Row="1"
                                Grid.Column="0"/>
                 <Label x:Name="player1Label"
@@ -42,6 +48,7 @@
                                BackgroundColor="Transparent"
                                TextColor="#39bafa"
                                Text="{Binding PlayerName1}"
+                               FontSize="Small"
                                Grid.Row="0" Grid.RowSpan="2"
                                Grid.Column="1"/>
                 <Label x:Name="player2Label"
@@ -52,6 +59,7 @@
                                BackgroundColor="Transparent"
                                TextColor="#39bafa"
                                Text="{Binding PlayerName2}"
+                               FontSize="Small"
                                Grid.Row="0" Grid.RowSpan="2"
                                Grid.Column="3"/>
                 <Image x:Name="vsImage"
@@ -70,6 +78,7 @@
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center"
                                Text="{Binding Score}"
+                               FontSize="Small"
                                Grid.Row="1"
                                Grid.Column="4"/>
                 <Image x:Name="gameStateImage"

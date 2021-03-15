@@ -64,12 +64,13 @@ namespace RWGame.ViewModels
     class StandingsDisplayData : INotifyPropertyChanged
     {
         private StandingsModel StandingsModel { get; set; }
-        public StandingsDisplayData()
+        public StandingsDisplayData(INavigation navigation)
         {
             StandingsModel = new StandingsModel();
+            Navigation = navigation;
             RefreshList();
         }
-
+        public INavigation Navigation { get; set; }
         #region DataProperties
         public Standings Standings
         {
@@ -121,18 +122,26 @@ namespace RWGame.ViewModels
             ManVsBot = new StandingViewCellElement(Standings.ManVsBot, -1, false);
         }
         #endregion
+
+        public async void OnSwipedRight()
+        {
+            await Navigation.PopAsync();
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
     class StandingsPageViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public StandingsDisplayData StandingsDisplayData { get; set; }
-        public StandingsPageViewModel()
+        public StandingsPageViewModel(INavigation navigation)
         {
-            StandingsDisplayData = new StandingsDisplayData();
+            StandingsDisplayData = new StandingsDisplayData(navigation);
             RefreshListCommand = new Command(StandingsDisplayData.RefreshList);
+            GoBack = new Command(StandingsDisplayData.OnSwipedRight);
         }
         public Command RefreshListCommand { get; set; }
+        public Command GoBack { get; set; }
 
     }
 }

@@ -140,8 +140,13 @@
                 </Grid>
                 <StackLayout x:Name="stackLayoutListView"
                              VerticalOptions="CenterAndExpand"
-                             HorizontalOptions="Fill"
-                             Margin="10,0,0,0">
+                             HorizontalOptions="Fill">
+                    <StackLayout.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" >
+                        <On Platform="iOS" Value="0,0,15,0" />
+                        <On Platform="Android" Value="15,0,15,0" />
+                        </OnPlatform>
+                    </StackLayout.Margin>
                     <Label x:Name="gameListViewEmptyMessage"
                            VerticalOptions="CenterAndExpand"
                            HorizontalOptions="Center"
@@ -156,6 +161,7 @@
                               CachingStrategy="RecycleElement"
                               VerticalOptions="CenterAndExpand"
                               IsPullToRefreshEnabled="True"
+                              BackgroundColor="Transparent"
                               ItemTemplate="{StaticResource gameCellTemplate}"
                               ItemSelected="OnSelection"
                               ItemsSource="{Binding UserDisplayData.CustomListViewRecords}"

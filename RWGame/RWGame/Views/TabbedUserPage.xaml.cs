@@ -11,8 +11,15 @@ namespace RWGame.Views
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-            Children.Add(new UserPage(systemSettings, Navigation));
-            Children.Add(new GameHistoryPage(systemSettings, Navigation));           
+
+            NavigationPage userPage = new NavigationPage(new UserPage(systemSettings, Navigation));
+            userPage.Title = "Started Games";
+
+            NavigationPage historyPage = new NavigationPage(new GameHistoryPage(systemSettings, Navigation));
+            historyPage.Title = "Game History";
+
+            Children.Add(userPage);
+            Children.Add(historyPage);           
         }
     }
 }
