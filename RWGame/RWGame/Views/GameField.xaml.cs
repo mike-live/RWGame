@@ -21,14 +21,19 @@ namespace RWGame.Views
         public Grid ControlsGrid { get; set; }
         public SKCanvasView[] CanvasView { get; set; } = new SKCanvasView[2];
         Label InfoTurnLabel { get; set; }
-        Action MakeTurnAndWait { get; set; }
+        Func<Task> MakeTurnAndWait { get; set; }
         SKCanvasView CanvasViewField { get; set; }
+        public int ChosenTurn
+        {
+            get { return ViewModel.ChosenTurn; }
+            set { ViewModel.ChosenTurn = value; }
+        }
 
-        public GameControls(Action MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, Color backgroundColor, SKCanvasView canvasViewField)
+        public GameControls(Func<Task> MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, Color backgroundColor, SKCanvasView canvasViewField)
         {
             this.MakeTurnAndWait = MakeTurnAndWait;
             this.InfoTurnLabel = InfoTurnLabel;
-            ViewModel = new GameControlsViewModel(game, gameStateInfo);
+            ViewModel = new GameControlsViewModel(game, gameStateInfo, MakeTurn, MakeTurnAndWait, FadeChosenTurn);
 
             BackgroundColor = backgroundColor;
             CanvasViewField = canvasViewField;
@@ -40,12 +45,15 @@ namespace RWGame.Views
             CanvasView[0].InvalidateSurface();
             CanvasView[1].InvalidateSurface();
 
+            /** По идее, не тут этому место, но по-человечески перевезти во ViewModel чет никак.
+                В конструкторе оно не выживет, потому что до конца не успеет создаться ViewModel, 
+                а где-то создавать метод и вызывать его отсюда ситуацию не исправит.*/
             if (ViewModel.GameStateInfo.GameState == GameStateEnum.WAIT)
             {
                 int idTurn = ViewModel.GameStateInfo.Turn[ViewModel.Game.IdPlayer];
                 if (idTurn != -1)
                 {
-                    MakeTurn(idTurn);
+                    ViewModel.MakeTurn(idTurn);
                 }
             }
         }
@@ -75,7 +83,8 @@ namespace RWGame.Views
             for (int i = 0; i < 4; i++)
             {
                 string dir = ViewModel.Game.GameSettings.Controls[i / 2][i % 2];
-                ControlsImages[i / 2, i % 2] = SKBitmap.Decode(Helper.getResourceStream("Images." + ViewModel.ControlsImagesNames[dir] + ".png"));
+                ControlsImages[i / 2, i % 2] = SKBitmap.Decode
+                    (Helper.getResourceStream("Images." + ViewModel.ControlsImagesNames[dir] + ".png"));
             }
             for (int i = 0; i < 2; i++)
             {
@@ -84,9 +93,9 @@ namespace RWGame.Views
                 int id = i;
 
                 var actionTap = new TapGestureRecognizer();
-                actionTap.Tapped += (s, e) =>
+                actionTap.Tapped += async (s, e) =>
                 {
-                    MakeTurn(id);
+                   await ViewModel.MakeTurn(id);
                 };
                 curCanvas.GestureRecognizers.Add(actionTap);
                 if (ViewModel.ChooseRow)
@@ -105,26 +114,18 @@ namespace RWGame.Views
                 curCanvas.Opacity = 0.75;
             }
         }
+
+        public void UpdateField()
+        {
+            CanvasViewField.InvalidateSurface();
+        }
+
         async void MakeTurn(int id)
         {
             SKCanvasView curCanvas = CanvasView[id];
-            if (!ViewModel.CanMakeTurn)
-            {
-                return;
-            }
-            ViewModel.CanMakeTurn = false;
-            if (ViewModel.CanAnimate)
-            {
-                ViewModel.CanAnimate = false;
-
-                await curCanvas.FadeTo(1, 100);
-                ViewModel.CanAnimate = true;
-            }
-            ViewModel.ChosenTurn = id;
-            InfoTurnLabel.Text = "Wait...";
-            CanvasViewField.InvalidateSurface();
-            await Task.Delay(1000);
-            MakeTurnAndWait();
+            await curCanvas.FadeTo(1, 100);
+            //InfoTurnLabel.Text = "Wait...";
+            UpdateField();
         }
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args, int id)
@@ -179,7 +180,7 @@ namespace RWGame.Views
             canvas.DrawBitmap(bitmap2, rect2);
         }
 
-        public async Task FadeChosenTurn()
+        public async void FadeChosenTurn()
         {
             await CanvasView[ViewModel.ChosenTurn].FadeTo(0.75, 25);
         }
@@ -194,7 +195,7 @@ namespace RWGame.Views
         {
             get
             {
-                return (ViewModel.Game.GameSettings.Goals[ViewModel.Game.IdPlayer] == "center") ?
+                return (ViewModel.GameGoal == "center") ?
                     SKColor.Parse("#99897d") : // Color for center player
                     SKColor.Parse("#9f18ff");  // Color for border player
             }
@@ -203,12 +204,11 @@ namespace RWGame.Views
         public GameField(Game game, GameStateInfo gameStateInfo, INavigation navigation)
         {
             InitializeComponent();           
-            ViewModel = new GameFieldViewModel(game, gameStateInfo, navigation);
+            ViewModel = new GameFieldViewModel(game, gameStateInfo, navigation, UpdateField);
             BindingContext = ViewModel;
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
 
-            ViewModel.FillGameTrajectory();
-            StartGameField();
+            StartGameControls();
             NavigationPage.SetHasNavigationBar(this, false);
         }
 
@@ -223,38 +223,24 @@ namespace RWGame.Views
             DrawField(canvas);
             DrawTrajectory(canvas);
         }
-        private void StartGameField()
+        private void StartGameControls()
         {
             if (ViewModel.GameStateInfo.GameState != GameStateEnum.END)
             {                        
                 GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, ViewModel.Game, ViewModel.GameStateInfo, backgroundColor, canvasView);
                 stackLayout.Children.Add(GameControls.ControlsGrid);
             }
-            else
-            {
-                InfoTurnLabel.Text = "Moves history";
-                ViewModel.NumTurns--;
-            }
         }
 
-        public async void UpdateState()
+        public void UpdateField()
         {
-            ViewModel.AddToTrajectory();
-            await GameControls.FadeChosenTurn();
-            GameControls.ViewModel.ChosenTurn = -1;
-            ViewModel.NumTurns = ViewModel.GameStateInfo.LastIdTurn;
-            GameScoreLabel.Text = ViewModel.NumTurns.ToString();  // Is it okay?
-
+            //GameScoreLabel.Text = ViewModel.NumTurns.ToString();  // Is it okay?
             canvasView.InvalidateSurface();
-
-            ViewModel.CheckEnd();
-            InfoTurnLabel.Text = "Make turn!";  // Is it okay?
-            GameControls.ViewModel.CanMakeTurn = true;
+            //InfoTurnLabel.Text = "Make turn!";  // Is it okay?
         }
-        private async void MakeTurnAndWait()
+        private async Task MakeTurnAndWait()
         {
             await ViewModel.MakeTurnAndWait(GameControls.ViewModel.ChosenTurn);
-            UpdateState();
         }
         void DrawField(SKCanvas canvas)
         {

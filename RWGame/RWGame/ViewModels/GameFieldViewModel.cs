@@ -5,12 +5,19 @@ using RWGame.Models;
 using System.Collections.Generic;
 using SkiaSharp;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using RWGame.Helpers;
 
 namespace RWGame.ViewModels
 {
-    public class GameControlsViewModel
+    public class GameControlsViewModel : INotifyPropertyChanged
     {
         public GameControlsModel GameControlsModel;
+        public Action<int> MakeTurnView;
+        public Func<Task> MakeTurnAndWait;
+        public Action FadeChosenTurn;
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public bool ChooseRow
         {
             get { return GameControlsModel.ChooseRow; }
@@ -53,16 +60,40 @@ namespace RWGame.ViewModels
             get { return Application.Current.MainPage.Height; }
         }
 
-        public GameControlsViewModel(Game game, GameStateInfo gameStateInfo)
+        public GameControlsViewModel(Game game, GameStateInfo gameStateInfo, Action<int> MakeTurnView, Func<Task> MakeTurnAndWait, Action FadeChosenTurn)
         {
             GameControlsModel = new GameControlsModel();
             Game = game;
             GameStateInfo = gameStateInfo;
+            this.MakeTurnView = MakeTurnView;
+            this.MakeTurnAndWait = MakeTurnAndWait;
+            this.FadeChosenTurn = FadeChosenTurn;
         }
+
+        public async Task MakeTurn(int id)
+        {
+            if (!CanMakeTurn)
+            {
+                return;
+            }
+            CanMakeTurn = false;
+            ChosenTurn = id;
+            MakeTurnView(id);
+            await Task.Delay(1000);
+
+            await MakeTurnAndWait();
+
+            FadeChosenTurn();
+
+            ChosenTurn = -1;
+            CanMakeTurn = true;
+        }
+
     }
-    public class GameFieldViewModel
+    public class GameFieldViewModel : INotifyPropertyChanged
     {
-        GameFieldModel GameFieldModel { get; set; }
+        public GameFieldModel GameFieldModel { get; set; }
+        Action UpdateField;
         #region ScreenSettings
         public double ScreenWidth
         {
@@ -116,8 +147,7 @@ namespace RWGame.ViewModels
         }
         public string InfoTurnLabelText
         {
-            get { return GameFieldModel.InfoTurnLabelText; }
-            set { GameFieldModel.InfoTurnLabelText = value; }
+            get { return GameFieldModel.InfoTurnLabelText.ToDescriptionString(); }
         }
         public Game Game 
         {
@@ -143,30 +173,13 @@ namespace RWGame.ViewModels
         public int NumTurns
         {
             get { return GameFieldModel.NumTurns; }
-            set { GameFieldModel.NumTurns = value; }
         }
         public int GridSize { get; set; }
         public float CellSize { get; set; }
-        public int MarginX
-        {
-            get { return GameFieldModel.MarginX; }
-            set { GameFieldModel.MarginX = value; }
-        }
-        public int MarginY
-        {
-            get { return GameFieldModel.MarginY; }
-            set { GameFieldModel.MarginY = value; }
-        }
-        public float CenterRadius
-        {
-            get { return GameFieldModel.CenterRadius; }
-            set { GameFieldModel.CenterRadius = value; }
-        }
-        public float ShiftX
-        {
-            get { return GameFieldModel.ShiftX; }
-            set { GameFieldModel.ShiftX = value; }
-        }
+        public int MarginX { get; set; } = 100;
+        public int MarginY { get; set; } = 100;
+        public float CenterRadius { get; set; } = 300;
+        public float ShiftX { get; set; } = 0;
         public bool IsFinished
         {
             get { return GameFieldModel.IsFinished; }
@@ -184,19 +197,17 @@ namespace RWGame.ViewModels
         {
             get { return GetGridPoint(GridSize / 2, GridSize / 2); }
         }
-        public GameFieldViewModel(Game game, GameStateInfo gameStateInfo, INavigation navigation)
+        public GameFieldViewModel(Game game, GameStateInfo gameStateInfo, INavigation navigation, Action UpdateField)
         {
             GameFieldModel = new GameFieldModel();
             Game = game;
             GameStateInfo = gameStateInfo;
-            Navigation = navigation;
-            NumTurns = Game.Turns.Count - 1;
-        }
-
-        public void FillGameTrajectory()
-        {
+            Navigation = navigation;          
+            this.UpdateField = UpdateField;
             GameFieldModel.FillGameTrajectory();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public void AdjustSurface(SKImageInfo info)
         {
@@ -236,14 +247,16 @@ namespace RWGame.ViewModels
         }
         #endregion
 
-        public void AddToTrajectory()
-        {
-            GameFieldModel.AddToTrajectory();
-        }
-
         public async Task MakeTurnAndWait(int ChosenTurn)
         {
-            await GameFieldModel.MakeTurn(ChosenTurn);                 
+            await GameFieldModel.MakeTurn(ChosenTurn);
+            UpdateState();
         }    
+
+        public void UpdateState()
+        {
+            UpdateField();
+            CheckEnd();
+        }
     }
 }

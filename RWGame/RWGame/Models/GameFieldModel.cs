@@ -3,11 +3,15 @@ using RWGame.Classes.ResponseClases;
 using System.Threading.Tasks;
 using SkiaSharp;
 using System.Collections.Generic;
+using System.ComponentModel;
+using RWGame.Helpers;
+using PropertyChanged;
 
 namespace RWGame.Models
 {
-    public class GameControlsModel
+    public class GameControlsModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public bool ChooseRow
         {
             get { return Game.GameSettings.TurnControls[Game.IdPlayer] == "row";  }
@@ -24,17 +28,27 @@ namespace RWGame.Models
 
         }
     }
-    class GameFieldModel
+    public class GameFieldModel : INotifyPropertyChanged
     {
         private readonly ServerWorker serverWorker;
-        public Game Game { get; set; }
-        public GameStateInfo GameStateInfo { get; set; }
-        public int NumTurns { get; set; }
-        public bool NeedsCheckState { get; set; } = true;
-        public int MarginX { get; set; } = 100;
-        public int MarginY { get; set; } = 100;
-        public float CenterRadius { get; set; } = 300;
-        public float ShiftX { get; set; } = 0;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Game Game
+        { 
+            get; 
+            set; 
+        }
+        public GameStateInfo GameStateInfo 
+        {
+            get;
+            set;
+        }
+        public int NumTurns
+        {
+            get { return GameStateInfo.LastIdTurn; }
+        } 
+        public bool NeedsCheckState { get; set; } = true;             
         public List<SKPoint> GameTrajectory { get; set; } = new List<SKPoint> { };
         public string GameTopScoreLabelText
         {
@@ -48,24 +62,30 @@ namespace RWGame.Models
         {
             get { return GameStateInfo.GameState == GameStateEnum.END; }
         }
-        public string InfoTurnLabelText
+        public InfoStringsEnum InfoTurnLabelText
         {
             get
             {
-                if (Game.Turns.Count == 1)
-                {
-                    return "Make first turn!";
-                }
-                else if (GameStateInfo.GameState == GameStateEnum.WAIT)
-                {
-                    return "Wait...";
-                }
-                else if (Game.Turns.Count > 1 && GameStateInfo.GameState != GameStateEnum.WAIT)
-                {
-                    return "Make turn!";
-                }
-
-                else return "";
+                 if (Game.Turns.Count == 1)
+                 {
+                     return InfoStringsEnum.MAKE_FIRST_TURN;
+                 }
+                 else if (GameStateInfo.GameState == GameStateEnum.WAIT)
+                 {
+                     return InfoStringsEnum.WAIT;
+                 }
+                 else if (Game.Turns.Count > 1 && GameStateInfo.GameState != GameStateEnum.WAIT && GameStateInfo.GameState != GameStateEnum.END)
+                 {
+                     return InfoStringsEnum.MAKE_TURN;
+                 }
+                 else if (GameStateInfo.GameState == GameStateEnum.END)
+                 {
+                     return InfoStringsEnum.MOVES_HISTORY;
+                 }
+                 else
+                 {
+                     return InfoStringsEnum.NONE;
+                 }
             }
             set { }
         }
@@ -76,6 +96,7 @@ namespace RWGame.Models
         public async Task MakeTurn(int chosenTurn)
         {
             GameStateInfo = await serverWorker.TaskMakeTurn(Game.IdGame, chosenTurn);
+            AddToTrajectory();
             while (GameStateInfo.GameState == GameStateEnum.WAIT)
             {
                 if (!NeedsCheckState)

@@ -34,6 +34,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameFieldViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Helpers\Emojis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Helpers\InfoStrings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RegistrationPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RealPlayerChoiceViewModel.cs" />
