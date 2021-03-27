@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using RWGame.Helpers;
 using PropertyChanged;
+using System;
 
 namespace RWGame.Models
 {
@@ -34,10 +35,12 @@ namespace RWGame.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        Action UpdateFieldState;
+
         public Game Game
-        { 
-            get; 
-            set; 
+        {
+            get;
+            set;
         }
         public GameStateInfo GameStateInfo 
         {
@@ -58,6 +61,7 @@ namespace RWGame.Models
         {
             get { return Game.GameSettings.Goals[Game.IdPlayer]; }
         }
+        public bool CanMakeTurn { get; set; } = true;
         public bool IsFinished
         {
             get { return GameStateInfo.GameState == GameStateEnum.END; }
@@ -66,37 +70,37 @@ namespace RWGame.Models
         {
             get
             {
-                 if (Game.Turns.Count == 1)
-                 {
-                     return InfoStringsEnum.MAKE_FIRST_TURN;
-                 }
-                 else if (GameStateInfo.GameState == GameStateEnum.WAIT)
-                 {
-                     return InfoStringsEnum.WAIT;
-                 }
-                 else if (Game.Turns.Count > 1 && GameStateInfo.GameState != GameStateEnum.WAIT && GameStateInfo.GameState != GameStateEnum.END)
-                 {
-                     return InfoStringsEnum.MAKE_TURN;
-                 }
-                 else if (GameStateInfo.GameState == GameStateEnum.END)
-                 {
-                     return InfoStringsEnum.MOVES_HISTORY;
-                 }
-                 else
-                 {
-                     return InfoStringsEnum.NONE;
-                 }
+                if (Game.Turns.Count == 1)
+                {
+                    return InfoStringsEnum.MAKE_FIRST_TURN;
+                }
+                else if (GameStateInfo.GameState == GameStateEnum.WAIT || !CanMakeTurn)
+                {
+                    return InfoStringsEnum.WAIT;
+                }
+                else if (Game.Turns.Count > 1 && GameStateInfo.GameState != GameStateEnum.WAIT && GameStateInfo.GameState != GameStateEnum.END)
+                {
+                    return InfoStringsEnum.MAKE_TURN;
+                }
+                else if (GameStateInfo.GameState == GameStateEnum.END)
+                {
+                    return InfoStringsEnum.MOVES_HISTORY;
+                }
+                else
+                {
+                    return InfoStringsEnum.NONE;
+                }
             }
             set { }
         }
-        public GameFieldModel()
+        public GameFieldModel(Action UpdateFieldState)
         {
             serverWorker = ServerWorker.GetServerWorker();
+            this.UpdateFieldState = UpdateFieldState;
         }
         public async Task MakeTurn(int chosenTurn)
         {
             GameStateInfo = await serverWorker.TaskMakeTurn(Game.IdGame, chosenTurn);
-            AddToTrajectory();
             while (GameStateInfo.GameState == GameStateEnum.WAIT)
             {
                 if (!NeedsCheckState)
@@ -106,6 +110,8 @@ namespace RWGame.Models
                 await Task.Delay(1000);
                 await UpdateGameState();
             }
+            UpdateFieldState();
+            AddToTrajectory();
         }
         public async Task UpdateGameState()
         {

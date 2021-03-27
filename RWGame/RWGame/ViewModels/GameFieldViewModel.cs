@@ -7,6 +7,7 @@ using SkiaSharp;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using RWGame.Helpers;
+using PropertyChanged;
 
 namespace RWGame.ViewModels
 {
@@ -16,6 +17,7 @@ namespace RWGame.ViewModels
         public Action<int> MakeTurnView;
         public Func<Task> MakeTurnAndWait;
         public Action FadeChosenTurn;
+        public Action UpdateInfoLabel;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public bool ChooseRow
@@ -60,7 +62,7 @@ namespace RWGame.ViewModels
             get { return Application.Current.MainPage.Height; }
         }
 
-        public GameControlsViewModel(Game game, GameStateInfo gameStateInfo, Action<int> MakeTurnView, Func<Task> MakeTurnAndWait, Action FadeChosenTurn)
+        public GameControlsViewModel(Game game, GameStateInfo gameStateInfo, Action<int> MakeTurnView, Func<Task> MakeTurnAndWait, Action FadeChosenTurn, Action UpdateInfoLabel)
         {
             GameControlsModel = new GameControlsModel();
             Game = game;
@@ -68,6 +70,7 @@ namespace RWGame.ViewModels
             this.MakeTurnView = MakeTurnView;
             this.MakeTurnAndWait = MakeTurnAndWait;
             this.FadeChosenTurn = FadeChosenTurn;
+            this.UpdateInfoLabel = UpdateInfoLabel;
         }
 
         public async Task MakeTurn(int id)
@@ -76,6 +79,7 @@ namespace RWGame.ViewModels
             {
                 return;
             }
+            UpdateInfoLabel();
             CanMakeTurn = false;
             ChosenTurn = id;
             MakeTurnView(id);
@@ -141,14 +145,27 @@ namespace RWGame.ViewModels
         {
             get { return ScreenWidth; }
         }
+        public bool CanMakeTurn { 
+            get { return GameFieldModel.CanMakeTurn; }
+            set { GameFieldModel.CanMakeTurn = value; }       
+        }
         public string GameScoreLabelText
         {
-            get { return NumTurns.ToString(); }
+            get;
+            set;
         }
         public string InfoTurnLabelText
         {
-            get { return GameFieldModel.InfoTurnLabelText.ToDescriptionString(); }
+            get;
+            set;
         }
+
+        public void UpdateFieldState()
+        {
+            GameScoreLabelText = GameFieldModel.NumTurns.ToString();
+            InfoTurnLabelText = GameFieldModel.InfoTurnLabelText.ToDescriptionString();
+        }
+
         public Game Game 
         {
             get { return GameFieldModel.Game; }
@@ -170,6 +187,7 @@ namespace RWGame.ViewModels
             get { return GameFieldModel.GameTrajectory; }
             set { GameFieldModel.GameTrajectory = value; }
         }
+        [AlsoNotifyFor("GameScoreLabelText")]
         public int NumTurns
         {
             get { return GameFieldModel.NumTurns; }
@@ -199,9 +217,10 @@ namespace RWGame.ViewModels
         }
         public GameFieldViewModel(Game game, GameStateInfo gameStateInfo, INavigation navigation, Action UpdateField)
         {
-            GameFieldModel = new GameFieldModel();
+            GameFieldModel = new GameFieldModel(UpdateFieldState);
             Game = game;
             GameStateInfo = gameStateInfo;
+            UpdateFieldState();
             Navigation = navigation;          
             this.UpdateField = UpdateField;
             GameFieldModel.FillGameTrajectory();
@@ -247,8 +266,13 @@ namespace RWGame.ViewModels
         }
         #endregion
 
-        public async Task MakeTurnAndWait(int ChosenTurn)
+        public void UpdateInfoLabel()
         {
+            InfoTurnLabelText = InfoStringsEnum.WAIT.ToDescriptionString();
+        }
+
+        public async Task MakeTurnAndWait(int ChosenTurn)
+        {           
             await GameFieldModel.MakeTurn(ChosenTurn);
             UpdateState();
         }    

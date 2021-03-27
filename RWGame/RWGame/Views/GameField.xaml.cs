@@ -29,11 +29,11 @@ namespace RWGame.Views
             set { ViewModel.ChosenTurn = value; }
         }
 
-        public GameControls(Func<Task> MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, Color backgroundColor, SKCanvasView canvasViewField)
+        public GameControls(Func<Task> MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, Color backgroundColor, SKCanvasView canvasViewField, Action UpdateInfoLabel)
         {
             this.MakeTurnAndWait = MakeTurnAndWait;
             this.InfoTurnLabel = InfoTurnLabel;
-            ViewModel = new GameControlsViewModel(game, gameStateInfo, MakeTurn, MakeTurnAndWait, FadeChosenTurn);
+            ViewModel = new GameControlsViewModel(game, gameStateInfo, MakeTurn, MakeTurnAndWait, FadeChosenTurn, UpdateInfoLabel);
 
             BackgroundColor = backgroundColor;
             CanvasViewField = canvasViewField;
@@ -227,7 +227,7 @@ namespace RWGame.Views
         {
             if (ViewModel.GameStateInfo.GameState != GameStateEnum.END)
             {                        
-                GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, ViewModel.Game, ViewModel.GameStateInfo, backgroundColor, canvasView);
+                GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, ViewModel.Game, ViewModel.GameStateInfo, backgroundColor, canvasView, ViewModel.UpdateInfoLabel);
                 stackLayout.Children.Add(GameControls.ControlsGrid);
             }
         }
