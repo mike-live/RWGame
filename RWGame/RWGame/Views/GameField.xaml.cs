@@ -115,7 +115,7 @@ namespace RWGame.Views
             }
         }
 
-        public void UpdateField()
+        public void UpdateGameField()
         {
             CanvasViewField.InvalidateSurface();
         }
@@ -124,8 +124,7 @@ namespace RWGame.Views
         {
             SKCanvasView curCanvas = CanvasView[id];
             await curCanvas.FadeTo(1, 100);
-            //InfoTurnLabel.Text = "Wait...";
-            UpdateField();
+            UpdateGameField();
         }
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args, int id)

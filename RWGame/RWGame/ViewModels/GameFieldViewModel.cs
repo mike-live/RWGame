@@ -159,11 +159,15 @@ namespace RWGame.ViewModels
             get;
             set;
         }
+        public InfoStringsEnum TurnState
+        {
+            get { return GameFieldModel.TurnState; }
+        }
 
         public void UpdateFieldState()
         {
             GameScoreLabelText = GameFieldModel.NumTurns.ToString();
-            InfoTurnLabelText = GameFieldModel.InfoTurnLabelText.ToDescriptionString();
+            InfoTurnLabelText = GameFieldModel.TurnState.ToDescriptionString();
         }
 
         public Game Game 
@@ -184,8 +188,24 @@ namespace RWGame.ViewModels
         }
         public List<SKPoint> GameTrajectory
         {
-            get { return GameFieldModel.GameTrajectory; }
-            set { GameFieldModel.GameTrajectory = value; }
+            get
+            {
+                List<SKPoint> temp = new List<SKPoint>();
+                foreach (Models.Point pnt in GameFieldModel.GameTrajectory)
+                {
+                    temp.Add(new SKPoint(pnt.X, pnt.Y));
+                }
+                return temp;
+            }
+            set
+            {
+                List<Models.Point> temp = new List<Models.Point>();
+                foreach (SKPoint pnt in value)
+                {
+                    temp.Add(new Models.Point((int) pnt.X, (int) pnt.Y));
+                }
+                GameFieldModel.GameTrajectory = temp;
+            }
         }
         [AlsoNotifyFor("GameScoreLabelText")]
         public int NumTurns
@@ -198,9 +218,15 @@ namespace RWGame.ViewModels
         public int MarginY { get; set; } = 100;
         public float CenterRadius { get; set; } = 300;
         public float ShiftX { get; set; } = 0;
-        public bool IsFinished
+
+        public async void IsFinished(bool state)
         {
-            get { return GameFieldModel.IsFinished; }
+            if (state)
+            {
+                await App.Current.MainPage.DisplayAlert("Game finished", "You made " + NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
+                await Navigation.PopAsync();
+            }
+            
         }
         public SKColor BorderColor
         {
@@ -217,13 +243,10 @@ namespace RWGame.ViewModels
         }
         public GameFieldViewModel(Game game, GameStateInfo gameStateInfo, INavigation navigation, Action UpdateField)
         {
-            GameFieldModel = new GameFieldModel(UpdateFieldState);
-            Game = game;
-            GameStateInfo = gameStateInfo;
+            GameFieldModel = new GameFieldModel(UpdateFieldState, game, gameStateInfo);
             UpdateFieldState();
             Navigation = navigation;          
             this.UpdateField = UpdateField;
-            GameFieldModel.FillGameTrajectory();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -234,16 +257,6 @@ namespace RWGame.ViewModels
             CellSize = (float)(Math.Min(info.Width - MarginX, info.Height - MarginY)) / GridSize;
             CenterRadius = (float)info.Width / 5;
             ShiftX = (info.Width - MarginX - CellSize * GridSize) / 2;
-        }
-
-        public async void CheckEnd()
-        {
-            if (IsFinished)
-            {
-                await App.Current.MainPage.DisplayAlert("Game finished", "You made " + NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
-                await Navigation.PopAsync();
-                return;
-            }           
         }
 
         #region PointMethods
@@ -280,7 +293,7 @@ namespace RWGame.ViewModels
         public void UpdateState()
         {
             UpdateField();
-            CheckEnd();
+            IsFinished(GameFieldModel.IsFinished);
         }
     }
 }
