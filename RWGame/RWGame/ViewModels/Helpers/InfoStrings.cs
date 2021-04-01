@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace RWGame.Helpers
 {
-    public enum InfoStringsEnum
+    public enum TurnStateEnum
     {
         [Description("")]
         NONE = 0,
@@ -20,7 +17,7 @@ namespace RWGame.Helpers
     }
     public static class InfoString
     {
-        public static string ToDescriptionString(this InfoStringsEnum val)
+        public static string ToDescriptionString(this TurnStateEnum val)
         {
             DescriptionAttribute[] attributes = (DescriptionAttribute[])val
                .GetType()

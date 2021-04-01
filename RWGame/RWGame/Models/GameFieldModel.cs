@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.ComponentModel;
 using RWGame.Helpers;
-using PropertyChanged;
-using System;
 
 namespace RWGame.Models
 {
@@ -167,29 +165,29 @@ namespace RWGame.Models
         {
             get { return GameState == GameStateEnum.END; }
         }
-        public InfoStringsEnum TurnState
+        public TurnStateEnum TurnState
         {
             get
             {
                 if (GameStateInfo.LastIdTurn == 0)
                 {
-                    return InfoStringsEnum.FIRST_TURN;
+                    return TurnStateEnum.FIRST_TURN;
                 }
                 else if (GameState == GameStateEnum.WAIT || !CanMakeTurn)
                 {
-                    return InfoStringsEnum.WAIT;
+                    return TurnStateEnum.WAIT;
                 }
                 else if (NumTurns > 0 && GameState != GameStateEnum.WAIT && GameState != GameStateEnum.END)
                 {
-                    return InfoStringsEnum.TURN;
+                    return TurnStateEnum.TURN;
                 }
                 else if (GameState == GameStateEnum.END)
                 {
-                    return InfoStringsEnum.END;
+                    return TurnStateEnum.END;
                 }
                 else
                 {
-                    return InfoStringsEnum.NONE;
+                    return TurnStateEnum.NONE;
                 }
             }
         }
