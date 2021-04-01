@@ -175,7 +175,7 @@ namespace RWGame.Views
 
         protected override bool OnBackButtonPressed()
         {
-            GameControls.ViewModel.StopWaitTurn();
+            GameControls?.ViewModel.StopWaitTurn();
             return base.OnBackButtonPressed();
         }
 

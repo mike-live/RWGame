@@ -18,11 +18,16 @@ namespace RWGame.Models
             get { return Game.GameSettings.TurnControls[Game.IdPlayer] == "row"; }
         }
         public int TurnDelayTime { get; set; } = 1000;
-        public bool CanMakeTurn { get; set; } = true;
+        public bool CanMakeTurn 
+        { 
+            get { return gameFieldModel.CanMakeTurn; }
+            set { gameFieldModel.CanMakeTurn = value; }
+        }
         public int ChosenTurn { get; set; } = -1;
         public Game Game { get { return gameFieldModel.Game; } }
         public GameStateInfo GameStateInfo { get { return gameFieldModel.GameStateInfo; } }
         public GameStateEnum GameState { get { return gameFieldModel.GameState; } }
+        public TurnStateEnum TurnState { get { return gameFieldModel.TurnState; } }
         private bool NeedsCheckState { get; set; } = true;
 
         public (string, string) CurrentDirections {
@@ -53,9 +58,9 @@ namespace RWGame.Models
             serverWorker = ServerWorker.GetServerWorker();
             _ = Prepare();
             gameFieldModel.PropertyChanged += (obj, args) => {
-                if (args.PropertyName == "GameState")
+                if (args.PropertyName == "TurnState")
                 {
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("GameState"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TurnState"));
                 }
             };
         }
@@ -77,13 +82,13 @@ namespace RWGame.Models
             {
                 return;
             }
+            ChosenTurn = chosenTurn; 
             CanMakeTurn = false;
-            ChosenTurn = chosenTurn;
-            gameFieldModel.GameState = GameStateEnum.WAIT;
+            //gameFieldModel.GameState = GameStateEnum.WAIT;
             await Task.Delay(TurnDelayTime);
             await MakeTurnAndWait();
-            ChosenTurn = -1;
             CanMakeTurn = true;
+            ChosenTurn = -1;
         }
         public async Task MakeTurnAndWait()
         {
@@ -143,9 +148,9 @@ namespace RWGame.Models
             get;
             set;
         }
-        public GameStateEnum GameState { 
-            get { return GameStateInfo.GameState; } 
-            set { GameStateInfo.GameState = value; } 
+        public GameStateEnum GameState 
+        { 
+            get { return GameStateInfo.GameState; }
         }
         public int NumTurns
         {

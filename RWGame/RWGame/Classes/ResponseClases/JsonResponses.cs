@@ -196,10 +196,8 @@ namespace RWGame.Classes.ResponseClases
         public string MessageError { get; set; }
     }
 
-    public class GameStateInfo : INotifyPropertyChanged
+    public class GameStateInfo
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
         [JsonProperty("id_turn")]
         public int LastIdTurn { get; set; }
 
@@ -211,9 +209,13 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("game_state")]
         private string gameState { get; set; }
-        public GameStateEnum GameState {
-            get { Enum.TryParse(gameState, out GameStateEnum curGameState); return curGameState; }
-            set { gameState = value.ToString(); }
+        public GameStateEnum GameState 
+        {
+            get 
+            {
+                Enum.TryParse(gameState, out GameStateEnum curGameState); 
+                return curGameState; 
+            }
         }
 
         [JsonProperty("score")]

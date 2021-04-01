@@ -197,9 +197,9 @@ namespace RWGame.ViewModels
         {
             get { return GameControlsModel.Game; }
         }
-        public GameStateEnum GameState
+        public TurnStateEnum TurnState
         {
-            get { return GameControlsModel.GameState; }
+            get { return GameControlsModel.TurnState; }
         }
         public (string, string) CurrentDirections
         {
@@ -221,13 +221,13 @@ namespace RWGame.ViewModels
             get { return Application.Current.MainPage.Height; }
         }
 
-        public void OnGameStateChanged()
+        public void OnTurnStateChanged()
         {
-            if (GameState == GameStateEnum.WAIT)
+            if (TurnState == TurnStateEnum.WAIT)
             {
                 StartTurn();
             }
-            else if (GameState == GameStateEnum.ACTIVE || GameState == GameStateEnum.END)
+            else if (TurnState == TurnStateEnum.TURN || TurnState == TurnStateEnum.END)
             {
                 FinishTurn();
             }
@@ -244,10 +244,10 @@ namespace RWGame.ViewModels
             this.FinishTurn = FinishTurn;
             GameControlsModel = new GameControlsModel(gameFieldViewModel.GameFieldModel);
             GameControlsModel.PropertyChanged += (obj, args) => {
-                if (args.PropertyName == "GameState")
+                if (args.PropertyName == "TurnState")
                 {
-                    OnGameStateChanged();
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("GameState"));
+                    OnTurnStateChanged();
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TurnState"));
                 }
             };
         }
