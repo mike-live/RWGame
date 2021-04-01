@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RWGame.Classes.ResponseClases
 {
@@ -195,8 +196,10 @@ namespace RWGame.Classes.ResponseClases
         public string MessageError { get; set; }
     }
 
-    public class GameStateInfo
+    public class GameStateInfo : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [JsonProperty("id_turn")]
         public int LastIdTurn { get; set; }
 
@@ -208,7 +211,13 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("game_state")]
         private string gameState { get; set; }
-        public GameStateEnum GameState { get { Enum.TryParse(gameState, out GameStateEnum curGameState); return curGameState; } }
+        public GameStateEnum GameState {
+            get { Enum.TryParse(gameState, out GameStateEnum curGameState); return curGameState; }
+            set { gameState = value.ToString(); }
+        }
+
+        [JsonProperty("score")]
+        public int? Score { get; set; }
 
         [JsonProperty("user_error")]
         public string UserError { get; set; }

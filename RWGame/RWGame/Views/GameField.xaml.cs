@@ -9,53 +9,33 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using RWGame.Models;
 
 namespace RWGame.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class GameControls
     {
-        public GameControlsViewModel ViewModel;
+        public GameControlsViewModel ViewModel { get; set; }
         private Color BackgroundColor { get; set; } = Color.Transparent;
         SKBitmap[,] ControlsImages { get; set; } = new SKBitmap[2, 2];
         public Grid ControlsGrid { get; set; }
         public SKCanvasView[] CanvasView { get; set; } = new SKCanvasView[2];
-        Label InfoTurnLabel { get; set; }
-        Func<Task> MakeTurnAndWait { get; set; }
-        SKCanvasView CanvasViewField { get; set; }
-        public int ChosenTurn
+        Action UpdateGameField { get; set; }
+        
+        public GameControls(GameFieldViewModel gameFieldViewModel, Color backgroundColor, Action UpdateGameField)
         {
-            get { return ViewModel.ChosenTurn; }
-            set { ViewModel.ChosenTurn = value; }
-        }
-
-        public GameControls(Func<Task> MakeTurnAndWait, Label InfoTurnLabel, Game game, GameStateInfo gameStateInfo, Color backgroundColor, SKCanvasView canvasViewField, Action UpdateInfoLabel)
-        {
-            this.MakeTurnAndWait = MakeTurnAndWait;
-            this.InfoTurnLabel = InfoTurnLabel;
-            ViewModel = new GameControlsViewModel(game, gameStateInfo, MakeTurn, MakeTurnAndWait, FadeChosenTurn, UpdateInfoLabel);
+            this.UpdateGameField = UpdateGameField;
+            ViewModel = new GameControlsViewModel(gameFieldViewModel, StartTurn, FinishTurn);
 
             BackgroundColor = backgroundColor;
-            CanvasViewField = canvasViewField;
-
+            
             MakeGameControl();
             CanvasView[0].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 0);
             CanvasView[1].PaintSurface += (sender, args) => OnCanvasViewPaintSurface(sender, args, 1);
 
             CanvasView[0].InvalidateSurface();
             CanvasView[1].InvalidateSurface();
-
-            /** По идее, не тут этому место, но по-человечески перевезти во ViewModel чет никак.
-                В конструкторе оно не выживет, потому что до конца не успеет создаться ViewModel, 
-                а где-то создавать метод и вызывать его отсюда ситуацию не исправит.*/
-            if (ViewModel.GameStateInfo.GameState == GameStateEnum.WAIT)
-            {
-                int idTurn = ViewModel.GameStateInfo.Turn[ViewModel.Game.IdPlayer];
-                if (idTurn != -1)
-                {
-                    ViewModel.MakeTurn(idTurn);
-                }
-            }
         }
 
         void MakeGameControl()
@@ -82,7 +62,7 @@ namespace RWGame.Views
                 };
             for (int i = 0; i < 4; i++)
             {
-                string dir = ViewModel.Game.GameSettings.Controls[i / 2][i % 2];
+                string dir = ViewModel.Controls[i / 2][i % 2];
                 ControlsImages[i / 2, i % 2] = SKBitmap.Decode
                     (Helper.getResourceStream("Images." + ViewModel.ControlsImagesNames[dir] + ".png"));
             }
@@ -115,15 +95,9 @@ namespace RWGame.Views
             }
         }
 
-        public void UpdateGameField()
+        async void StartTurn()
         {
-            CanvasViewField.InvalidateSurface();
-        }
-
-        async void MakeTurn(int id)
-        {
-            SKCanvasView curCanvas = CanvasView[id];
-            await curCanvas.FadeTo(1, 100);
+            await CanvasView[ViewModel.ChosenTurn].FadeTo(1, 100);
             UpdateGameField();
         }
 
@@ -135,7 +109,7 @@ namespace RWGame.Views
 
             int controlSize = ViewModel.ChooseRow ? info.Height : info.Width;
             SKRect rect = ViewModel.ChooseRow ? SKRect.Create(controlSize / 2, 0, info.Width - controlSize, info.Height)
-                                    : SKRect.Create(0, controlSize / 2, info.Width, info.Height - controlSize);
+                                              : SKRect.Create(0, controlSize / 2, info.Width, info.Height - controlSize);
             SKPaint paint = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill };
             canvas.DrawRect(rect, paint);
             canvas.DrawCircle(new SKPoint(controlSize / 2, controlSize / 2), controlSize / 2, paint);
@@ -160,8 +134,8 @@ namespace RWGame.Views
                 MergeBitmaps(canvas, control1, control2, info.Width, info.Height, true);
             }
         }
-        public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, int width, int height,
-            bool vertical = true)
+        public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, 
+            int width, int height, bool vertical = true)
         {
             SKRect rect1, rect2;
             if (vertical)
@@ -179,9 +153,10 @@ namespace RWGame.Views
             canvas.DrawBitmap(bitmap2, rect2);
         }
 
-        public async void FadeChosenTurn()
+        public async void FinishTurn()
         {
             await CanvasView[ViewModel.ChosenTurn].FadeTo(0.75, 25);
+            UpdateGameField();
         }
     }
     public partial class GameField : ContentPage
@@ -190,25 +165,21 @@ namespace RWGame.Views
         GameControls GameControls { get; set; }
         private Color backgroundColor { get; set; } = Color.Transparent;
         private SKColor backgroundSKColor { get; set; } = SKColors.Transparent;
-        public SKColor BorderColor
-        {
-            get
-            {
-                return (ViewModel.GameGoal == "center") ?
-                    SKColor.Parse("#99897d") : // Color for center player
-                    SKColor.Parse("#9f18ff");  // Color for border player
-            }
-        }
-        
         public GameField(Game game, GameStateInfo gameStateInfo, INavigation navigation)
         {
             InitializeComponent();           
-            ViewModel = new GameFieldViewModel(game, gameStateInfo, navigation, UpdateField);
+            ViewModel = new GameFieldViewModel(game, gameStateInfo, navigation);
             BindingContext = ViewModel;
             canvasView.PaintSurface += OnCanvasViewPaintSurface;
 
             StartGameControls();
             NavigationPage.SetHasNavigationBar(this, false);
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            GameControls.ViewModel.StopWaitTurn();
+            return base.OnBackButtonPressed();
         }
 
         private void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args)
@@ -224,22 +195,16 @@ namespace RWGame.Views
         }
         private void StartGameControls()
         {
-            if (ViewModel.GameStateInfo.GameState != GameStateEnum.END)
+            if (!ViewModel.IsFinished)
             {                        
-                GameControls = new GameControls(MakeTurnAndWait, InfoTurnLabel, ViewModel.Game, ViewModel.GameStateInfo, backgroundColor, canvasView, ViewModel.UpdateInfoLabel);
+                GameControls = new GameControls(ViewModel, backgroundColor, UpdateGameField);
                 stackLayout.Children.Add(GameControls.ControlsGrid);
             }
         }
 
-        public void UpdateField()
+        public void UpdateGameField()
         {
-            //GameScoreLabel.Text = ViewModel.NumTurns.ToString();  // Is it okay?
             canvasView.InvalidateSurface();
-            //InfoTurnLabel.Text = "Make turn!";  // Is it okay?
-        }
-        private async Task MakeTurnAndWait()
-        {
-            await ViewModel.MakeTurnAndWait(GameControls.ViewModel.ChosenTurn);
         }
         void DrawField(SKCanvas canvas)
         {
@@ -265,13 +230,22 @@ namespace RWGame.Views
             };
             for (int i = 0; i <= ViewModel.GridSize; i++)
             {
-                canvas.DrawLine(ViewModel.GetGridPoint(new SKPoint(i, 0)), ViewModel.GetGridPoint(new SKPoint(i, ViewModel.GridSize)), paint);
-                canvas.DrawLine(ViewModel.GetGridPoint(new SKPoint(0, i)), ViewModel.GetGridPoint(new SKPoint(ViewModel.GridSize, i)), paint);
+                canvas.DrawLine(
+                    ViewModel.GetGridPoint(new SKPoint(i, 0)), 
+                    ViewModel.GetGridPoint(new SKPoint(i, ViewModel.GridSize)), 
+                    paint
+                );
+                canvas.DrawLine(
+                    ViewModel.GetGridPoint(new SKPoint(0, i)), 
+                    ViewModel.GetGridPoint(new SKPoint(ViewModel.GridSize, i)), 
+                    paint
+                );
             }
             paint.StrokeWidth = 5;
-            paint.Color = BorderColor;
+            paint.Color = ViewModel.BorderColor;
 
-            SKPoint p1 = ViewModel.GetGridPoint(new SKPoint(0, 0)), p2 = ViewModel.GetGridPoint(new SKPoint(ViewModel.GridSize, ViewModel.GridSize));
+            SKPoint p1 = ViewModel.GetGridPoint(new SKPoint(0, 0));
+            SKPoint p2 = ViewModel.GetGridPoint(new SKPoint(ViewModel.GridSize, ViewModel.GridSize));
             canvas.DrawRect(p1.X, p1.Y, p2.X - p1.X, p2.Y - p1.Y, paint);
 
             paint = new SKPaint
@@ -309,9 +283,10 @@ namespace RWGame.Views
             float starSize = ViewModel.CellSize * 0.75f;
             var bitmap = SKBitmap.Decode(Helper.getResourceStream("Images.star.png"));
             SKImage image = SKImage.FromBitmap(bitmap);
+            SKPoint last = ViewModel.GameTrajectory.Last();
             SKRect rect = new SKRect
             {
-                Location = ViewModel.GetGridPoint(ViewModel.GameTrajectory.Last()) - new SKPoint(starSize, starSize),
+                Location = ViewModel.GetGridPoint(last) - new SKPoint(starSize, starSize),
                 Size = new SKSize(starSize * 2, starSize * 2)
             };
             canvas.DrawImage(image, rect);
@@ -326,7 +301,10 @@ namespace RWGame.Views
             {
                 int numDash = 5;
                 float dashLength = 2 * (numDash - 1) + numDash;
-                float[] dashArray = { ViewModel.CellSize / dashLength, 2 * ViewModel.CellSize / dashLength };
+                float[] dashArray = { 
+                    ViewModel.CellSize / dashLength, 
+                    2 * ViewModel.CellSize / dashLength 
+                };
                 SKPaint paint = new SKPaint
                 {
                     Color = SKColors.White,
@@ -337,19 +315,18 @@ namespace RWGame.Views
                 };
                 SKPoint cur = ViewModel.GameTrajectory.Last();
 
-                string dir1, dir2;
-                if (GameControls.ViewModel.ChooseRow)
-                {
-                    dir1 = GameControls.ViewModel.Game.GameSettings.Controls[GameControls.ViewModel.ChosenTurn][0];
-                    dir2 = GameControls.ViewModel.Game.GameSettings.Controls[GameControls.ViewModel.ChosenTurn][1];
-                }
-                else
-                {
-                    dir1 = GameControls.ViewModel.Game.GameSettings.Controls[0][GameControls.ViewModel.ChosenTurn];
-                    dir2 = GameControls.ViewModel.Game.GameSettings.Controls[1][GameControls.ViewModel.ChosenTurn];
-                }
-                canvas.DrawLine(ViewModel.GetGridPoint(cur), ViewModel.GetGridPoint(ViewModel.MovePoint(cur, dir1)), paint);
-                canvas.DrawLine(ViewModel.GetGridPoint(cur), ViewModel.GetGridPoint(ViewModel.MovePoint(cur, dir2)), paint);
+                var (dir1, dir2) = GameControls.ViewModel.CurrentDirections;
+
+                canvas.DrawLine(
+                    ViewModel.GetGridPoint(cur), 
+                    ViewModel.GetGridPoint(ViewModel.MovePoint(cur, dir1)), 
+                    paint
+                );
+                canvas.DrawLine(
+                    ViewModel.GetGridPoint(cur), 
+                    ViewModel.GetGridPoint(ViewModel.MovePoint(cur, dir2)), 
+                    paint
+                );
             }
         }
     }
