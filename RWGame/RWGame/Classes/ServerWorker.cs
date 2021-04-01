@@ -98,8 +98,6 @@ namespace RWGame.Classes
                 }
             };
             isDeviceConnect = false;
-            clientHandler = new HttpClientHandler { Proxy = new WebProxy("proxy.unn.ru:8080") };
-            //clientHandler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
             client = new HttpClient(clientHandler);
             cookieContainer = new CookieContainer();
             clientHandler.CookieContainer = cookieContainer;
