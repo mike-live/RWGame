@@ -98,6 +98,7 @@ namespace RWGame.Classes
                 }
             };
             isDeviceConnect = false;
+            clientHandler = new HttpClientHandler();
             client = new HttpClient(clientHandler);
             cookieContainer = new CookieContainer();
             clientHandler.CookieContainer = cookieContainer;
