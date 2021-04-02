@@ -7,97 +7,12 @@ using SkiaSharp;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using RWGame.Helpers;
-using PropertyChanged;
 
 namespace RWGame.ViewModels
-{
-    public class GameControlsViewModel : INotifyPropertyChanged
-    {
-        public GameControlsModel GameControlsModel;
-        public Action<int> MakeTurnView;
-        public Func<Task> MakeTurnAndWait;
-        public Action FadeChosenTurn;
-        public Action UpdateInfoLabel;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public bool ChooseRow
-        {
-            get { return GameControlsModel.ChooseRow; }
-            set { GameControlsModel.ChooseRow = value; }
-        }
-        public bool CanAnimate
-        {
-            get { return GameControlsModel.CanAnimate; }
-            set { GameControlsModel.CanAnimate = value; }
-        }
-        public bool CanMakeTurn
-        {
-            get { return GameControlsModel.CanMakeTurn; }
-            set { GameControlsModel.CanMakeTurn = value; }
-        }
-        public int ChosenTurn
-        {
-            get { return GameControlsModel.ChosenTurn; }
-            set { GameControlsModel.ChosenTurn = value; }
-        }
-        public Game Game
-        {
-            get { return GameControlsModel.Game; }
-            set { GameControlsModel.Game = value; }
-        }
-        public GameStateInfo GameStateInfo
-        {
-            get { return GameControlsModel.GameStateInfo; }
-            set { GameControlsModel.GameStateInfo = value; }
-        }
-        public Dictionary<string, string> ControlsImagesNames { get; set; } = new Dictionary<string, string> {
-            { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
-        };
-        public double ScreenWidth
-        {
-            get { return Application.Current.MainPage.Width; }
-        }
-        public double ScreenHeight
-        {
-            get { return Application.Current.MainPage.Height; }
-        }
-
-        public GameControlsViewModel(Game game, GameStateInfo gameStateInfo, Action<int> MakeTurnView, Func<Task> MakeTurnAndWait, Action FadeChosenTurn, Action UpdateInfoLabel)
-        {
-            GameControlsModel = new GameControlsModel();
-            Game = game;
-            GameStateInfo = gameStateInfo;
-            this.MakeTurnView = MakeTurnView;
-            this.MakeTurnAndWait = MakeTurnAndWait;
-            this.FadeChosenTurn = FadeChosenTurn;
-            this.UpdateInfoLabel = UpdateInfoLabel;
-        }
-
-        public async Task MakeTurn(int id)
-        {
-            if (!CanMakeTurn)
-            {
-                return;
-            }
-            UpdateInfoLabel();
-            CanMakeTurn = false;
-            ChosenTurn = id;
-            MakeTurnView(id);
-            await Task.Delay(1000);
-
-            await MakeTurnAndWait();
-
-            FadeChosenTurn();
-
-            ChosenTurn = -1;
-            CanMakeTurn = true;
-        }
-
-    }
-    public class GameFieldViewModel : INotifyPropertyChanged
+{   public class GameFieldViewModel : INotifyPropertyChanged
     {
         public GameFieldModel GameFieldModel { get; set; }
-        Action UpdateField;
+
         #region ScreenSettings
         public double ScreenWidth
         {
@@ -113,9 +28,10 @@ namespace RWGame.ViewModels
             get { return "seashore2.png"; }
         }
         public Rectangle BackImageBounds
-        { 
+        {
             get { return new Rectangle(0, 0, ScreenWidth, ScreenWidth * 2); }
         }
+        public Color BackgroundColor { get; set; } = Color.Transparent;
         public Rectangle StackLayoutBounds
         {
             get { return new Rectangle(0, 0, ScreenWidth, ScreenHeight); }
@@ -128,7 +44,10 @@ namespace RWGame.ViewModels
         {
             get { return "state_star_" + GameGoal + ".png"; }
         }
-        public string GoalLabelText { get; set; } = "";
+        public string GoalLabelText 
+        { 
+            get { return GameGoal == "center" ? "Center" : "Border"; } 
+        }
         public string GameTopScoreImageSource
         {
             get { return "top_score_" + GameGoal + ".png"; }
@@ -145,47 +64,19 @@ namespace RWGame.ViewModels
         {
             get { return ScreenWidth; }
         }
-        public bool CanMakeTurn { 
-            get { return GameFieldModel.CanMakeTurn; }
-            set { GameFieldModel.CanMakeTurn = value; }       
-        }
         public string GameScoreLabelText
         {
-            get;
-            set;
+            get { return GameFieldModel.NumTurns.ToString(); }
         }
         public string InfoTurnLabelText
         {
-            get;
-            set;
+            get { return GameFieldModel.TurnState.ToDescriptionString(); }
         }
-        public InfoStringsEnum TurnState
-        {
-            get { return GameFieldModel.TurnState; }
-        }
-
-        public void UpdateFieldState()
-        {
-            GameScoreLabelText = GameFieldModel.NumTurns.ToString();
-            InfoTurnLabelText = GameFieldModel.TurnState.ToDescriptionString();
-        }
-
-        public Game Game 
+        public Game Game
         {
             get { return GameFieldModel.Game; }
-            set { GameFieldModel.Game = value; }
-        }
-        public GameStateInfo GameStateInfo 
-        { 
-            get { return GameFieldModel.GameStateInfo; } 
-            set { GameFieldModel.GameStateInfo = value; }
         }
         INavigation Navigation { get; set; }
-        public bool NeedsCheckState
-        {
-            get { return GameFieldModel.NeedsCheckState; }
-            set { GameFieldModel.NeedsCheckState = value; }
-        }
         public List<SKPoint> GameTrajectory
         {
             get
@@ -197,17 +88,7 @@ namespace RWGame.ViewModels
                 }
                 return temp;
             }
-            set
-            {
-                List<Models.Point> temp = new List<Models.Point>();
-                foreach (SKPoint pnt in value)
-                {
-                    temp.Add(new Models.Point((int) pnt.X, (int) pnt.Y));
-                }
-                GameFieldModel.GameTrajectory = temp;
-            }
         }
-        [AlsoNotifyFor("GameScoreLabelText")]
         public int NumTurns
         {
             get { return GameFieldModel.NumTurns; }
@@ -218,21 +99,11 @@ namespace RWGame.ViewModels
         public int MarginY { get; set; } = 100;
         public float CenterRadius { get; set; } = 300;
         public float ShiftX { get; set; } = 0;
-
-        public async void IsFinished(bool state)
-        {
-            if (state)
-            {
-                await App.Current.MainPage.DisplayAlert("Game finished", "You made " + NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
-                await Navigation.PopAsync();
-            }
-            
-        }
         public SKColor BorderColor
         {
             get
             {
-                return (Game.GameSettings.Goals[Game.IdPlayer] == "center") ?
+                return (GameFieldModel.GameGoal == "center") ?
                     SKColor.Parse("#99897d") : // Color for center player
                     SKColor.Parse("#9f18ff");  // Color for border player
             }
@@ -241,12 +112,34 @@ namespace RWGame.ViewModels
         {
             get { return GetGridPoint(GridSize / 2, GridSize / 2); }
         }
-        public GameFieldViewModel(Game game, GameStateInfo gameStateInfo, INavigation navigation, Action UpdateField)
+        public bool IsFinished
         {
-            GameFieldModel = new GameFieldModel(UpdateFieldState, game, gameStateInfo);
-            UpdateFieldState();
-            Navigation = navigation;          
-            this.UpdateField = UpdateField;
+            get { return GameFieldModel.IsFinished; }
+        }
+
+        public GameFieldViewModel(Game game, GameStateInfo gameStateInfo, INavigation navigation)
+        {
+            GameFieldModel = new GameFieldModel(game, gameStateInfo);
+            Navigation = navigation;
+            GameFieldModel.PropertyChanged += (obj, args) => {
+                if (args.PropertyName == "NumTurns")
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NumTurns"));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("GameScoreLabelText"));
+                } else
+                if (args.PropertyName == "TurnState")
+                {
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("InfoTurnLabelText"));
+                } else
+                if (args.PropertyName == "IsFinished")
+                {
+                    if (IsFinished)
+                    {
+                        FinishGame();
+                    }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsFinished"));
+                }
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -279,21 +172,92 @@ namespace RWGame.ViewModels
         }
         #endregion
 
-        public void UpdateInfoLabel()
+        public async void FinishGame()
         {
-            InfoTurnLabelText = InfoStringsEnum.WAIT.ToDescriptionString();
-        }
-
-        public async Task MakeTurnAndWait(int ChosenTurn)
-        {           
-            await GameFieldModel.MakeTurn(ChosenTurn);
-            UpdateState();
-        }    
-
-        public void UpdateState()
-        {
-            UpdateField();
-            IsFinished(GameFieldModel.IsFinished);
+            await App.Current.MainPage.DisplayAlert("Game finished", "You made " + NumTurns.ToString() + " turns!" + "\n" + "Thanks for playing ;)", "OK");
+            await Navigation.PopAsync();
         }
     }
+
+    public class GameControlsViewModel : INotifyPropertyChanged
+    {
+        private readonly GameControlsModel GameControlsModel;
+        public Action StartTurn { get; set; }
+        public Action FinishTurn { get; set; }
+
+        public bool ChooseRow
+        {
+            get { return GameControlsModel.ChooseRow; }
+        }
+        public int ChosenTurn
+        {
+            get { return GameControlsModel.ChosenTurn; }
+        }
+        public Game Game
+        {
+            get { return GameControlsModel.Game; }
+        }
+        public TurnStateEnum TurnState
+        {
+            get { return GameControlsModel.TurnState; }
+        }
+        public (string, string) CurrentDirections
+        {
+            get { return GameControlsModel.CurrentDirections; }
+        }
+        public List<List<string>> Controls
+        {
+            get { return GameControlsModel.Controls; }
+        }
+        public Dictionary<string, string> ControlsImagesNames { get; set; } = new Dictionary<string, string> {
+            { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
+        };
+        public double ScreenWidth
+        {
+            get { return Application.Current.MainPage.Width; }
+        }
+        public double ScreenHeight
+        {
+            get { return Application.Current.MainPage.Height; }
+        }
+
+        public void OnTurnStateChanged()
+        {
+            if (TurnState == TurnStateEnum.WAIT)
+            {
+                StartTurn();
+            }
+            else if (TurnState == TurnStateEnum.TURN || TurnState == TurnStateEnum.END)
+            {
+                FinishTurn();
+            }
+        }
+
+        public void StopWaitTurn()
+        {
+            GameControlsModel.StopWaitTurn();
+        }
+
+        public GameControlsViewModel(GameFieldViewModel gameFieldViewModel, Action StartTurn, Action FinishTurn)
+        {
+            this.StartTurn = StartTurn;
+            this.FinishTurn = FinishTurn;
+            GameControlsModel = new GameControlsModel(gameFieldViewModel.GameFieldModel);
+            GameControlsModel.PropertyChanged += (obj, args) => {
+                if (args.PropertyName == "TurnState")
+                {
+                    OnTurnStateChanged();
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("TurnState"));
+                }
+            };
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public async Task MakeTurn(int ChosenTurn)
+        {
+            await GameControlsModel.MakeTurn(ChosenTurn);
+        }
+    }
+
 }
