@@ -19,28 +19,39 @@
     <Compile Include="$(MSBuildThisFileDirectory)Classes\Helper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ResponseClases\JsonResponses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Classes\ServerWorker.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Classes\SystemSettings.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)GameField.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)GameHistoryPage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)GameProcesses.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISignalsPlay.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameFieldModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\StandingsModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\GameHistoryModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealPlayerChoiceModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RegistrationPageModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StandingsPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\UserModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)PagesGameChoise\ChoiseRealPlayerPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RegistrationPage.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml.cs">
-      <DependentUpon>TabbedUserPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)TourGuide.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)UserPage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameFieldViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Helpers\Emojis.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Helpers\InfoStrings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\LoginPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RegistrationPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RealPlayerChoiceViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\StandingsPageViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameField.xaml.cs">
+      <DependentUpon>GameField.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml.cs">
+      <DependentUpon>RealPlayerChoicePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml.cs">
+      <DependentUpon>GameCellTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\GameHistoryPage.xaml.cs">
+      <DependentUpon>GameHistoryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml.cs">
       <DependentUpon>LoginPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -49,18 +60,16 @@
       <DependentUpon>RegistrationPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\TabbedUserPage.xaml.cs">
+      <DependentUpon>TabbedUserPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml.cs">
+      <DependentUpon>UserPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\StandingsPage.xaml.cs">
+      <DependentUpon>StandingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)TabbedUserPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)GameField.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\star.png" />
@@ -70,6 +79,12 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\left.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\right.png" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LoginPage.xaml">
@@ -83,5 +98,37 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)FodyWeavers.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\StandingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameHistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\TabbedUserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

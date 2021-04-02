@@ -14,6 +14,7 @@ namespace RWGame.Classes
 {
     public class ServerWorker
     {
+        private static ServerWorker serverWorker;
         public string URLServer { get; private set; }
         private bool isDeviceConnect;
         public bool IsDeviceConnect
@@ -85,7 +86,7 @@ namespace RWGame.Classes
         /// <summary>+Получить таблицу рейтинга</summary>
         readonly string GetStandingsCommand = "game_actions/get_standings";
 
-        public ServerWorker()
+        private ServerWorker() 
         {
             URLServer = "https://scigames.ru/";
             CrossConnectivity.Current.ConnectivityChanged += delegate
@@ -105,6 +106,14 @@ namespace RWGame.Classes
             Task.Run(() => SetCookies()).Wait();
         }
 
+        public static ServerWorker GetServerWorker()
+        {
+            if (serverWorker == null)
+            {
+                serverWorker = new ServerWorker();
+            }
+            return serverWorker;
+        }
         private async Task SetCookies()
         {
             try
@@ -157,8 +166,13 @@ namespace RWGame.Classes
             string cookiesHeader = cookies?.FirstOrDefault();
             if (cookiesHeader != null)
             {
-                await SecureStorage.SetAsync("cookies", cookiesHeader);
-                Console.WriteLine($"Cookies: {cookiesHeader}");
+                try
+                {
+                    await SecureStorage.SetAsync("cookies", cookiesHeader);
+                    Console.WriteLine($"Cookies: {cookiesHeader}");
+                }
+                catch { }
+                
             }
 
             string responseJsonString = await response.Content.ReadAsStringAsync();

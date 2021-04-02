@@ -1,18 +1,14 @@
 using RWGame.Classes;
 using RWGame.Classes.ResponseClases;
-using RWGame.PagesGameChoise;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using SkiaSharp;
 using SkiaSharp.Views.Forms;
 //using System.Text;
 //using System.IO;
 using System.Threading.Tasks;
 using Xamarin.Forms;
-using Xamarin.Essentials;
-using System.Text;
+using RWGame.Views;
 //using Xamarin.Forms.Shapes;
 //using Xamarin.Forms.Platform.Android;
 
@@ -339,7 +335,7 @@ namespace RWGame
             {
                 if (isGameStarted) return;
                 isGameStarted = true;
-                await Navigation.PushAsync(new ChoiseRealPlayerPage(serverWorker, systemSettings));
+                await Navigation.PushAsync(new RealPlayerChoicePage(serverWorker, systemSettings));
             };
 
 

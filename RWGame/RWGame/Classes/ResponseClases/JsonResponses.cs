@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RWGame.Classes.ResponseClases
 {
@@ -21,7 +22,13 @@ namespace RWGame.Classes.ResponseClases
 
     public enum GameStateEnum
     {
-        NEW = 0, CONNECT = 1, START = 2, ACTIVE = 3, END = 4, PAUSE = 5, WAIT = 6
+        NEW = 0, 
+        CONNECT = 1, 
+        START = 2, 
+        ACTIVE = 3, 
+        END = 4, 
+        PAUSE = 5, 
+        WAIT = 6
     };
 
     /*public enum ControlsEnum
@@ -202,7 +209,17 @@ namespace RWGame.Classes.ResponseClases
 
         [JsonProperty("game_state")]
         private string gameState { get; set; }
-        public GameStateEnum GameState { get { Enum.TryParse(gameState, out GameStateEnum curGameState); return curGameState; } }
+        public GameStateEnum GameState 
+        {
+            get 
+            {
+                Enum.TryParse(gameState, out GameStateEnum curGameState); 
+                return curGameState; 
+            }
+        }
+
+        [JsonProperty("score")]
+        public int? Score { get; set; }
 
         [JsonProperty("user_error")]
         public string UserError { get; set; }
@@ -235,7 +252,7 @@ namespace RWGame.Classes.ResponseClases
         public string Name { get; set; }
 
         [JsonProperty("family")]
-        public string Family{ get; set; }
+        public string Surname { get; set; }
 
         [JsonProperty("birthday")]
         public DateTime Birthday { get; set; }
@@ -259,7 +276,7 @@ namespace RWGame.Classes.ResponseClases
         public int CountGamesCenter { get; set; }
 
         [JsonProperty("count_games_2")]
-        public int CountGamesBorder { get; set; }    
+        public int CountGamesBorder { get; set; }
     }
 
     public class PlayerInfo

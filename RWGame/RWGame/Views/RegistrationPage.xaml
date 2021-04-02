@@ -8,6 +8,9 @@
              BackgroundImageSource="background_2_art_1.png">
     <ContentPage.Content>
         <ScrollView>
+            <ScrollView.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBackCommand}"/>
+            </ScrollView.GestureRecognizers>
             <StackLayout>
                 <StackLayout x:Name="personalDataLayout"
                              VerticalOptions="CenterAndExpand" 
@@ -44,6 +47,7 @@
                         <Entry x:Name="nameEntry"
                                Placeholder="Your name"
                                TextColor="#39bafa"
+                               BackgroundColor="#FFFFFF"
                                Margin="10,0,10,0"
                                Keyboard="Text"
                                Text="{Binding User.Name}">
@@ -81,6 +85,7 @@
                         <DatePicker x:Name="birthdayEntry"
                                     Format="d"
                                     TextColor="#39bafa"
+                                    BackgroundColor="#FFFFFF"
                                     MinimumDate="1900.01.01"
                                     MaximumDate="{x:Static sys:DateTime.Now}"
                                     Date="{Binding User.Birthday}"
@@ -157,7 +162,7 @@
 
                     <!--#region Next -->
                     <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Margin="15,5,15,10">
-                        <Button Text="Continue" HorizontalOptions="End" 
+                        <Button Text="CONTINUE" HorizontalOptions="End" 
                                 BackgroundColor="#f2fbff" 
                                 BorderColor="#39bafa"
                                 BorderWidth="2"
@@ -201,6 +206,7 @@
                         <Entry x:Name="emailEntry"
                                Placeholder="Email"
                                TextColor="#39bafa"
+                               BackgroundColor="#FFFFFF"
                                Text="{Binding User.Email}"
                                Margin="10,0,10,0"
                                Keyboard="Email">
@@ -240,6 +246,7 @@
                                Placeholder="Login"
                                TextColor="#39bafa"
                                Margin="10,0,10,0"
+                               BackgroundColor="#FFFFFF"
                                Keyboard="Text"
                                Text="{Binding User.Login}">
                             <Entry.Behaviors>
@@ -280,6 +287,7 @@
                                Placeholder="Password"
                                TextColor="#39bafa"
                                Margin="10,0,10,0"
+                               BackgroundColor="#FFFFFF"
                                Keyboard="Text"
                                IsPassword="True"
                                Text="{Binding User.Password}">
@@ -320,6 +328,7 @@
                                Placeholder="Confirm password"
                                TextColor="#39bafa"
                                Margin="10,0,10,0"
+                               BackgroundColor="#FFFFFF"
                                Keyboard="Text"
                                IsPassword="True"
                                Text="{Binding User.ConfirmPassword}">
@@ -340,7 +349,7 @@
                     <!--#endregion Confirm Password-->
                     <!--#region SignUp -->
                     <StackLayout VerticalOptions="Fill" HorizontalOptions="Fill" Spacing="0" Margin="15,0,15,10">
-                        <Button Text="Sign Up"
+                        <Button Text="SIGN UP"
                                 HorizontalOptions="End" 
                                 BackgroundColor="#f2fbff" 
                                 BorderColor="#39bafa"

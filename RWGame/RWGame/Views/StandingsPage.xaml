@@ -1,0 +1,192 @@
+﻿<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="RWGame.Views.StandingsPage"    
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             BackgroundColor="White"
+             BackgroundImageSource="background_2_art_1.png">
+
+
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
+            <StackLayout.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBack}"/>
+            </StackLayout.GestureRecognizers>
+            <!-- Temporary! Change text to Binding later if we want to use this view for different standings. -->
+            <Label x:Name="standingsLabel"
+                   Text="Humanity vs Bot"
+                   FontSize="Large"
+                   TextColor="#0099e6"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Margin="20,10,20,10"/>
+            <Grid HorizontalOptions="FillAndExpand" 
+                                  VerticalOptions="FillAndExpand"
+                                  Margin="1,3,1,3"
+                                  ColumnSpacing="0"
+                                  RowSpacing="1">
+                <Grid.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBack}"/>
+                </Grid.GestureRecognizers>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.75*" />
+                    <ColumnDefinition Width="2.7*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1.2*" />
+                </Grid.ColumnDefinitions>
+                <BoxView Color="#203949AB"
+                             Grid.Column="0" Grid.ColumnSpan="5"
+                             Grid.Row="0" Grid.RowSpan="1"/>
+                <Image x:Name="performanceCenterImage"
+                                       HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       Source="top_score_center.png"
+                                       Grid.Column="2"
+                                       Grid.Row="1" />
+                <Image x:Name="performanceBorderImage"
+                                       HeightRequest="{Binding FontSize, Source={x:Reference ratingInfoLabel}}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       Source="top_score_border.png"
+                                       Grid.Column="3"
+                                       Grid.Row="1" />
+                <Label x:Name="ratingInfoLabel"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       TextColor="#0099e6"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       Text="Rating"
+                                       FontSize="Small" 
+                                       Grid.Column="4"
+                                       Grid.Row="1"/>
+                <Label x:Name="manLabel"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       TextColor="#0099e6"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="Small"
+                                       Text="Humanity" 
+                                       Grid.Column="1"
+                                       Grid.Row="0"/>
+                <Label x:Name="manPerformanceCenterLabel"
+                                       Text="{Binding StandingsDisplayData.ManPerformanceCenterLabelText}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       TextColor="#0099e6"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="Small" 
+                                       Grid.Column="2"
+                                       Grid.Row="0"/>
+                <Label x:Name="manPerformanceBorderLabel"
+                                       Text="{Binding StandingsDisplayData.ManPerformanceBorderLabelText }"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       TextColor="#0099e6"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="Small" 
+                                       Grid.Column="3"
+                                       Grid.Row="0"/>
+                <Label x:Name="manRatingLabel"
+                                       Text="{Binding StandingsDisplayData.ManRatingLabelText}"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="CenterAndExpand"
+                                       TextColor="#0099e6"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       FontSize="Small" 
+                                       Grid.Column="4"
+                                       Grid.Row="0" />
+            </Grid>
+            <ListView x:Name="standingsListView"
+                      IsPullToRefreshEnabled="True"
+                      BackgroundColor="Transparent"
+                      RefreshCommand="{Binding RefreshListCommand}"
+                      IsRefreshing="{Binding StandingsDisplayData.ListViewIsRefreshing}"
+                      ItemsSource="{Binding StandingsDisplayData.StandingsListViewRecords}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid VerticalOptions="FillAndExpand"   
+                              HorizontalOptions="FillAndExpand"
+                              ColumnSpacing="0"
+                              RowSpacing="1"
+                              Margin="1,3,1,3"
+                              BackgroundColor="{Binding CellBackgroundColor}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="2.45*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1.2*" />
+                                </Grid.ColumnDefinitions>
+                                <Label x:Name="playerRankLabel"
+                                        Text="{Binding PlayerRank}"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="Center"
+                                        TextColor="#39bafa"
+                                        FontSize="Small"
+                                        FontAttributes="Bold"
+                                        Margin="10,0,0,0"
+                                        Grid.Row="0" Grid.RowSpan="1"
+                                        Grid.Column="0" Grid.ColumnSpan="1"/>
+                                <Label x:Name="playerUserNameLabel"
+                                        Text="{Binding UserName}"
+                                        HorizontalOptions="StartAndExpand"
+                                        VerticalOptions="Center"
+                                        TextColor="#39bafa"
+                                        FontSize="Small"
+                                        FontAttributes="Bold"
+                                        HorizontalTextAlignment="Start"
+                                        Grid.Row="0" Grid.RowSpan="1"
+                                        Grid.Column="1" Grid.ColumnSpan="1"/>
+                                <Label x:Name="playerPerformanceCenterLabel"
+                                       Text="{Binding PerformanceCenter}"
+                                       HorizontalOptions="FillAndExpand"
+                                       VerticalOptions="Center"
+                                       TextColor="#39bafa"
+                                       FontSize="Small"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       Grid.Row="0" Grid.RowSpan="1"
+                                       Grid.Column="2" Grid.ColumnSpan="1"/>
+                                <Label x:Name="playerPerformanceBorderLabel"
+                                       Text="{Binding PerformanceBorder}"
+                                       HorizontalOptions="FillAndExpand"
+                                       VerticalOptions="Center"
+                                       HorizontalTextAlignment="Center"
+                                       TextColor="#39bafa"
+                                       FontSize="Small"
+                                       FontAttributes="Bold"
+                                       Grid.Row="0" Grid.RowSpan="1"
+                                       Grid.Column="3" Grid.ColumnSpan="1"/>
+                                <Label x:Name="playerRatingLabel"
+                                       Text="{Binding Rating}"
+                                       HorizontalOptions="CenterAndExpand"
+                                       VerticalOptions="Center"
+                                       TextColor="#39bafa"
+                                       FontSize="Small"
+                                       FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center"
+                                       Grid.Row="0" Grid.RowSpan="1"
+                                       Grid.Column="4" Grid.ColumnSpan="1"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

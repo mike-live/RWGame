@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms" 
+             xmlns:viewmodels="clr-namespace:RWGame.ViewModels" 
+             x:DataType="viewmodels:GameFieldViewModel"
+             x:Class="RWGame.Views.GameField">
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <Image x:Name="Back"
+                   VerticalOptions="Start"
+                   Aspect="AspectFill"
+                   Source="{Binding BackImageSource}"
+                   AbsoluteLayout.LayoutBounds="{Binding BackImageBounds}"/>
+            <StackLayout x:Name="stackLayout"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="Fill"
+                         Spacing="0"
+                         AbsoluteLayout.LayoutBounds="{Binding StackLayoutBounds}">
+                <Grid x:Name="labelGrid"
+                      HorizontalOptions="Fill"
+                      Margin="20,0,20,0"
+                      BackgroundColor="#266bbaff">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="2.2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackLayout x:Name="stackLayoutScore"
+                                 Orientation="Horizontal"
+                                 HorizontalOptions="Start"
+                                 Grid.Row="0"
+                                 Grid.Column="0">
+                        <Image x:Name="GameScoreImage"
+                               BackgroundColor="{Binding BackgroundColor}"
+                               Source="{Binding GameScoreImageSource}"
+                               Aspect="AspectFit"
+                               HeightRequest="{Binding FontSize, Source={x:Reference GameScoreLabel}}"
+                               Scale="1"
+                               Margin="0,3,0,3"/>
+                        <Label x:Name="GameScoreLabel"
+                               Text="{Binding GameScoreLabelText}"
+                               FontSize="Medium"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="End"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="{Binding BackgroundColor}"/>
+                    </StackLayout>
+                    <Label x:Name="GoalLabel"
+                           Text="{Binding GoalLabelText}"
+                           FontSize="Medium"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           HorizontalOptions="CenterAndExpand"
+                           VerticalOptions="Center"
+                           Background="{Binding BackgroundColor}"
+                           Grid.Row="0"
+                           Grid.Column="1"/>
+                    <StackLayout x:Name="stackLayoutTopScore"
+                                 Orientation="Horizontal"
+                                 HorizontalOptions="EndAndExpand"
+                                 Grid.Row="0"
+                                 Grid.Column="2">
+                        <Image x:Name="GameTopScoreImage"
+                               BackgroundColor="{Binding BackgroundColor}"
+                               Source="{Binding GameTopScoreImageSource}"
+                               Aspect="AspectFit"
+                               HeightRequest="{Binding FontSize, Source={x:Reference GameTopScoreLabel}}"
+                               Scale="1"
+                               Margin="0,3,0,3"/>
+                        <Label x:Name="GameTopScoreLabel"
+                               Text="{Binding GameTopScoreLabelText}"
+                               FontSize="Medium"
+                               FontAttributes="Bold"
+                               TextColor="White"
+                               HorizontalOptions="End"
+                               VerticalOptions="CenterAndExpand"
+                               BackgroundColor="{Binding BackgroundColor}"/>
+                    </StackLayout>
+                </Grid>
+                <skia:SKCanvasView x:Name="canvasView"
+                               HorizontalOptions="FillAndExpand"
+                               VerticalOptions="Fill"
+                               Margin="0,0,0,0"
+                               HeightRequest="{Binding CanvasViewHeightRequest}"
+                               WidthRequest="{Binding CanvasViewWidthRequest}">
+                </skia:SKCanvasView>
+                <Label x:Name="InfoTurnLabel"
+                       Text="{Binding InfoTurnLabelText}"
+                       FontSize="Large"
+                       FontAttributes="Bold"
+                       TextColor="#15c1ff"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       BackgroundColor="#80f9ce6f"/>
+            </StackLayout>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>
