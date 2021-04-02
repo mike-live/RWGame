@@ -94,8 +94,12 @@ namespace RWGame.Views
 
         async void StartTurn()
         {
-            await CanvasView[ViewModel.ChosenTurn].FadeTo(1, 100);
-            UpdateGameField();
+            if (ViewModel.ChosenTurn != -1)
+            {
+                await CanvasView[ViewModel.ChosenTurn].FadeTo(1, 100);
+                UpdateGameField();
+            }
+            
         }
 
         void OnCanvasViewPaintSurface(object sender, SKPaintSurfaceEventArgs args, int id)
@@ -152,8 +156,11 @@ namespace RWGame.Views
 
         public async void FinishTurn()
         {
-            await CanvasView[ViewModel.ChosenTurn].FadeTo(0.75, 25);
-            UpdateGameField();
+            if (ViewModel.ChosenTurn != -1)
+            {
+                await CanvasView[ViewModel.ChosenTurn].FadeTo(0.75, 25);
+                UpdateGameField();
+            }
         }
     }
     public partial class GameField : ContentPage
