@@ -16,6 +16,9 @@
                      HorizontalOptions="Fill"
                      Margin="10,0,10,0"
                      Spacing="0">
+            <StackLayout.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBackCommand}"/>
+            </StackLayout.GestureRecognizers>
             <Label x:Name="headLabel"
                    HorizontalOptions="Center"
                    VerticalOptions="Start"
@@ -47,6 +50,7 @@
                            HorizontalOptions="FillAndExpand"
                            VerticalOptions="CenterAndExpand"
                            MinimumWidthRequest="60"
+                           BackgroundColor="Transparent"
                            Margin="0,5"/>
                 <Button x:Name="playButton"
                         Text="{Binding RealPlayerChoiceDisplayData.PlayButtonText}"
@@ -60,7 +64,11 @@
             <ListView x:Name="searchResults"
                       ItemsSource="{Binding RealPlayerChoiceDisplayData.SearchResults}"
                       ItemSelected="OnSelection"
+                      BackgroundColor="Transparent"
                       IsVisible="{Binding RealPlayerChoiceDisplayData.IsPlayerListVisible}">
+                <ListView.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBackCommand}"/>
+                </ListView.GestureRecognizers>
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

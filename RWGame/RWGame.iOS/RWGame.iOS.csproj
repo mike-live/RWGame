@@ -285,6 +285,10 @@
     <ImageAsset Include="Assets.xcassets\ic_google.imageset\ic_google.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\background_2_art_1.imageset\background_2_art_1-1.png" />
+    <ImageAsset Include="Assets.xcassets\background_2_art_1.imageset\background_2_art_1-2.png" />
+    <ImageAsset Include="Assets.xcassets\HeadLogo.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\HeadLogo.imageset\HeadLogo.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -350,6 +354,7 @@
     <Folder Include="Assets.xcassets\top_score_border.imageset\" />
     <Folder Include="Assets.xcassets\top_score_center.imageset\" />
     <Folder Include="Assets.xcassets\yes.imageset\" />
+    <Folder Include="Assets.xcassets\HeadLogo.imageset\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\RWGame\RWGame.projitems" Label="Shared" />

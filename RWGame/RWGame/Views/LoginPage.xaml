@@ -31,7 +31,7 @@
                                VerticalOptions = "End"
                                Text = "{Binding login}"
                                TextColor="#39bafa"
-                               BackgroundColor="#FFFFFF"
+                               BackgroundColor="Transparent"
                                PlaceholderColor="#39bafa"/>
                         <Entry Placeholder="Enter password"
                                HorizontalOptions = "FillAndExpand"
@@ -39,7 +39,7 @@
                                Text = "{Binding password}"
                                TextColor="#39bafa"
                                PlaceholderColor="#39bafa"
-                               BackgroundColor="#FFFFFF"
+                               BackgroundColor="Transparent"
                                IsPassword="True"/>
                         <Button Text="Login"
                                 VerticalOptions="EndAndExpand"
