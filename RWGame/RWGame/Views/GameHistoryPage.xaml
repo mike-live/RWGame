@@ -5,7 +5,8 @@
              xmlns:behaviorsPack="clr-namespace:Xamarin.Forms.BehaviorsPack;assembly=Xamarin.Forms.BehaviorsPack"
              Title="{Binding GameHistoryDisplayData.Title}"
              BackgroundColor="White"
-             BackgroundImageSource="background_2_art_1.png">
+             BackgroundImageSource="background_2_art_1.png"
+             IconImageSource="ic_history.pdf">
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>

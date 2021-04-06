@@ -1,6 +1,8 @@
 using RWGame.Classes;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Forms.PlatformConfiguration;
+using System;
 
 namespace RWGame.Views
 {
@@ -11,8 +13,15 @@ namespace RWGame.Views
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-            Children.Add(new UserPage(Navigation));
-            Children.Add(new GameHistoryPage(Navigation));           
+            UserPage userPage = new UserPage(Navigation);
+            Children.Add(userPage);
+
+            if (Device.RuntimePlatform == Device.iOS)
+            {
+                Children.Add(new PlayPopupIOS(userPage.ViewModel));
+            }            
+            Children.Add(new GameHistoryPage(Navigation));
+            
         }
     }
 }

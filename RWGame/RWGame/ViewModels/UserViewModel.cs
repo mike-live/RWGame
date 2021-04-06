@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Collections.ObjectModel;
 using RWGame.Views;
 
+
 namespace RWGame.ViewModels
 {
     public class GameListElement
@@ -54,7 +55,6 @@ namespace RWGame.ViewModels
             RealPlayerChoicePage = new RealPlayerChoicePage();
             StandingsPage = new Views.StandingsPage();
         }
-
         #region MainProperties
         public RealPlayerChoicePage RealPlayerChoicePage { get; set; }
         public Views.StandingsPage StandingsPage { get; set; } 
@@ -85,7 +85,7 @@ namespace RWGame.ViewModels
         }
 
         #region ViewProperties
-        public string Title { get; } = "Started Games";
+        public string Title { get; } = "STARTED GAMES";
 
         public string GameListViewEmptyMessageText { get; } = "Here we place your current games.\nTo play tap bot or friend.";
 
@@ -222,6 +222,7 @@ namespace RWGame.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public UserDisplayData UserDisplayData { get; set; }
+        public bool OnAndroid { get; set; } = Device.RuntimePlatform == Device.Android;
         public UserViewModel(INavigation Navigation)
         {
             UserDisplayData = new UserDisplayData(Navigation);

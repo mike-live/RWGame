@@ -12,6 +12,10 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)MainPage.xaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PlayPopupIOS.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -71,6 +75,9 @@
       <DependentUpon>StandingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PlayPopupIOS.xaml.cs">
+      <DependentUpon>PlayPopupIOS.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\star.png" />

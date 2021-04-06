@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pages:PopupPage 
+xmlns="http://xamarin.com/schemas/2014/forms"
+xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
+x:Class="RWGame.Views.PlayPopupIOS"
+Title="Play">
+    <StackLayout x:Name="buttonStack"
+                 VerticalOptions="Center"
+                 HorizontalOptions="Fill"
+                 Margin="20,10,20,10"
+                 Orientation="Horizontal"
+                 BackgroundColor="White">
+        <StackLayout x:Name="stackLayoutPlayWithAnotherPlayer"
+                     HorizontalOptions="CenterAndExpand"
+                     Spacing="0">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding PlayWithAnotherPlayerCommand}"/>
+            </StackLayout.GestureRecognizers>
+            <ImageButton x:Name="playWithAnotherPlayerButton"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center"
+                         BackgroundColor="White"
+                         IsEnabled="True"
+                         Source="{Binding UserDisplayData.PlayWithAnotherPlayerButtonImage}"
+                         HeightRequest="30"
+                         WidthRequest="60"
+                         Padding="0"
+                         Command="{Binding PlayWithAnotherPlayerCommand}"/>
+            <Label x:Name="playWithAnotherPlayerLabel"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   TextColor="#39bafa"
+                   BackgroundColor="White"
+                   FontSize="Small"
+                   FontAttributes="Bold"
+                   Text="{Binding UserDisplayData.PlayWithAnotherPlayerLabelText}"/>
+        </StackLayout>
+        <StackLayout x:Name="stackLayoutPlayWithBot"
+                     HorizontalOptions="CenterAndExpand"
+                     Spacing="0">
+            <StackLayout.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding PlayWithBotCommand}"/>
+            </StackLayout.GestureRecognizers>
+            <ImageButton x:Name="playWithBotButton"
+                         VerticalOptions="Center"
+                         HorizontalOptions="Center"
+                         IsEnabled="True"
+                         BackgroundColor="White"
+                         Source="{Binding UserDisplayData.PlayWithBotButtonImage}"
+                         HeightRequest="30"
+                         WidthRequest="60"
+                         Padding="0"
+                         Command="{Binding PlayWithBotCommand}"/>
+            <Label x:Name="playWithBotLabel"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"
+                   TextColor="#39bafa"
+                   BackgroundColor="White"
+                   FontSize="Small"
+                   FontAttributes="Bold"
+                   Text="{Binding UserDisplayData.PlayWithBotLabelText}" />
+        </StackLayout>
+    </StackLayout>
+</pages:PopupPage>

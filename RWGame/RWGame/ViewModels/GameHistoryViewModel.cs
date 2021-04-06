@@ -31,7 +31,7 @@ namespace RWGame.ViewModels
         #endregion
 
         #region ViewProperties
-        public string Title { get; } = "Games History";
+        public string Title { get; } = "GAMES HISTORY";
         public string GameListViewEmptyMessageText { get; } = "Here we place your finished games.\nThanks for playing =)";
 
         public bool IsCustomListViewVisible { get; set; } = false;

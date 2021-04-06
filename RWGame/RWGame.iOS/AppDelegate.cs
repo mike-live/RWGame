@@ -19,11 +19,13 @@ namespace RWGame.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            Rg.Plugins.Popup.Popup.Init();
+
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 
             UIApplication.SharedApplication.StatusBarHidden = true;
-
+            
             return base.FinishedLaunching(app, options);
         }
     }

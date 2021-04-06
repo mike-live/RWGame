@@ -5,7 +5,8 @@
              x:Class="RWGame.Views.UserPage"
              Title="{Binding UserDisplayData.Title}"    
              BackgroundColor="White"
-             BackgroundImageSource="background_2_art_1.png">
+             BackgroundImageSource="background_2_art_1.png"
+             IconImageSource="ic_play.pdf">
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>
@@ -175,7 +176,14 @@
                              VerticalOptions="Center"
                              HorizontalOptions="Fill"
                              Margin="20,10,20,10"
-                             Orientation="Horizontal">
+                             Orientation="Horizontal"
+                             BackgroundColor="White">
+                    <StackLayout.IsVisible>
+                        <OnPlatform x:TypeArguments="x:Boolean">
+                            <On Platform="iOS" Value="false"/>
+                            <On Platform="Android" Value="true"/>
+                        </OnPlatform>
+                    </StackLayout.IsVisible>
                     <StackLayout x:Name="stackLayoutPlayWithAnotherPlayer"
                                  HorizontalOptions="CenterAndExpand"
                                  Spacing="0">
@@ -196,6 +204,7 @@
                                VerticalOptions="Center"
                                HorizontalOptions="Center"
                                TextColor="#39bafa"
+                               BackgroundColor="White"
                                FontSize="Small"
                                FontAttributes="Bold"
                                Text="{Binding UserDisplayData.PlayWithAnotherPlayerLabelText}"/>
@@ -220,6 +229,7 @@
                                VerticalOptions="Center"
                                HorizontalOptions="Center"
                                TextColor="#39bafa"
+                               BackgroundColor="White"
                                FontSize="Small"
                                FontAttributes="Bold"
                                Text="{Binding UserDisplayData.PlayWithBotLabelText}" />
