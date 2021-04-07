@@ -1,5 +1,4 @@
-﻿
-using Foundation;
+﻿using Foundation;
 using UIKit;
 
 namespace RWGame.iOS
@@ -19,8 +18,6 @@ namespace RWGame.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            Rg.Plugins.Popup.Popup.Init();
-
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
 

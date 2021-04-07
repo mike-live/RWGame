@@ -22,21 +22,21 @@
 	</array>
 	<key>MinimumOSVersion</key>
 	<string>14.0</string>
-	<key>CFBundleDisplayName</key>
-	<string>RWGame</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.companyname.RWGame</string>
+	<string>com.scigames.RWGame</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>CFBundleName</key>
 	<string>RWGame</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon.appiconset</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>CFBundleDisplayName</key>
+	<string>Random Walk</string>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon-1.appiconset</string>
 </dict>
 </plist>

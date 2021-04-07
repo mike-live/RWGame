@@ -52,7 +52,7 @@ namespace RWGame.ViewModels
         {
             this.Navigation = Navigation;
             UserModel = new UserModel();
-            RealPlayerChoicePage = new RealPlayerChoicePage();
+            RealPlayerChoicePage = new RealPlayerChoicePage(Navigation);
             StandingsPage = new Views.StandingsPage();
         }
         #region MainProperties
@@ -85,7 +85,7 @@ namespace RWGame.ViewModels
         }
 
         #region ViewProperties
-        public string Title { get; } = "STARTED GAMES";
+        public string Title { get; } = "ONGOING";
 
         public string GameListViewEmptyMessageText { get; } = "Here we place your current games.\nTo play tap bot or friend.";
 
@@ -222,10 +222,11 @@ namespace RWGame.ViewModels
     {
         public event PropertyChangedEventHandler PropertyChanged;
         public UserDisplayData UserDisplayData { get; set; }
-        public bool OnAndroid { get; set; } = Device.RuntimePlatform == Device.Android;
+        private INavigation Navigation { get; set; }
         public UserViewModel(INavigation Navigation)
         {
             UserDisplayData = new UserDisplayData(Navigation);
+            this.Navigation = Navigation;
             RefreshGamesListCommand = new Command(UserDisplayData.OnPullUpdateGameList);
             PlayWithBotCommand = new Command(UserDisplayData.PlayWithBot);
             PlayWithAnotherPlayerCommand = new Command(UserDisplayData.PlayWithAnotherPlayer);

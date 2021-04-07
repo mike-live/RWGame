@@ -10,10 +10,10 @@ namespace RWGame.Views
     public partial class RealPlayerChoicePage : ContentPage
     {
         private RealPlayerChoiceViewModel ViewModel;
-        public RealPlayerChoicePage()
+        public RealPlayerChoicePage(INavigation navigation)
         {
             InitializeComponent();
-            ViewModel = new RealPlayerChoiceViewModel(Navigation);
+            ViewModel = new RealPlayerChoiceViewModel(navigation);
             BindingContext = ViewModel;
 
             NavigationPage.SetHasNavigationBar(this, false);

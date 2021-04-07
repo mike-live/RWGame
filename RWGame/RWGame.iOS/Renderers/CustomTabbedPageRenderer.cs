@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using RWGame.iOS.Renderers;
 using UIKit;
 using Xamarin.Forms;
@@ -20,13 +21,13 @@ namespace RWGame.iOS.Renderers
         public override void ViewWillAppear(bool animated)
         {
             base.ViewWillAppear(animated);
-            ResizeIcons();
+            //ResizeIcons();
      
         }
 
         public override void ItemSelected(UITabBar tabbar, UITabBarItem item)
         {
-            ResizeIcons();
+            //ResizeIcons();
         }
 
         private void ResizeIcons()

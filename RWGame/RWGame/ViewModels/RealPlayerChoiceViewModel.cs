@@ -112,7 +112,10 @@ namespace RWGame.ViewModels
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
                     GameField = new Views.GameField(Game, GameStateInfo, Navigation);
-                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
+                    if (Device.RuntimePlatform == Device.Android)
+                    {
+                        Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
+                    }
                     await Navigation.PushAsync(GameField);
                 }
                 else

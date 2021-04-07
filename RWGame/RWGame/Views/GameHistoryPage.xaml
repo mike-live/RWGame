@@ -19,6 +19,12 @@
         <StackLayout VerticalOptions="Center"
                      HorizontalOptions="Fill"
                      Margin="10,10,0,10">
+            <StackLayout.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" >
+                        <On Platform="iOS" Value="0,15,15,0" />
+                        <On Platform="Android" Value="15,0,15,0" />
+                        </OnPlatform>
+            </StackLayout.Margin>
             <ListView x:Name="gamesListView"
                       ItemsSource="{Binding GameHistoryDisplayData.CustomListViewRecords}"
                       ItemSelected="OnSelection"

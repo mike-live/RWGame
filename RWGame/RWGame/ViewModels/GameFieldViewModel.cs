@@ -7,6 +7,7 @@ using SkiaSharp;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using RWGame.Helpers;
+using RWGame.Views;
 
 namespace RWGame.ViewModels
 {   public class GameFieldViewModel : INotifyPropertyChanged
