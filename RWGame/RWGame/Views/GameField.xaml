@@ -7,6 +7,9 @@
              x:Class="RWGame.Views.GameField">
     <ContentPage.Content>
         <AbsoluteLayout>
+            <AbsoluteLayout.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBackCommand}" />
+            </AbsoluteLayout.GestureRecognizers>
             <Image x:Name="Back"
                    VerticalOptions="Start"
                    Aspect="AspectFill"
