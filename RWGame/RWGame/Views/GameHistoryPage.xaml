@@ -6,7 +6,7 @@
              Title="{Binding GameHistoryDisplayData.Title}"
              BackgroundColor="White"
              BackgroundImageSource="background_2_art_1.png"
-             IconImageSource="ic_history.pdf">
+             IconImageSource="ic_history">
     <ContentPage.Resources>
         <ResourceDictionary Source="GameCellTemplate.xaml" />
     </ContentPage.Resources>
@@ -22,7 +22,7 @@
             <StackLayout.Margin>
                         <OnPlatform x:TypeArguments="Thickness" >
                         <On Platform="iOS" Value="0,15,15,0" />
-                        <On Platform="Android" Value="15,0,15,0" />
+                        <On Platform="Android" Value="15,15,15,0" />
                         </OnPlatform>
             </StackLayout.Margin>
             <ListView x:Name="gamesListView"

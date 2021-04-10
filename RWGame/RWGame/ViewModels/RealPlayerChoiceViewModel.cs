@@ -112,10 +112,7 @@ namespace RWGame.ViewModels
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
                     GameField = new Views.GameField(Game, GameStateInfo, Navigation);
-                    if (Device.RuntimePlatform == Device.Android)
-                    {
-                        Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
-                    }
+                    //Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
                     await Navigation.PushAsync(GameField);
                 }
                 else
@@ -135,11 +132,6 @@ namespace RWGame.ViewModels
             SearchResults = emptyList;
             IsPlayerListVisible = false;
         }
-
-        public async void GoBack()
-        {
-            await Navigation.PopAsync();
-        }
     }
     public class RealPlayerChoiceViewModel : INotifyPropertyChanged
     {
@@ -151,14 +143,12 @@ namespace RWGame.ViewModels
             OnAppearanceCommand = new Command(RealPlayerChoiceDisplayData.OnAppearance);
             PerformSearchCommand = new Command(RealPlayerChoiceDisplayData.PerformSearch);
             StartGameCommand = new Command(RealPlayerChoiceDisplayData.StartGame);
-            GoBackCommand = new Command(RealPlayerChoiceDisplayData.GoBack);
         }
 
         public Command CheckLoginCommand { get; set; }
         public Command OnAppearanceCommand { get; set; }
         public Command PerformSearchCommand { get; set; }
         public Command StartGameCommand { get; set; }
-        public Command GoBackCommand { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

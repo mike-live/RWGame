@@ -7,7 +7,7 @@
     xmlns:views="clr-namespace:RWGame.Views"
     x:DataType="views:PlayWithBotPage"
     Title="PvE"
-    IconImageSource="bot.pdf">
+    IconImageSource="bot">
     <ContentPage.Behaviors>
         <behaviorsPack:EventToCommandBehavior
             EventName="Appearing"

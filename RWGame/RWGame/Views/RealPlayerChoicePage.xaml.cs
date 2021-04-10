@@ -36,5 +36,9 @@ namespace RWGame.Views
             ViewModel.CheckLoginCommand.Execute(sender);
             ViewModel.StartGameCommand.Execute(sender);
         }
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
     }
 }

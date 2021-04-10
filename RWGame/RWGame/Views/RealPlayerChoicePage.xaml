@@ -6,7 +6,7 @@
              BackgroundColor="White"
              BackgroundImageSource="background_2_art_1.png"
              Title="PvP"
-             IconImageSource="pvp.pdf">
+             IconImageSource="pvp">
     <ContentPage.Behaviors>
         <behaviorsPack:EventToCommandBehavior
             EventName="Appearing"
