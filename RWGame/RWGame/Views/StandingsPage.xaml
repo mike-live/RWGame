@@ -9,7 +9,7 @@
     <ContentPage.Content>
         <StackLayout HorizontalOptions="Fill" VerticalOptions="Fill">
             <StackLayout.GestureRecognizers>
-                <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBack}"/>
+                <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBackCommand}"/>
             </StackLayout.GestureRecognizers>
             <!-- Temporary! Change text to Binding later if we want to use this view for different standings. -->
             <Label x:Name="standingsLabel"
@@ -26,7 +26,7 @@
                                   ColumnSpacing="0"
                                   RowSpacing="1">
                 <Grid.GestureRecognizers>
-                    <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBack}"/>
+                    <SwipeGestureRecognizer Direction="Right" Command="{Binding GoBackCommand}"/>
                 </Grid.GestureRecognizers>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="1*"/>

@@ -7,10 +7,12 @@ using SkiaSharp;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using RWGame.Helpers;
+using RWGame.Views;
 
 namespace RWGame.ViewModels
 {   public class GameFieldViewModel : INotifyPropertyChanged
     {
+        public Command GoBackCommand { get; set; }
         public GameFieldModel GameFieldModel { get; set; }
 
         #region ScreenSettings
@@ -121,6 +123,7 @@ namespace RWGame.ViewModels
         {
             GameFieldModel = new GameFieldModel(game, gameStateInfo);
             Navigation = navigation;
+            GoBackCommand = new Command(GoBack);
             GameFieldModel.PropertyChanged += (obj, args) => {
                 if (args.PropertyName == "NumTurns")
                 {
@@ -143,6 +146,11 @@ namespace RWGame.ViewModels
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public async void GoBack()
+        {
+            await Navigation.PopAsync();
+        }
 
         public void AdjustSurface(SKImageInfo info)
         {
