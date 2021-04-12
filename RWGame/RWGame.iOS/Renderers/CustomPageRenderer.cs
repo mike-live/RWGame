@@ -3,6 +3,7 @@ using RWGame.Views;
 using Xamarin.Forms;
 using RWGame.iOS.Renderers;
 using Xamarin.Forms.Platform.iOS;
+using UIKit;
 
 [assembly: ExportRenderer(typeof(UserPage), typeof(Page_iOS))]
 [assembly: ExportRenderer(typeof(RealPlayerChoicePage), typeof(Page_iOS))]
@@ -23,6 +24,13 @@ namespace RWGame.iOS.Renderers
             i = i.Scale(this.View.Frame.Size);
 
             this.View.BackgroundColor = UIKit.UIColor.FromPatternImage(i);
+        }
+
+        protected override void OnElementChanged(VisualElementChangedEventArgs e)
+        {
+            base.OnElementChanged(e);
+            if (UIDevice.CurrentDevice.CheckSystemVersion(13, 0))
+                OverrideUserInterfaceStyle = UIKit.UIUserInterfaceStyle.Light;
         }
     }
 }

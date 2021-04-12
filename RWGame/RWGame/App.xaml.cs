@@ -13,12 +13,15 @@ namespace RWGame
 
         public App()
         {
+            Device.SetFlags(new string[] { "AppTheme_Experimental" });
+
             InitializeComponent();
             MainPage = new NavigationPage(new Views.LoginPage());
         }
 
         protected override void OnStart()
         {
+            //Application.Current.UserAppTheme = OSAppTheme.Light;
             // Handle when your app starts
         }
 
