@@ -17,14 +17,25 @@
     </ContentPage.Behaviors>
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center"
-                     HorizontalOptions="Fill"
-                     Margin="10,10,0,10">
-            <StackLayout.Margin>
-                        <OnPlatform x:TypeArguments="Thickness" >
-                        <On Platform="iOS" Value="0,15,15,0" />
-                        <On Platform="Android" Value="15,15,15,0" />
-                        </OnPlatform>
-            </StackLayout.Margin>
+                     HorizontalOptions="Fill">
+            <Label x:Name="PageTitle"
+                   Text="Game History"
+                   TextColor="#39bafa"
+                   FontSize="Large"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Margin="15,15,15,15"/>
+            <BoxView HeightRequest="2"
+                         HorizontalOptions="FillAndExpand"
+                         BackgroundColor="#39bafa">
+                <BoxView.Margin>
+                    <OnPlatform x:TypeArguments="Thickness" >
+                        <On Platform="iOS" Value="0,15,0,15" />
+                        <On Platform="Android" Value="15,0,15,15" />
+                    </OnPlatform>
+                </BoxView.Margin>
+            </BoxView>
             <ListView x:Name="gamesListView"
                       ItemsSource="{Binding GameHistoryDisplayData.CustomListViewRecords}"
                       ItemSelected="OnSelection"
@@ -35,6 +46,12 @@
                       ItemTemplate="{StaticResource gameCellTemplate}"
                       IsVisible="{Binding GameHistoryDisplayData.IsCustomListViewVisible}"
                       SelectionMode="{Binding UserDisplayData.SelectionMode}">
+                <ListView.Margin>
+                    <OnPlatform x:TypeArguments="Thickness" >
+                        <On Platform="iOS" Value="0,0,15,0" />
+                        <On Platform="Android" Value="15,0,15,0" />
+                    </OnPlatform>
+                </ListView.Margin>
             </ListView>
             <Label x:Name="gameListViewEmptyMessage"
                    VerticalOptions="CenterAndExpand"

@@ -291,28 +291,72 @@
     <ImageAsset Include="Assets.xcassets\ic_google.imageset\ic_google.png">
       <Visible>false</Visible>
     </ImageAsset>
-    <ImageAsset Include="Assets.xcassets\background_2_art_1.imageset\background_2_art_1-1.png" />
-    <ImageAsset Include="Assets.xcassets\background_2_art_1.imageset\background_2_art_1-2.png" />
-    <ImageAsset Include="Assets.xcassets\HeadLogo.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\HeadLogo.imageset\HeadLogo.png" />
-    <ImageAsset Include="Assets.xcassets\ic_play.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\ic_history.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\bot.imageset\bot2.pdf" />
-    <ImageAsset Include="Assets.xcassets\ic_history.imageset\ic_history-3.pdf" />
-    <ImageAsset Include="Assets.xcassets\ic_play.imageset\background-4.pdf" />
-    <ImageAsset Include="Assets.xcassets\pvp.imageset\pvp2-2.pdf" />
-    <ImageAsset Include="Assets.xcassets\Icon.imageset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\Icon.imageset\RWIcon.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\Contents.json" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\87.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\120.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\120-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\180.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\152.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\1024.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\120-2.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\180-1.png" />
-    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\87-1.png" />
+    <ImageAsset Include="Assets.xcassets\background_2_art_1.imageset\background_2_art_1-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\background_2_art_1.imageset\background_2_art_1-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\HeadLogo.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\HeadLogo.imageset\HeadLogo.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\ic_play.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\ic_history.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\bot.imageset\bot2.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\ic_history.imageset\ic_history-3.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\ic_play.imageset\background-4.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\pvp.imageset\pvp2-2.pdf">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Icon.imageset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Icon.imageset\RWIcon.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\Contents.json">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\87.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\120.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\120-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\180.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\152.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\1024.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\120-2.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\180-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\AppIcon-1.appiconset\87-1.png">
+      <Visible>false</Visible>
+    </ImageAsset>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

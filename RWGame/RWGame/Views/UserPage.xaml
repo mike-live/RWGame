@@ -139,6 +139,16 @@
                                Grid.Column="0" Grid.ColumnSpan="3"/>
                     </Grid>
                 </Grid>
+                <BoxView HeightRequest="2"
+                         HorizontalOptions="FillAndExpand"
+                         BackgroundColor="#39bafa">
+                    <BoxView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" >
+                            <On Platform="iOS" Value="0,15,0,15" />
+                            <On Platform="Android" Value="15,0,15,15" />
+                        </OnPlatform>
+                    </BoxView.Margin>
+                </BoxView>
                 <StackLayout x:Name="stackLayoutListView"
                              VerticalOptions="CenterAndExpand"
                              HorizontalOptions="Fill">

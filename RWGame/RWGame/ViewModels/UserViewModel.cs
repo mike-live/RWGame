@@ -85,7 +85,7 @@ namespace RWGame.ViewModels
         }
 
         #region ViewProperties
-        public string Title { get; } = "ONGOING";
+        public string Title { get; } = "HOME";
 
         public string GameListViewEmptyMessageText { get; } = "Here we place your current games.\nTo play tap bot or friend.";
 
