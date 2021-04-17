@@ -76,16 +76,11 @@ namespace RWGame.ViewModels
             Login = selectedItem.Login;
             IsPlayerListVisible = false;
         }
-        public async void CheckLogin()
+        public void CheckLogin()
         {
-            if (Login != null || Login != "")
+            if (RealPlayerChoiceModel.PlayerList != null)
             {
                 SelectedPlayerId = -1;
-                if (RealPlayerChoiceModel.PlayerList == null)
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Entered player doesn't exist", "OK");
-                    return;
-                }
                 foreach (var player in RealPlayerChoiceModel.PlayerList)
                 {
                     if (player.Login == Login)
