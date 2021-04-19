@@ -69,7 +69,7 @@
                             <DataTemplate>
                                 <ViewCell>
                                     <Grid HorizontalOptions="FillAndExpand"
-                                          VerticalOptions="Fill">
+                                          VerticalOptions="CenterAndExpand">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>

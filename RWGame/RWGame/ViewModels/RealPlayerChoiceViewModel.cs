@@ -58,7 +58,7 @@ namespace RWGame.ViewModels
         }
         public async void PerformSearch()
         {
-            IsPlayerListVisible = (Login == "") ? false : true;
+            IsPlayerListVisible = (Login != "");
             RealPlayerChoiceModel.Login = Login;
             await RealPlayerChoiceModel.TaskUpdatePlayerList();
             List<PlayerListElement> results = GetSearchResults();           
