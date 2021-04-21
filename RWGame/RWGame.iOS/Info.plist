@@ -34,9 +34,9 @@
 	<false/>
 	<key>CFBundleDisplayName</key>
 	<string>Random Walk</string>
-	<key>XSAppIconAssets</key>
-	<string>Assets.xcassets/AppIcon-1.appiconset</string>
 	<key>UIStatusBarHidden</key>
 	<true/>
+	<key>XSAppIconAssets</key>
+	<string>Assets.xcassets/AppIcon.appiconset</string>
 </dict>
 </plist>
