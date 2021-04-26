@@ -133,4 +133,10 @@
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_down.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_left.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_right.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_up.png" />
+  </ItemGroup>
 </Project>
