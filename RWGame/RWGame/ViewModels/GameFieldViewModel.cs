@@ -218,7 +218,7 @@ namespace RWGame.ViewModels
             get { return GameControlsModel.Controls; }
         }
         public Dictionary<string, string> ControlsImagesNames { get; set; } = new Dictionary<string, string> {
-            { "U", "up" }, { "L", "left" }, { "D", "down" }, { "R", "right" }
+            { "U", "arrow_up" }, { "L", "arrow_left" }, { "D", "arrow_down" }, { "R", "arrow_right" }
         };
         public double ScreenWidth
         {
