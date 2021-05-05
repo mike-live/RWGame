@@ -7,22 +7,22 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <FlexLayout Direction="Column"
-                                    AlignItems="Stretch"
-                                    JustifyContent="SpaceEvenly"
-                                    Margin="20,10,20,10"
-                                    IsVisible="{Binding IsNotAuthentication}">
+                <StackLayout>
                     <Image WidthRequest="{Binding logoSize}" 
                                    HeightRequest="{Binding logoSize}"
                                    Margin="10, 15, 10, 0"
-                                   Source="HeadLogo.png"
-                                   FlexLayout.AlignSelf="Center"/>
+                                   Source="HeadLogo.png"/>
                     <Label Text="Random Walk"
                                    FontSize="Large"
                                    TextColor="#39bafa"
                                    FontAttributes="Bold"
-                                   FlexLayout.AlignSelf="Center"
                                    Style="{StaticResource MainTitleStyle}"/>
+                </StackLayout>
+                <StackLayout Padding="{StaticResource PagePadding}"
+                             VerticalOptions="Fill"
+                             Spacing="{StaticResource PageSpacing}"
+                             Margin="20,10,20,10"
+                             IsVisible="{Binding IsNotAuthentication}">
                     <Entry Placeholder="Enter login"
                                Text = "{Binding login}"
                                TextColor="#39bafa"
@@ -110,7 +110,7 @@
                                 TextColor="White"
                                 HeightRequest="40"
                                 BackgroundColor="#7ad3ff"/>-->
-                </FlexLayout>
+                </StackLayout>
                 <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                              IsVisible="{Binding IsAuthentication}">
                     <Label Text="Connecting..."
