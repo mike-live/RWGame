@@ -48,7 +48,6 @@ namespace RWGame
 
         protected override void OnStart()
         {
-            //Application.Current.UserAppTheme = OSAppTheme.Light;
             // Handle when your app starts
         }
 
