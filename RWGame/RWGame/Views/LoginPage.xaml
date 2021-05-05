@@ -26,7 +26,8 @@
                                TextColor="#39bafa"
                                BackgroundColor="Transparent"
                                PlaceholderColor="#39bafa"
-                               Style="{StaticResource MainEntryStyle}"/>
+                               Style="{StaticResource MainEntryStyle}">
+                    </Entry>
                     <Entry Placeholder="Enter password"
                                VerticalOptions = "Start"
                                Text = "{Binding password}"
@@ -34,7 +35,15 @@
                                PlaceholderColor="#39bafa"
                                BackgroundColor="Transparent"
                                IsPassword="True"
-                               Style="{StaticResource MainEntryStyle}"/>
+                               Style="{StaticResource MainEntryStyle}">
+                        <Entry.Margin>
+                            <OnPlatform x:TypeArguments="Thickness">
+                                <On Platform="Android">
+                                    <OnIdiom x:TypeArguments="Thickness" Tablet="0,-15,0,0" Phone="0,-10,0,0"/>
+                                </On>
+                            </OnPlatform>
+                        </Entry.Margin>
+                    </Entry>
                     <Button Text="Login"
                                 Command="{Binding LoginNormalCommand}"
                                 TextColor="White"
