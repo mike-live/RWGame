@@ -7,7 +7,8 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <StackLayout>
+                <StackLayout VerticalOptions="CenterAndExpand"
+                             IsVisible="{Binding IsNotAuthentication}">
                     <Image WidthRequest="{Binding logoSize}" 
                                    HeightRequest="{Binding logoSize}"
                                    Margin="10, 15, 10, 0"
@@ -19,7 +20,7 @@
                                    Style="{StaticResource MainTitleStyle}"/>
                 </StackLayout>
                 <StackLayout Padding="{StaticResource PagePadding}"
-                             VerticalOptions="Fill"
+                             VerticalOptions="StartAndExpand"
                              Spacing="{StaticResource PageSpacing}"
                              Margin="20,10,20,10"
                              IsVisible="{Binding IsNotAuthentication}">
