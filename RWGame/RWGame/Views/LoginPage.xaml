@@ -7,7 +7,10 @@
     <ContentPage.Content>
         <ScrollView>
             <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                <StackLayout VerticalOptions="CenterAndExpand"
+                <StackLayout Padding="{StaticResource PagePadding}"
+                             VerticalOptions="CenterAndExpand"
+                             Spacing="{StaticResource PageSpacing}"
+                             Margin="20,10,20,10"
                              IsVisible="{Binding IsNotAuthentication}">
                     <Image WidthRequest="{Binding logoSize}" 
                                    HeightRequest="{Binding logoSize}"
@@ -18,12 +21,6 @@
                                    TextColor="#39bafa"
                                    FontAttributes="Bold"
                                    Style="{StaticResource MainTitleStyle}"/>
-                </StackLayout>
-                <StackLayout Padding="{StaticResource PagePadding}"
-                             VerticalOptions="StartAndExpand"
-                             Spacing="{StaticResource PageSpacing}"
-                             Margin="20,10,20,10"
-                             IsVisible="{Binding IsNotAuthentication}">
                     <Entry Placeholder="Enter login"
                                Text = "{Binding login}"
                                TextColor="#39bafa"
@@ -41,7 +38,6 @@
                     <Button Text="Login"
                                 Command="{Binding LoginNormalCommand}"
                                 TextColor="White"
-                                HeightRequest="40"
                                 BackgroundColor="#39bafa"
                                 Style="{StaticResource MainButtonStyle}"/>
                     <Label Text="No account yet? Create one"
