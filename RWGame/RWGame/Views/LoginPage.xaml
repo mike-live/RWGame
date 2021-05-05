@@ -15,6 +15,7 @@
                            Margin="10, 15, 10, 0"
                            Source="HeadLogo.png"/>
                     <Label Text="Random Walk"
+                       Style="{StaticResource MainTitleStyle}"
                        HorizontalOptions="Center" VerticalOptions="Start"
                        FontSize="Large"
                        TextColor="#39bafa"
@@ -32,7 +33,8 @@
                                Text = "{Binding login}"
                                TextColor="#39bafa"
                                BackgroundColor="Transparent"
-                               PlaceholderColor="#39bafa"/>
+                               PlaceholderColor="#39bafa"
+                               Style="{StaticResource MainEntryStyle}"/>
                         <Entry Placeholder="Enter password"
                                HorizontalOptions = "FillAndExpand"
                                VerticalOptions = "Start"
@@ -40,19 +42,22 @@
                                TextColor="#39bafa"
                                PlaceholderColor="#39bafa"
                                BackgroundColor="Transparent"
-                               IsPassword="True"/>
+                               IsPassword="True"
+                               Style="{StaticResource MainEntryStyle}"/>
                         <Button Text="Login"
                                 VerticalOptions="EndAndExpand"
                                 HorizontalOptions = "FillAndExpand"
                                 Command="{Binding LoginNormalCommand}"
                                 TextColor="White"
                                 HeightRequest="40"
-                                BackgroundColor="#39bafa"/>
+                                BackgroundColor="#39bafa"
+                                Style="{StaticResource MainButtonStyle}"/>
                         <Label Text="No account yet? Create one"
                                HorizontalOptions="Center" VerticalOptions="Center"
                                FontSize="Small"
                                TextColor="#0099e6"
-                               Margin="0,10,0,10">
+                               Margin="0,10,0,10"
+                               Style="{StaticResource NormalTitleStyle}">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding RegistrationCommand}"/>

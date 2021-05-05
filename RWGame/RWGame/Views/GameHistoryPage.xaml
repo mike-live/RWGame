@@ -8,7 +8,7 @@
              BackgroundImageSource="background_2_art_1.png"
              IconImageSource="ic_history">
     <ContentPage.Resources>
-        <ResourceDictionary Source="GameCellTemplate.xaml" />
+        <ResourceDictionary Source="Helpers/GameCellTemplate.xaml" />
     </ContentPage.Resources>
     <ContentPage.Behaviors>
         <behaviorsPack:EventToCommandBehavior

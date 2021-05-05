@@ -43,8 +43,8 @@ namespace RWGame.Views
                 HorizontalOptions = LayoutOptions.Center,
                 VerticalOptions = LayoutOptions.StartAndExpand,
                 BackgroundColor = BackgroundColor,
-                HeightRequest = ViewModel.ScreenHeight * 0.2,
-                WidthRequest = ViewModel.ScreenWidth * 0.25,
+                HeightRequest = ViewModel.ScreenWidth / 2.5,
+                WidthRequest = ViewModel.ScreenWidth / 2.5,
                 RowSpacing = 6,
                 ColumnSpacing = 6,
             };
