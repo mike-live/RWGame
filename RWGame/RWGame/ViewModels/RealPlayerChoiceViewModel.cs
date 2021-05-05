@@ -58,7 +58,7 @@ namespace RWGame.ViewModels
         }
         public async void PerformSearch()
         {
-            IsPlayerListVisible = true;
+            IsPlayerListVisible = (Login != "");
             RealPlayerChoiceModel.Login = Login;
             await RealPlayerChoiceModel.TaskUpdatePlayerList();
             List<PlayerListElement> results = GetSearchResults();           
@@ -76,16 +76,11 @@ namespace RWGame.ViewModels
             Login = selectedItem.Login;
             IsPlayerListVisible = false;
         }
-        public async void CheckLogin()
+        public void CheckLogin()
         {
-            if (Login != null)
+            if (RealPlayerChoiceModel.PlayerList != null)
             {
                 SelectedPlayerId = -1;
-                if (RealPlayerChoiceModel.PlayerList == null)
-                {
-                    await App.Current.MainPage.DisplayAlert("Error", "Enter player doesn't exist", "OK");
-                    return;
-                }
                 foreach (var player in RealPlayerChoiceModel.PlayerList)
                 {
                     if (player.Login == Login)
@@ -101,7 +96,7 @@ namespace RWGame.ViewModels
                         Login = SearchResults[0].Login;
                     }
                 }
-            }           
+            } 
         }
 
         public async void StartGame()
@@ -112,7 +107,6 @@ namespace RWGame.ViewModels
                 if (!RealPlayerChoiceModel.CancelGame)
                 {
                     GameField = new Views.GameField(Game, GameStateInfo, Navigation);
-                    Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 1]);
                     await Navigation.PushAsync(GameField);
                 }
                 else
@@ -122,7 +116,7 @@ namespace RWGame.ViewModels
             }
             else
             {
-                await App.Current.MainPage.DisplayAlert("Error", "Enter player doesn't exist", "OK");
+                await App.Current.MainPage.DisplayAlert("Error", "Entered player doesn't exist", "OK");
             }
         }
         

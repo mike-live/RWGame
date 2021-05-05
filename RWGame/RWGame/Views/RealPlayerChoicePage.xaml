@@ -4,89 +4,96 @@
              xmlns:behaviorsPack="clr-namespace:Xamarin.Forms.BehaviorsPack;assembly=Xamarin.Forms.BehaviorsPack"
              x:Class="RWGame.Views.RealPlayerChoicePage"
              BackgroundColor="White"
-             BackgroundImageSource="background_2_art_1.png">
+             BackgroundImageSource="background_2_art_1.png"
+             Title="PvP"
+             IconImageSource="pvp">
     <ContentPage.Behaviors>
         <behaviorsPack:EventToCommandBehavior
             EventName="Appearing"
             Command="{Binding OnAppearanceCommand}" />
     </ContentPage.Behaviors>
     <ContentPage.Content>
-        <StackLayout x:Name="stackLayout"
-                     VerticalOptions="Fill"
-                     HorizontalOptions="Fill"
-                     Margin="10,0,10,0"
-                     Spacing="0">
-            <Label x:Name="headLabel"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start"
-                   Text="{Binding RealPlayerChoiceDisplayData.HeadLabelText}"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   FontSize="Medium"
-                   Margin="0,10"/>
-            <Label x:Name="promptLabel"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Start"
-                   Text="{Binding RealPlayerChoiceDisplayData.PromptLabelText}"
-                   TextColor="#39bafa"
-                   FontAttributes="Bold"
-                   FontSize="Small"
-                   Margin="0,10"/>
-            <StackLayout x:Name="stackLayoutPlay"
-                         Orientation="Horizontal">
-                <SearchBar x:Name="searchBar"
-                           Placeholder="Enter player login"
-                           PlaceholderColor="LightGray"
+                        <StackLayout x:Name="stackLayout"
+                             VerticalOptions="Fill"
+                             HorizontalOptions="Fill"
+                             Margin="10,0,10,0"
+                             Spacing="0">
+                    <Label x:Name="headLabel"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Start"
+                           Text="{Binding RealPlayerChoiceDisplayData.HeadLabelText}"
                            TextColor="#39bafa"
-                           HorizontalTextAlignment="Center"
-                           FontSize="Medium"
                            FontAttributes="Bold"
-                           Text="{Binding RealPlayerChoiceDisplayData.Login}"
-                           SearchCommand="{Binding PerformSearchCommand}"
-                           TextChanged="OnTextChanged"
-                           HorizontalOptions="FillAndExpand"
-                           VerticalOptions="CenterAndExpand"
-                           MinimumWidthRequest="60"
-                           Margin="0,5"/>
-                <Button x:Name="playButton"
-                        Text="{Binding RealPlayerChoiceDisplayData.PlayButtonText}"
-                        TextColor="#39bafa"
-                        FontAttributes="Bold"
-                        BackgroundColor="Transparent"
-                        HeightRequest="40"
-                        VerticalOptions="Center"
-                        Clicked="OnButtonClicked"/>
-            </StackLayout>
-            <ListView x:Name="searchResults"
-                      ItemsSource="{Binding RealPlayerChoiceDisplayData.SearchResults}"
-                      ItemSelected="OnSelection"
-                      IsVisible="{Binding RealPlayerChoiceDisplayData.IsPlayerListVisible}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid HorizontalOptions="FillAndExpand"
-                                  VerticalOptions="Fill">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                </Grid.ColumnDefinitions>
-                                <Label x:Name="login"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center"
-                                       BackgroundColor="Transparent"
-                                       Text="{Binding Login}"
-                                       TextColor="#39bafa"
-                                       FontSize="Small"
-                                       FontAttributes="Bold"
-                                       Grid.Row="0" Grid.RowSpan="1"
-                                       Grid.Column="0" Grid.ColumnSpan="1"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+                           FontSize="Medium"
+                           Margin="0,10"/>
+                    <Label x:Name="promptLabel"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Start"
+                           Text="{Binding RealPlayerChoiceDisplayData.PromptLabelText}"
+                           TextColor="#39bafa"
+                           FontAttributes="Bold"
+                           FontSize="Small"
+                           Margin="0,10"/>
+                    <StackLayout x:Name="stackLayoutPlay"
+                                 Orientation="Horizontal">
+                        <SearchBar x:Name="searchBar"
+                                   Placeholder="Enter player login"
+                                   PlaceholderColor="LightGray"
+                                   TextColor="#39bafa"
+                                   HorizontalTextAlignment="Center"
+                                   FontSize="Medium"
+                                   FontAttributes="Bold"
+                                   Text="{Binding RealPlayerChoiceDisplayData.Login}"
+                                   SearchCommand="{Binding PerformSearchCommand}"
+                                   TextChanged="OnTextChanged"
+                                   HorizontalOptions="FillAndExpand"
+                                   VerticalOptions="CenterAndExpand"
+                                   MinimumWidthRequest="60"
+                                   BackgroundColor="Transparent"
+                                   Margin="0,5"/>
+                        <Button x:Name="playButton"
+                                Text="{Binding RealPlayerChoiceDisplayData.PlayButtonText}"
+                                TextColor="#39bafa"
+                                FontAttributes="Bold"
+                                BackgroundColor="Transparent"
+                                HeightRequest="40"
+                                VerticalOptions="Center"
+                                Clicked="OnButtonClicked"/>
+                    </StackLayout>
+                    <ListView x:Name="searchResults"
+                              ItemsSource="{Binding RealPlayerChoiceDisplayData.SearchResults}"
+                              ItemSelected="OnSelection"
+                              BackgroundColor="Transparent"
+                              IsVisible="{Binding RealPlayerChoiceDisplayData.IsPlayerListVisible}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <Grid HorizontalOptions="FillAndExpand"
+                                          VerticalOptions="CenterAndExpand">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Label x:Name="login"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center"
+                                               BackgroundColor="Transparent"
+                                               Text="{Binding Login}"
+                                               TextColor="#39bafa"
+                                               FontSize="Small"
+                                               FontAttributes="Bold"
+                                               Grid.Row="0" Grid.RowSpan="1"
+                                               Grid.Column="0" Grid.ColumnSpan="1"/>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.Footer>
+                            <Label />
+                        </ListView.Footer>
+                    </ListView>
+                </StackLayout>
     </ContentPage.Content>
 </ContentPage>

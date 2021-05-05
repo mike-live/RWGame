@@ -11,6 +11,11 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)MainPage.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PlayWithBotPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -70,6 +75,9 @@
       <DependentUpon>StandingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PlayWithBotPage.xaml.cs">
+      <DependentUpon>PlayWithBotPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\star.png" />
@@ -126,9 +134,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_down.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_left.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_right.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_up.png" />
   </ItemGroup>
 </Project>

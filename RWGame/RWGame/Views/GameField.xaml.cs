@@ -88,7 +88,7 @@ namespace RWGame.Views
                     Grid.SetRowSpan(curCanvas, 2);
                 }
 
-                curCanvas.Opacity = 0.75;
+                curCanvas.Opacity = 0.7;
             }
         }
 
@@ -108,35 +108,43 @@ namespace RWGame.Views
             SKSurface surface = args.Surface;
             SKCanvas canvas = surface.Canvas;
 
-            int controlSize = ViewModel.ChooseRow ? info.Height : info.Width;
-            SKRect rect = ViewModel.ChooseRow ? SKRect.Create(controlSize / 2, 0, info.Width - controlSize, info.Height)
-                                              : SKRect.Create(0, controlSize / 2, info.Width, info.Height - controlSize);
-            SKPaint paint = new SKPaint { Color = SKColors.White, Style = SKPaintStyle.Fill };
-            canvas.DrawRect(rect, paint);
-            canvas.DrawCircle(new SKPoint(controlSize / 2, controlSize / 2), controlSize / 2, paint);
-            if (ViewModel.ChooseRow)
-            {
-                canvas.DrawCircle(new SKPoint(info.Width - controlSize / 2, controlSize / 2), controlSize / 2, paint);
-            }
-            else
-            {
-                canvas.DrawCircle(new SKPoint(controlSize / 2, info.Height - controlSize / 2), controlSize / 2, paint);
-            }
+            int marginControl = 5;
+            int marginArrow = 20;
+            int roundRadius = 80;
+
+            // Tested colors 39bafa c67b39 bf8f26 99897d 24bfdb
+            SKPaint paint = new SKPaint { Color = SKColor.Parse("#c08445"), Style = SKPaintStyle.Fill };
+            SKPaint paint2 = new SKPaint { Color = SKColor.Parse("#c08445"), Style = SKPaintStyle.Fill };
+            
+            canvas.DrawRoundRect(new SKRect(0, 0, info.Width, info.Height), roundRadius, roundRadius, paint);
+            canvas.DrawRoundRect(
+                new SKRect (marginControl, marginControl, info.Width - marginControl, info.Height - marginControl), 
+                roundRadius, roundRadius, paint2
+            );
+
             if (ViewModel.ChooseRow)
             {
                 SKBitmap control1 = ControlsImages[id, 0];
                 SKBitmap control2 = ControlsImages[id, 1];
-                MergeBitmaps(canvas, control1, control2, info.Width, info.Height, false);
+                MergeBitmaps(canvas, control1, control2, info.Width, info.Height, false, marginControl + marginArrow);
             }
             else
             {
                 SKBitmap control1 = ControlsImages[0, id];
                 SKBitmap control2 = ControlsImages[1, id];
-                MergeBitmaps(canvas, control1, control2, info.Width, info.Height, true);
+                MergeBitmaps(canvas, control1, control2, info.Width, info.Height, true, marginControl + marginArrow);
             }
         }
+        SKRect SetRectangleMargin(SKRect rect, int marginControl = 0)
+        {
+            rect.Bottom -= marginControl;
+            rect.Top += marginControl;
+            rect.Left += marginControl;
+            rect.Right -= marginControl;
+            return rect;
+        }
         public void MergeBitmaps(SKCanvas canvas, SKBitmap bitmap1, SKBitmap bitmap2, 
-            int width, int height, bool vertical = true)
+            int width, int height, bool vertical = true, int marginControl = 0)
         {
             SKRect rect1, rect2;
             if (vertical)
@@ -149,7 +157,8 @@ namespace RWGame.Views
                 rect1 = SKRect.Create(0, 0, height, height);
                 rect2 = SKRect.Create(width - height, 0, height, height);
             }
-
+            rect1 = SetRectangleMargin(rect1, marginControl);
+            rect2 = SetRectangleMargin(rect2, marginControl);
             canvas.DrawBitmap(bitmap1, rect1);
             canvas.DrawBitmap(bitmap2, rect2);
         }
@@ -158,7 +167,7 @@ namespace RWGame.Views
         {
             if (ViewModel.ChosenTurn != -1)
             {
-                await CanvasView[ViewModel.ChosenTurn].FadeTo(0.75, 25);
+                await CanvasView[ViewModel.ChosenTurn].FadeTo(0.7, 25);
                 UpdateGameField();
             }
         }

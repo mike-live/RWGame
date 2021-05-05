@@ -9,10 +9,12 @@
       "idiom": "universal"
     },
     {
+      "filename": "background_2_art_1-1.png",
       "scale": "2x",
       "idiom": "universal"
     },
     {
+      "filename": "background_2_art_1-2.png",
       "scale": "3x",
       "idiom": "universal"
     },
@@ -524,5 +526,8 @@
   "info": {
     "version": 1,
     "author": "xcode"
+  },
+  "properties": {
+    "template-rendering-intent": "original"
   }
 }
