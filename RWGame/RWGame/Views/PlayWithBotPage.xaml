@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviorsPack="clr-namespace:Xamarin.Forms.BehaviorsPack;assembly=Xamarin.Forms.BehaviorsPack"
+    x:Class="RWGame.Views.PlayWithBotPage"
+    xmlns:views="clr-namespace:RWGame.Views"
+    x:DataType="views:PlayWithBotPage"
+    Title="PvE"
+    IconImageSource="bot">
+    <ContentPage.Behaviors>
+        <behaviorsPack:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding PlayWithBotCommand}" />
+        <behaviorsPack:EventToCommandBehavior
+            EventName="Disappearing"
+            Command="{Binding SwitchToDefaultTab}" />
+    </ContentPage.Behaviors>
+    <ContentPage.Content>
+        <StackLayout>
+            <Label HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Text="Here is your game with a bot"
+               TextColor="#39bafa"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

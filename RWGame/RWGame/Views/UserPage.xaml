@@ -5,9 +5,10 @@
              x:Class="RWGame.Views.UserPage"
              Title="{Binding UserDisplayData.Title}"    
              BackgroundColor="White"
-             BackgroundImageSource="background_2_art_1.png">
+             BackgroundImageSource="background_2_art_1.png"
+             IconImageSource="ongoing">
     <ContentPage.Resources>
-        <ResourceDictionary Source="GameCellTemplate.xaml" />
+        <ResourceDictionary Source="Helpers/GameCellTemplate.xaml" />
     </ContentPage.Resources>
     <ContentPage.Behaviors>
         <behaviorsPack:EventToCommandBehavior
@@ -138,13 +139,23 @@
                                Grid.Column="0" Grid.ColumnSpan="3"/>
                     </Grid>
                 </Grid>
+                <BoxView HeightRequest="1"
+                         HorizontalOptions="FillAndExpand"
+                         BackgroundColor="#39bafa">
+                    <BoxView.Margin>
+                        <OnPlatform x:TypeArguments="Thickness" >
+                            <On Platform="iOS" Value="15,15,15,15" />
+                            <On Platform="Android" Value="15,0,15,15" />
+                        </OnPlatform>
+                    </BoxView.Margin>
+                </BoxView>
                 <StackLayout x:Name="stackLayoutListView"
                              VerticalOptions="CenterAndExpand"
                              HorizontalOptions="Fill">
                     <StackLayout.Margin>
                         <OnPlatform x:TypeArguments="Thickness" >
-                        <On Platform="iOS" Value="0,0,15,0" />
-                        <On Platform="Android" Value="15,0,15,0" />
+                            <On Platform="iOS" Value="0,0,15,0" />
+                            <On Platform="Android" Value="15,0,15,0" />
                         </OnPlatform>
                     </StackLayout.Margin>
                     <Label x:Name="gameListViewEmptyMessage"
@@ -169,61 +180,10 @@
                               IsRefreshing="{Binding UserDisplayData.CustomListViewRecordsIsRefreshing}"
                               RefreshCommand="{Binding RefreshGamesListCommand}"
                               SelectionMode="{Binding UserDisplayData.SelectionMode}">
+                        <ListView.Footer>
+                            <Label />
+                        </ListView.Footer>
                     </ListView>
-                </StackLayout>
-                <StackLayout x:Name="buttonStack"
-                             VerticalOptions="Center"
-                             HorizontalOptions="Fill"
-                             Margin="20,10,20,10"
-                             Orientation="Horizontal">
-                    <StackLayout x:Name="stackLayoutPlayWithAnotherPlayer"
-                                 HorizontalOptions="CenterAndExpand"
-                                 Spacing="0">
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding PlayWithAnotherPlayerCommand}"/>
-                        </StackLayout.GestureRecognizers>
-                        <ImageButton x:Name="playWithAnotherPlayerButton"
-                                     VerticalOptions="Center"
-                                     HorizontalOptions="Center"
-                                     BackgroundColor="White"
-                                     IsEnabled="True"
-                                     Source="{Binding UserDisplayData.PlayWithAnotherPlayerButtonImage}"
-                                     HeightRequest="30"
-                                     WidthRequest="60"
-                                     Padding="0"
-                                     Command="{Binding PlayWithAnotherPlayerCommand}"/>
-                        <Label x:Name="playWithAnotherPlayerLabel"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center"
-                               TextColor="#39bafa"
-                               FontSize="Small"
-                               FontAttributes="Bold"
-                               Text="{Binding UserDisplayData.PlayWithAnotherPlayerLabelText}"/>
-                    </StackLayout>
-                    <StackLayout x:Name="stackLayoutPlayWithBot"
-                                 HorizontalOptions="CenterAndExpand"
-                                 Spacing="0">
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding PlayWithBotCommand}"/>
-                        </StackLayout.GestureRecognizers>
-                        <ImageButton x:Name="playWithBotButton"
-                                     VerticalOptions="Center"
-                                     HorizontalOptions="Center"
-                                     IsEnabled="True"
-                                     BackgroundColor="White"
-                                     Source="{Binding UserDisplayData.PlayWithBotButtonImage}"
-                                     HeightRequest="30"
-                                     WidthRequest="60"
-                                     Padding="0"
-                                     Command="{Binding PlayWithBotCommand}"/>
-                        <Label x:Name="playWithBotLabel"
-                               VerticalOptions="Center"
-                               HorizontalOptions="Center"
-                               TextColor="#39bafa"
-                               FontSize="Small"
-                               FontAttributes="Bold"
-                               Text="{Binding UserDisplayData.PlayWithBotLabelText}" />
-                    </StackLayout>
                 </StackLayout>
             </StackLayout>
         </RelativeLayout>

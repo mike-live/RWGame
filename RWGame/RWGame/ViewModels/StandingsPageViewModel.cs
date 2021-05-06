@@ -123,7 +123,7 @@ namespace RWGame.ViewModels
         }
         #endregion
 
-        public async void OnSwipedRight()
+        public async void GoBack()
         {
             await Navigation.PopAsync();
         }
@@ -138,10 +138,10 @@ namespace RWGame.ViewModels
         {
             StandingsDisplayData = new StandingsDisplayData(navigation);
             RefreshListCommand = new Command(StandingsDisplayData.RefreshList);
-            GoBack = new Command(StandingsDisplayData.OnSwipedRight);
+            GoBackCommand = new Command(StandingsDisplayData.GoBack);
         }
         public Command RefreshListCommand { get; set; }
-        public Command GoBack { get; set; }
+        public Command GoBackCommand { get; set; }
 
     }
 }

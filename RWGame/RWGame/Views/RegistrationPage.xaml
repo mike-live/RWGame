@@ -92,7 +92,8 @@
                                     Margin="10,0,10,0">
                         </DatePicker>
                         <Label x:Name="birthdayTipLabel"
-                               Text="" FontSize="Micro"
+                               Text=" "
+                               FontSize="Micro"
                                TextColor="Red"
                                VerticalOptions="End"
                                HorizontalOptions="Fill"
@@ -165,6 +166,7 @@
                         <Button Text="CONTINUE" HorizontalOptions="End" 
                                 BackgroundColor="#f2fbff" 
                                 BorderColor="#39bafa"
+                                Padding="15"
                                 BorderWidth="2"
                                 TextColor="#39bafa"
                                 CornerRadius="5"
@@ -353,6 +355,7 @@
                                 HorizontalOptions="End" 
                                 BackgroundColor="#f2fbff" 
                                 BorderColor="#39bafa"
+                                Padding="15"
                                 BorderWidth="2"
                                 TextColor="#39bafa"
                                 CornerRadius="5"

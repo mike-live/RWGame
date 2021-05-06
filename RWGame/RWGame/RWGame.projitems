@@ -11,6 +11,11 @@
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml" />
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)MainPage.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\PlayWithBotPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
@@ -30,7 +35,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)TourGuide.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameFieldViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\Helpers\Emojis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\GameHistoryViewModel.cs" />
@@ -43,11 +47,17 @@
     <Compile Include="$(MSBuildThisFileDirectory)Views\GameField.xaml.cs">
       <DependentUpon>GameField.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Helpers\SmallDevicesStyle.xaml.cs">
+      <DependentUpon>SmallDevicesStyle.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Helpers\GameCellTemplate.xaml.cs">
+      <DependentUpon>GameCellTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\Helpers\GeneralDevicesStyle.xaml.cs">
+      <DependentUpon>GeneralDevicesStyle.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\RealPlayerChoicePage.xaml.cs">
       <DependentUpon>RealPlayerChoicePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml.cs">
-      <DependentUpon>GameCellTemplate.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\GameHistoryPage.xaml.cs">
       <DependentUpon>GameHistoryPage.xaml</DependentUpon>
@@ -70,6 +80,9 @@
       <DependentUpon>StandingsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)WaitInternetView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\PlayWithBotPage.xaml.cs">
+      <DependentUpon>PlayWithBotPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\star.png" />
@@ -106,10 +119,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameCellTemplate.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameHistoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,7 +135,23 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\GameField.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_down.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_left.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_right.png" />
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Images\arrow_up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Helpers\GameCellTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Helpers\GeneralDevicesStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\Helpers\SmallDevicesStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>

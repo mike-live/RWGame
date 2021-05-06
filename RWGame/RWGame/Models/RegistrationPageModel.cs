@@ -33,21 +33,21 @@ namespace RWGame.Models
         }
         private readonly ServerWorker serverWorker;
 
-        public string NameError { get; set; }
+        public string NameError { get; set; } = " ";
         public bool? NameIsCorrect { get; set; } = null;
         public string NameCorrectnessImage 
         {
             get { return GetCorrectImage(NameIsCorrect); } 
         }
 
-        public string EmailError { get; set; }
+        public string EmailError { get; set; } = " ";
         public bool? EmailIsCorrect { get; set; } = null;
         public string EmailCorrectnessImage
         {
             get { return GetCorrectImage(EmailIsCorrect); }
         }
 
-        public string LoginError { get; set; }
+        public string LoginError { get; set; } = " ";
         public bool? LoginIsCorrect { get; set; } = null;
         public string LoginCorrectnessImage
         {
@@ -55,14 +55,14 @@ namespace RWGame.Models
         }
 
 
-        public string PasswordError { get; set; }
+        public string PasswordError { get; set; } = " ";
         public bool? PasswordIsCorrect { get; set; } = null;
         public string PasswordCorrectnessImage
         {
             get { return GetCorrectImage(PasswordIsCorrect); }
         }
 
-        public string ConfirmPasswordError { get; set; }
+        public string ConfirmPasswordError { get; set; } = " ";
         public bool? ConfirmPasswordIsCorrect { get; set; } = null;
         public string ConfirmPasswordCorrectnessImage
         {
@@ -91,7 +91,7 @@ namespace RWGame.Models
                 }
                 else
                 {
-                    NameError = "";
+                    NameError = " ";
                     NameIsCorrect = true;
                 }
             }
@@ -124,7 +124,7 @@ namespace RWGame.Models
                 }
                 else
                 {
-                    EmailError = "";
+                    EmailError = " ";
                     EmailIsCorrect = true;
                 }
             }
@@ -166,7 +166,7 @@ namespace RWGame.Models
                 }
                 else
                 {
-                    LoginError = "";
+                    LoginError = " ";
                     LoginIsCorrect = true;
                 }
             }
@@ -208,7 +208,7 @@ namespace RWGame.Models
                 }
                 else
                 {
-                    PasswordError = "";
+                    PasswordError = " ";
                     PasswordIsCorrect = true;
                 }
             }
@@ -229,7 +229,7 @@ namespace RWGame.Models
                 }
                 else
                 {
-                    ConfirmPasswordError = "";
+                    ConfirmPasswordError = " ";
                     ConfirmPasswordIsCorrect = true;
                 }
             }
