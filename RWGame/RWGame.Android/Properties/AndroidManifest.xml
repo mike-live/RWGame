@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="20" android:versionName="Penguin 1.1" package="com.scigames.RWGame" android:installLocation="preferExternal">
-	<uses-sdk android:minSdkVersion="23" android:targetSdkVersion="29" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="22" android:versionName="Penguin 1.1" package="com.scigames.RWGame" android:installLocation="preferExternal">
+	<uses-sdk android:minSdkVersion="23" android:targetSdkVersion="30" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<application android:label="Random Walk" android:icon="@mipmap/ic_launcher" android:allowBackup="true"></application>
 </manifest>
