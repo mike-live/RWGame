@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -327,27 +327,27 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.1.0.446</Version>
+      <Version>7.2.0.562</Version>
     </PackageReference>
     <PackageReference Include="Fody">
-      <Version>6.4.0</Version>
+      <Version>6.6.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>12.0.3</Version>
+      <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Plugin.GoogleClient">
       <Version>2.1.12</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
-      <Version>3.3.3</Version>
+      <Version>3.4.0</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp">
-      <Version>2.80.2</Version>
+      <Version>2.80.3</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.Forms">
-      <Version>2.80.2</Version>
+      <Version>2.80.3</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
@@ -356,22 +356,28 @@
       <Version>3.2.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
-      <Version>1.6.1</Version>
+      <Version>1.7.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.2012</Version>
+      <Version>5.0.0.2291</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.BehaviorsPack">
       <Version>3.0.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets.xcassets\AppIcon.appiconset\" />
     <Folder Include="Assets.xcassets\background_2_art_1.imageset\" />
     <Folder Include="Assets.xcassets\bot.imageset\" />
+    <Folder Include="Assets.xcassets\HeadLogo.imageset\" />
     <Folder Include="Assets.xcassets\help.imageset\" />
+    <Folder Include="Assets.xcassets\Icon.imageset\" />
     <Folder Include="Assets.xcassets\ic_google.imageset\" />
+    <Folder Include="Assets.xcassets\ic_history.imageset\" />
+    <Folder Include="Assets.xcassets\ic_play.imageset\" />
     <Folder Include="Assets.xcassets\lightning.imageset\" />
     <Folder Include="Assets.xcassets\no.imageset\" />
+    <Folder Include="Assets.xcassets\ongoing.imageset\" />
     <Folder Include="Assets.xcassets\pvp.imageset\" />
     <Folder Include="Assets.xcassets\RWIcon.imageset\" />
     <Folder Include="Assets.xcassets\seashore2.imageset\" />
@@ -383,13 +389,6 @@
     <Folder Include="Assets.xcassets\top_score_border.imageset\" />
     <Folder Include="Assets.xcassets\top_score_center.imageset\" />
     <Folder Include="Assets.xcassets\yes.imageset\" />
-    <Folder Include="Assets.xcassets\HeadLogo.imageset\" />
-    <Folder Include="Assets.xcassets\ic_play.imageset\" />
-    <Folder Include="Assets.xcassets\ic_history.imageset\" />
-    <Folder Include="Renderers\" />
-    <Folder Include="Assets.xcassets\Icon.imageset\" />
-    <Folder Include="Assets.xcassets\AppIcon.appiconset\" />
-    <Folder Include="Assets.xcassets\ongoing.imageset\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\RWGame\RWGame.projitems" Label="Shared" />
