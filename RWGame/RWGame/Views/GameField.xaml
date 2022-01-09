@@ -60,7 +60,7 @@
                            TextColor="White"
                            HorizontalOptions="CenterAndExpand"
                            VerticalOptions="Center"
-                           Background="{Binding BackgroundColor}"
+                           BackgroundColor="{Binding BackgroundColor}"
                            Grid.Row="0"
                            Grid.Column="1"/>
                     <StackLayout x:Name="stackLayoutTopScore"
