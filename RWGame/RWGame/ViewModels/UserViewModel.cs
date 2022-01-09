@@ -7,6 +7,7 @@ using System.Linq;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using RWGame.Views;
+using Humanizer;
 
 
 namespace RWGame.ViewModels
@@ -16,7 +17,7 @@ namespace RWGame.ViewModels
         private Game Game { get; set; }
         public int IdGame { get { return Game.IdGame; } }
         public string GameId { get { return "#" + IdGame.ToString(); } }
-        public string Date { get { return Game.Start.ToString(); } }
+        public string Date { get { return DateTime.Parse(Game.Start).Humanize(); } }
         public string PlayerName1 { get { return Game.PlayerUserName1; } }
         public string PlayerName2 { get { return Game.PlayerUserName2; } }
         public string GameStateImage
