@@ -2,8 +2,6 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms" 
-             xmlns:viewmodels="clr-namespace:RWGame.ViewModels" 
-             x:DataType="viewmodels:GameFieldViewModel"
              x:Class="RWGame.Views.GameField">
     <ContentPage.Content>
         <AbsoluteLayout>

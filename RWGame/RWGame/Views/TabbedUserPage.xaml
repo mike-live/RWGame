@@ -5,6 +5,8 @@
             x:Class="RWGame.Views.TabbedUserPage"
             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
             android:TabbedPage.IsSwipePagingEnabled="False"
+            BarTextColor="Gray"
+            BackgroundColor="White"
             BarBackgroundColor="#F2FAFE">
     
 </TabbedPage>

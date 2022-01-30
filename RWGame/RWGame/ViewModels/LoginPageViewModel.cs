@@ -93,8 +93,13 @@ namespace RWGame.ViewModels
             RegistrationCommand = new Command(Registration);
             LoginCommand = new Command(() => LoginAsync());
             LogoutCommand = new Command(Logout);
-
-            googleClientManager = CrossGoogleClient.Current;
+            if (Device.RuntimePlatform != "UWP")
+            {
+                googleClientManager = CrossGoogleClient.Current;
+            } else
+            {
+                googleClientManager = null;
+            }
             getCredentials();
 
             IsLoggedIn = false;
@@ -209,6 +214,10 @@ namespace RWGame.ViewModels
             IsLoggingIn = true;
             IsGoogleSignIn = true;
 
+            if (googleClientManager == null)
+            {
+                return;
+            }
             googleClientManager.OnLogin += OnLoginCompleted;
             try
             {
