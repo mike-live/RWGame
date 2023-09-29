@@ -15,7 +15,7 @@
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v13.0</TargetFrameworkVersion>
     <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -56,6 +56,9 @@
     <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <AndroidEnableMultiDex>false</AndroidEnableMultiDex>
     <AndroidSupportedAbis>armeabi-v7a;x86;x86_64;arm64-v8a</AndroidSupportedAbis>
+    <AndroidPackageFormat>aab</AndroidPackageFormat>
+    <AndroidUseAapt2>true</AndroidUseAapt2>
+    <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -88,30 +91,30 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.2.0.562</Version>
+      <Version>7.2.0.564</Version>
     </PackageReference>
     <PackageReference Include="Fody">
-      <Version>6.6.0</Version>
+      <Version>6.8.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Humanizer">
-      <Version>2.13.14</Version>
+      <Version>2.14.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.1</Version>
+      <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="Plugin.GoogleClient">
       <Version>2.1.12</Version>
     </PackageReference>
     <PackageReference Include="PropertyChanged.Fody">
-      <Version>3.4.0</Version>
+      <Version>4.1.0</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp">
-      <Version>2.80.3</Version>
+      <Version>2.88.6</Version>
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.Forms">
-      <Version>2.80.3</Version>
+      <Version>2.88.6</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
@@ -135,22 +138,22 @@
       <Version>28.0.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.AppCompat.Resources">
-      <Version>1.1.0.1</Version>
+      <Version>1.1.0.2</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.AndroidX.MediaRouter">
-      <Version>1.2.5.2</Version>
+      <Version>1.4.0.3</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
-      <Version>1.7.0</Version>
+      <Version>1.8.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms">
-      <Version>5.0.0.2291</Version>
+      <Version>5.0.0.2612</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms.BehaviorsPack">
       <Version>3.0.0</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.GooglePlayServices.Plus">
-      <Version>117.0.0.4</Version>
+      <Version>117.0.0.11</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
