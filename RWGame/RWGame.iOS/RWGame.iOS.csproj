@@ -331,10 +331,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs">
-      <Version>7.2.0.562</Version>
+      <Version>7.2.0.564</Version>
     </PackageReference>
     <PackageReference Include="Fody">
-      <Version>6.6.0</Version>
+      <Version>6.8.0</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
@@ -355,6 +355,9 @@
     </PackageReference>
     <PackageReference Include="SkiaSharp.Views.Forms">
       <Version>2.88.6</Version>
+    </PackageReference>
+    <PackageReference Include="Splat">
+      <Version>14.7.1</Version>
     </PackageReference>
     <PackageReference Include="System.Net.Http">
       <Version>4.3.4</Version>
